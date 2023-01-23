@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PlaceAutoComplete } from "./PlaceAutocomplete";
+import { PlaceAutoComplete } from "./PlaceAutoComplete";
 import Map2FictionService from "../../services/Map2FictonService";
 
 export const AddPlace = () => {
