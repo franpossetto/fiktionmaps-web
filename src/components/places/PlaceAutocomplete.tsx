@@ -9,7 +9,7 @@ export const PlaceAutoComplete = ({ setPlace }: any) => {
   });
 
   const options = {
-    fields: ["formatted_address", "geometry", "name"],
+    // fields: ["formatted_address", "geometry", "name", "place_id"],
     strictBounds: false,
     types: ["street_address"],
   };
@@ -41,9 +41,18 @@ export const PlaceAutoComplete = ({ setPlace }: any) => {
 
   const handlePlaceChanged = () => {
     const place = autocomplete.getPlace();
+
     if (place) {
       setAutoCompleteValue(place.formatted_address);
       setPlace(place.formatted_address);
+
+      place.address_components?.filter((item: any) => {
+        if (item.types.includes("country")) {
+          console.log(item.short_name);
+        }
+      });
+    } else {
+      console.log(inputRef.current.name);
     }
   };
   return (
