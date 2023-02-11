@@ -1,12 +1,9 @@
-import { AddPlace } from "./components/places/AddPlace";
-
-// import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import { AddMovie } from "./components/movies/AddMovie";
+import { AddFiction } from "./pages/AddFiction";
 
 function App() {
-  return <AddMovie />;
+  return <AddFiction />;
 }
 
 export default App;
