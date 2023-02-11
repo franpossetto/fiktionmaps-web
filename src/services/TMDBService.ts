@@ -15,6 +15,15 @@ class TMDBService {
         }
     }
 
+    async getEpisodes(season_id: number, season_number: number, episode_number: number): Promise<any>{
+        try {
+            const response = await axios.get(`${this.baseUrl}/tv/${season_id}/season/${season_number}/episode/${episode_number}?api_key=${this.apiKey}`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async getDetails(id: number, type: MediaType): Promise<any>{
         try {
             const response = await axios.get(`${this.baseUrl}/${MediaType[type]}/${id}?api_key=${this.apiKey}`);
