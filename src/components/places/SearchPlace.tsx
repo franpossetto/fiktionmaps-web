@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 
-export const SearchPlace = ({ setPlace }: any) => {
+export const SearchPlace = ({ setPlace, reset }: any) => {
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
     version: "weekly",
@@ -9,7 +9,6 @@ export const SearchPlace = ({ setPlace }: any) => {
   });
 
   const options = {
-    // fields: ["formatted_address", "geometry", "name", "place_id"],
     strictBounds: false,
     types: ["street_address"],
   };
@@ -35,6 +34,10 @@ export const SearchPlace = ({ setPlace }: any) => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    inputRef.current.value = "";
+  }, [reset]);
 
   const [autoCompleteValue, setAutoCompleteValue] = useState("");
   const inputRef: any = useRef();
