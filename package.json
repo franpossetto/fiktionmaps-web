@@ -12,11 +12,13 @@
     "@googlemaps/js-api-loader": "^1.15.1",
     "@popperjs/core": "^2.11.6",
     "@react-google-maps/api": "^2.17.1",
+    "@reduxjs/toolkit": "^1.9.2",
     "axios": "^1.2.3",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
     "use-places-autocomplete": "^4.0.0"
   },
   "devDependencies": {
