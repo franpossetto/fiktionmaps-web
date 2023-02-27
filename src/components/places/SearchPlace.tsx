@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
+import { useDispatch, useSelector } from "react-redux";
+import { selectPlace } from "../../store/slices/placeSlices";
 
 export const SearchPlace = ({ setPlace, reset }: any) => {
   const loader = new Loader({
@@ -7,6 +9,9 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
     version: "weekly",
     libraries: ["places"],
   });
+
+  const selectedPlace = useSelector((state: any) => state.placeReducer);
+  const dispatch = useDispatch();
 
   const options = {
     strictBounds: false,
@@ -48,16 +53,18 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
     if (place) {
       setAutoCompleteValue(place.formatted_address);
       setPlace(place.formatted_address);
+      dispatch(selectPlace(place.formatted_address));
 
-      place.address_components?.filter((item: any) => {
-        if (item.types.includes("country")) {
-          console.log(item.short_name);
-        }
-      });
-    } else {
-      console.log(inputRef.current.name);
+      //   place.address_components?.filter((item: any) => {
+      //     if (item.types.includes("country")) {
+      //       console.log(item.short_name);
+      //     }
+      //   });
+      // } else {
+      //   console.log(inputRef.current.name);
     }
   };
+
   return (
     <>
       <input
