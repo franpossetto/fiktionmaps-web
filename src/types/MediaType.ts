@@ -1,5 +1,6 @@
 export enum MediaType {
-    movie,
-    tv,
-    book
+    MOVIE,
+    TV,
+    BOOK,
+    SONG
 }

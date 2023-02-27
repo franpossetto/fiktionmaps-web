@@ -5,18 +5,23 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { MediaType } from "../../types/MediaType";
 import { Fiction } from "../../types/Fiction";
 import { Season, TVSeason } from "../../types/Season";
+import { useSelector } from "react-redux";
+import { FictionDTO } from "../../types/dto/FictionDTO";
+import { FictionProvider } from "../../types/FictionProvider";
 
-export const SearchFiction = (props: any) => {
-  const mediaType: MediaType = props.mediaType;
+export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
+  const [results, setResults] = useState<Fiction[]>([]); // result list
+  const [episodes, setEpisodes] = useState<any[]>([]); // result list
 
-  const [results, setResults] = useState<Fiction[]>([]);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<boolean>(false);
   const [close, setClose] = useState<boolean>(false);
 
   const [seasons, setSeasons] = useState<Season>();
 
-  const [selectedFiction, setSelectedFiction] = useState<number>();
+  const [selectedFiction, setSelectedFiction] = useState<Fiction | undefined>(
+    undefined
+  );
   const [selectedSeason, setSelectedSeason] = useState<number>(0);
   const [selectedEpisode, setselectedEpisode] = useState<number>(1);
 
@@ -25,13 +30,13 @@ export const SearchFiction = (props: any) => {
 
   // Set the Fiction placeholder type
   useEffect(() => {
-    if (MediaType[mediaType] == "movie") {
+    if (MediaType[mediaType] == "MOVIE") {
       setFictionPlaceholderType("Movie Name");
     }
-    if (MediaType[mediaType] == "tv") {
+    if (MediaType[mediaType] == "TV") {
       setFictionPlaceholderType("TV Show Name");
     }
-    if (MediaType[mediaType] == "book") {
+    if (MediaType[mediaType] == "BOOK") {
       setFictionPlaceholderType("Book Name");
     }
   }, [mediaType]);
@@ -48,17 +53,6 @@ export const SearchFiction = (props: any) => {
     setSelected(false);
   }, [close, mediaType]);
 
-  const getEp = async (session_id: number) => {
-    if (selectedFiction) {
-      const episodes = await TMDBService.getEpisodes(
-        selectedFiction,
-        selectedSeason,
-        selectedEpisode
-      );
-      return episodes;
-    }
-  };
-
   const searchMovie = async (fictionName: string) => {
     if (fictionName == "") {
       setResults([]);
@@ -66,33 +60,19 @@ export const SearchFiction = (props: any) => {
     } else {
       try {
         const res = await TMDBService.search(fictionName, mediaType);
-        if (MediaType[mediaType] == "movie") {
-          setResults(
-            res.results.map((movie: any) => ({
-              title: movie.title,
-              id: movie.id,
-              img: movie.poster_path,
-              overview:
-                movie.overview.length > 30
-                  ? movie.overview.slice(0, 120) + "..."
-                  : movie.overview,
-            }))
-          );
-        } else if (MediaType[mediaType] == "tv") {
-          setResults(
-            res.results.map((tv: any) => ({
-              title: tv.name,
-              id: tv.id,
-              img: tv.poster_path,
-              overview:
-                tv.overview.length > 30
-                  ? tv.overview.slice(0, 120) + "..."
-                  : tv.overview.length > 0
-                  ? tv.overview
-                  : "No description provided",
-            }))
-          );
-        }
+        const fiction: Fiction[] = res.results.map((fiction: any) => ({
+          title: fiction.title || fiction.name,
+          id: fiction.id,
+          img: fiction.poster_path,
+          overview:
+            fiction.overview.length > 30
+              ? fiction.overview.slice(0, 120) + "..."
+              : fiction.overview,
+          provider: FictionProvider.TMDB,
+          episode: null,
+          type: mediaType,
+        }));
+        setResults(fiction);
       } catch (err) {
         console.log("err");
       }
@@ -102,13 +82,12 @@ export const SearchFiction = (props: any) => {
   const setQueryCustom = async (res: Fiction) => {
     setQuery(res.title);
     setSelected(true);
-    setSelectedFiction(res.id);
+    setSelectedFiction(res);
     setResults([res]);
     const result = await TMDBService.getDetails(res.id, mediaType);
     const number_of_seasons = result.number_of_seasons;
-    console.log(result);
 
-    const seasons: TVSeason[] = result.seasons?.map((tv: any) => ({
+    const tvSeasons: TVSeason[] = result.seasons?.map((tv: any) => ({
       title: tv.name,
       id: tv.id,
       number: 1,
@@ -117,21 +96,35 @@ export const SearchFiction = (props: any) => {
 
     setSeasons({
       number_of_seasons: number_of_seasons,
-      seasons: seasons,
+      seasons: tvSeasons,
     });
-    console.log(seasons);
+
+    if (mediaType == MediaType.TV) {
+      const episodes = await TMDBService.getAllEpisodes(
+        res.id,
+        selectedSeason,
+        tvSeasons[selectedSeason].episodes
+      );
+      setEpisodes(episodes);
+      console.log(episodes);
+    }
   };
 
   useEffect(() => {
     if (selectedSeason) {
-      const a = getEp(selectedSeason);
-      console.log(a);
+      TMDBService.getAllEpisodes(
+        selectedFiction?.id || 0,
+        selectedSeason,
+        seasons?.seasons[selectedSeason].episodes || 1
+      )
+        .then((episodes: any[]) => {
+          setEpisodes(episodes);
+        })
+        .catch((error) => {
+          // manejar el error
+        });
     }
   }, [selectedSeason]);
-
-  const _setSelectedSeason = (season_number: number) => {
-    console.log(season_number);
-  };
 
   return (
     <>
@@ -194,7 +187,7 @@ export const SearchFiction = (props: any) => {
           ))}
         </div>
       )}
-      {MediaType[mediaType] == "tv" && selected && (
+      {MediaType[mediaType] == "TV" && selected && (
         <>
           <br />
           <label> Seasson </label>
@@ -205,14 +198,14 @@ export const SearchFiction = (props: any) => {
           >
             {seasons?.seasons &&
               seasons?.seasons.map((season, i) => (
-                <option key={i + 1} value={i + 1}>
+                <option key={i} value={i}>
                   {season.title}
                 </option>
               ))}
           </select>
           <br></br>
           <label> Episode </label>
-          <select className="form-select" aria-label="Default select example">
+          {/* <select className="form-select" aria-label="Default select example">
             {seasons?.seasons &&
               Array.from(
                 { length: seasons?.seasons[selectedSeason].episodes || 19 },
@@ -222,6 +215,13 @@ export const SearchFiction = (props: any) => {
                   </option>
                 )
               )}
+          </select> */}
+          <select className="form-select" aria-label="Default select example">
+            {episodes.map((episode: any, index: number) => (
+              <option key={index} value={episode.id}>
+                {episode.display_name}
+              </option>
+            ))}
           </select>
           <br></br>
         </>

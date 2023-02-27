@@ -1,12 +1,17 @@
+import { FictionProvider } from "../FictionProvider";
+import { MediaType } from "../MediaType";
+
 export interface FictionDTO {
     name: string;
-    type: Type;
-    provider: Provider
+    type: MediaType;
+    id: number;
+    provider: FictionProvider;
+    episode?: EpisodeDTO;
 }
 
-enum Type {
-    MOVIE, TV_SHOW, BOOK, SONG
+export interface EpisodeDTO {
+    name: string;
+    id: number;
+    season_number: number;
 }
-enum Provider {
-    OMDB_API, TVDB_API, CUSTOM
-}
+
