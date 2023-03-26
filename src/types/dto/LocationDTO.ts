@@ -1,8 +1,10 @@
 import { MapsProvider } from "../MapsProvider";
 
 export interface LocationDTO {
-    fromated_address: string;
-    place_type: string;
+    formatted_address: string;
+    latitude: number,
+    longitude: number,
     place_id: string;
     provider: MapsProvider
+    city: string
 }

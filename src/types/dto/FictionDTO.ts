@@ -4,7 +4,6 @@ import { MediaType } from "../MediaType";
 export interface FictionDTO {
     name: string;
     type: MediaType;
-    id: number;
     provider: FictionProvider;
     episode?: EpisodeDTO;
 }
