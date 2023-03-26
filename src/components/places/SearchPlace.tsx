@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { useDispatch, useSelector } from "react-redux";
 import { selectPlace } from "../../store/slices/placeSlices";
+import { LocationDTO } from "../../types/dto/LocationDTO";
+import { MapsProvider } from "../../types/MapsProvider";
 
 export const SearchPlace = ({ setPlace, reset }: any) => {
   const loader = new Loader({
@@ -15,7 +17,7 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
 
   const options = {
     strictBounds: false,
-    types: ["street_address"],
+    types: ["address"],
   };
 
   let autocomplete: any;
@@ -52,16 +54,34 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
 
     if (place) {
       setAutoCompleteValue(place.formatted_address);
-      setPlace(place.formatted_address);
       dispatch(selectPlace(place.formatted_address));
 
-      //   place.address_components?.filter((item: any) => {
-      //     if (item.types.includes("country")) {
-      //       console.log(item.short_name);
-      //     }
-      //   });
-      // } else {
-      //   console.log(inputRef.current.name);
+      // Find the locality in the address components
+      let locality = "";
+      let country = "";
+
+      place.address_components?.forEach((component: any) => {
+        if (component.types.includes("locality")) {
+          locality = component.long_name;
+        }
+        if (component.types.includes("country")) {
+          country = component.long_name;
+        }
+      });
+
+      const location: LocationDTO = {
+        formatted_address: place.formatted_address,
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng(),
+        place_id: place.place_id,
+        provider: MapsProvider.GOOGLE_MAPS,
+        city: locality,
+      };
+      console.log("Fran");
+      setPlace(location);
+      // Log the locality to the console
+      // console.log("City:", locality + "," + country);
+      // console.log("Object", place);
     }
   };
 

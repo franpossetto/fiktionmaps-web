@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-class Map2FictionService {
+export class Map2FictionService {
     // Define the base URL for the API
     baseUrl: string = 'http://localhost:8080';
 
@@ -18,6 +18,17 @@ class Map2FictionService {
     async post(url: string, city: string): Promise<any> {
         try {
             const response = await axios.post(`${this.baseUrl}/${url}`, {name: city});
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    
+    // Define a method for making a POST request
+    async createFictionMap(url: string, fictionMap: any): Promise<any> {
+        try {
+            const response = await axios.post(`${this.baseUrl}/${url}`, fictionMap);
             return response.data;
         } catch (error) {
             throw error;

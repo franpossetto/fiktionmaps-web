@@ -5,9 +5,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { MediaType } from "../../types/MediaType";
 import { Fiction } from "../../types/Fiction";
 import { Season, TVSeason } from "../../types/Season";
-import { useSelector } from "react-redux";
-import { FictionDTO } from "../../types/dto/FictionDTO";
 import { FictionProvider } from "../../types/FictionProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { selectFiction } from "../../store/slices/fictionSlices";
+import { FictionDTO } from "../../types/dto/FictionDTO";
 
 export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
   const [results, setResults] = useState<Fiction[]>([]); // result list
@@ -27,6 +28,12 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
 
   const [fictionPlaceholderType, setFictionPlaceholderType] =
     useState("Movie Name");
+
+  const selectedFictionReducer = useSelector(
+    (state: any) => state.fictionReducer
+  );
+
+  const dispatch = useDispatch();
 
   // Set the Fiction placeholder type
   useEffect(() => {
@@ -87,12 +94,23 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
     const result = await TMDBService.getDetails(res.id, mediaType);
     const number_of_seasons = result.number_of_seasons;
 
-    const tvSeasons: TVSeason[] = result.seasons?.map((tv: any) => ({
-      title: tv.name,
-      id: tv.id,
-      number: 1,
-      episodes: tv.episode_count,
-    }));
+    const tvSeasons: TVSeason[] =
+      result.seasons?.map((tv: any) => ({
+        title: tv.name,
+        id: tv.id,
+        number: 1,
+        episodes: tv.episode_count,
+      })) ??
+      (result.seasons && result.seasons.length > 0
+        ? [
+            {
+              title: result.seasons[0].name,
+              id: result.seasons[0].id,
+              number: 1,
+              episodes: result.seasons[0].episode_count,
+            },
+          ]
+        : []);
 
     setSeasons({
       number_of_seasons: number_of_seasons,
@@ -103,10 +121,9 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
       const episodes = await TMDBService.getAllEpisodes(
         res.id,
         selectedSeason,
-        tvSeasons[selectedSeason].episodes
+        tvSeasons[selectedSeason].episodes || 0
       );
       setEpisodes(episodes);
-      console.log(episodes);
     }
   };
 
@@ -124,7 +141,22 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
           // manejar el error
         });
     }
+    console.log("pase");
+    dispatch(selectFiction(selectedFiction));
   }, [selectedSeason]);
+
+  useEffect(() => {
+    console.log(selectedFictionReducer.selected_fiction);
+  }, [selectedFictionReducer.selected_fiction]);
+
+  useEffect(() => {
+    const fictionDTO: FictionDTO = {
+      name: results[0]?.title,
+      type: results[0]?.type || MediaType.MOVIE,
+      provider: results[0]?.provider || FictionProvider.TMDB,
+    };
+    setFictionDTO([fictionDTO]);
+  }, [results]);
 
   return (
     <>
@@ -205,17 +237,6 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
           </select>
           <br></br>
           <label> Episode </label>
-          {/* <select className="form-select" aria-label="Default select example">
-            {seasons?.seasons &&
-              Array.from(
-                { length: seasons?.seasons[selectedSeason].episodes || 19 },
-                (_, index) => (
-                  <option key={index} value={index}>
-                    {index + 1}
-                  </option>
-                )
-              )}
-          </select> */}
           <select className="form-select" aria-label="Default select example">
             {episodes.map((episode: any, index: number) => (
               <option key={index} value={episode.id}>
