@@ -1,19 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
-import { useDispatch, useSelector } from "react-redux";
-import { selectPlace } from "../../store/slices/placeSlices";
 import { LocationDTO } from "../../types/dto/LocationDTO";
-import { MapsProvider } from "../../types/MapsProvider";
+import { MapsProvider } from "../../types/providers/MapsProvider";
+import PlaceContext from "../../context/PlaceContext";
 
 export const SearchPlace = ({ setPlace, reset }: any) => {
+  const formData = useContext(PlaceContext);
+
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
     version: "weekly",
     libraries: ["places"],
   });
-
-  const selectedPlace = useSelector((state: any) => state.placeReducer);
-  const dispatch = useDispatch();
 
   const options = {
     strictBounds: false,
@@ -54,7 +52,6 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
 
     if (place) {
       setAutoCompleteValue(place.formatted_address);
-      dispatch(selectPlace(place.formatted_address));
 
       // Find the locality in the address components
       let locality = "";
@@ -68,7 +65,6 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
           country = component.long_name;
         }
       });
-
       const location: LocationDTO = {
         formatted_address: place.formatted_address,
         latitude: place.geometry.location.lat(),
@@ -76,12 +72,12 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
         place_id: place.place_id,
         provider: MapsProvider.GOOGLE_MAPS,
         city: locality,
+        country: country,
       };
-      console.log("Fran");
-      setPlace(location);
-      // Log the locality to the console
-      // console.log("City:", locality + "," + country);
-      // console.log("Object", place);
+
+      console.log(place);
+
+      setPlace({ ...formData, place: location });
     }
   };
 

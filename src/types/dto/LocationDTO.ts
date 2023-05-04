@@ -1,4 +1,4 @@
-import { MapsProvider } from "../MapsProvider";
+import { MapsProvider } from "../providers/MapsProvider";
 
 export interface LocationDTO {
     formatted_address: string;
@@ -6,5 +6,6 @@ export interface LocationDTO {
     longitude: number,
     place_id: string;
     provider: MapsProvider
-    city: string
+    city: string,
+    country: string
 }

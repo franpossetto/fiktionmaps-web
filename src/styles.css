@@ -1,0 +1,80 @@
+@font-face {
+  font-family: "ITCAvantGardeProBk";
+  src: url("../src/assets/font/ITCAvantGardePro-Bk.otf") format('opentype');;
+}
+
+@font-face {
+  font-family: "ITCAvantGardeProBkDemi";
+  src: url("../src/assets/font/ITCAvantGardePro-Demi.otf") format('opentype');;
+}
+
+body {
+    background-color: #0f1319;
+    /* background-color: #0f152f; */
+    color: white;
+    font-family: 'ITCAvantGardeProBk', 'Poppins', sans-serif;
+    line-height: 2;
+}
+
+  .item-list a:hover {
+    color: #fff;
+  }
+  
+  .selected-item a {
+    color: #fff !important;
+    font-weight: 600;
+  }
+  
+  button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 12px;
+    padding: 10px 15px;
+  }
+
+
+  
+
+  .collapsed {
+    width: 50px;
+    overflow: hidden;
+    transition: width 0.3s ease;
+  }
+  
+  .collapsed .item-list,
+  .collapsed .section-title {
+    display: none;
+  }
+  
+  .collapsed .logo {
+    display: none;
+  }
+
+  .side-bar.collapsed {
+    cursor: pointer;
+    width:50px;
+  }
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px; 
+  }
+  
+  .small-logo {
+    display: none;
+    width: 40px;
+    margin-top: 20px;
+  }
+  
+  .collapsed .logo {
+    display: none;
+  }
+  
+  .collapsed .small-logo {
+    display:flex;
+    margin: auto;
+
+  }
+ 

@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TMDBService from "../../services/TMDBService";
 import "./SearchFiction.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { MediaType } from "../../types/MediaType";
 import { Fiction } from "../../types/Fiction";
 import { Season, TVSeason } from "../../types/Season";
-import { FictionProvider } from "../../types/FictionProvider";
-import { useDispatch, useSelector } from "react-redux";
-import { selectFiction } from "../../store/slices/fictionSlices";
 import { FictionDTO } from "../../types/dto/FictionDTO";
+import FictionContext from "../../context/FictionContext";
+import { FictionProvider } from "../../types/providers/FictionProvider";
 
-export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
-  const [results, setResults] = useState<Fiction[]>([]); // result list
+export const SearchFiction = ({ mediaType, setFiction }: any) => {
+  const formData = useContext(FictionContext);
+
+  const [fictions, setFictions] = useState<Fiction[]>([]); // result list
   const [episodes, setEpisodes] = useState<any[]>([]); // result list
 
   const [query, setQuery] = useState("");
@@ -29,13 +30,6 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
   const [fictionPlaceholderType, setFictionPlaceholderType] =
     useState("Movie Name");
 
-  const selectedFictionReducer = useSelector(
-    (state: any) => state.fictionReducer
-  );
-
-  const dispatch = useDispatch();
-
-  // Set the Fiction placeholder type
   useEffect(() => {
     if (MediaType[mediaType] == "MOVIE") {
       setFictionPlaceholderType("Movie Name");
@@ -58,11 +52,12 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
   useEffect(() => {
     setQuery("");
     setSelected(false);
+    setSelectedFiction(undefined);
   }, [close, mediaType]);
 
   const searchMovie = async (fictionName: string) => {
     if (fictionName == "") {
-      setResults([]);
+      setFictions([]);
       return;
     } else {
       try {
@@ -79,7 +74,7 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
           episode: null,
           type: mediaType,
         }));
-        setResults(fiction);
+        setFictions(fiction);
       } catch (err) {
         console.log("err");
       }
@@ -90,7 +85,7 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
     setQuery(res.title);
     setSelected(true);
     setSelectedFiction(res);
-    setResults([res]);
+    setFictions([res]);
     const result = await TMDBService.getDetails(res.id, mediaType);
     const number_of_seasons = result.number_of_seasons;
 
@@ -141,22 +136,22 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
           // manejar el error
         });
     }
-    console.log("pase");
-    dispatch(selectFiction(selectedFiction));
   }, [selectedSeason]);
 
   useEffect(() => {
-    console.log(selectedFictionReducer.selected_fiction);
-  }, [selectedFictionReducer.selected_fiction]);
-
-  useEffect(() => {
+    console.log(selectedFiction);
     const fictionDTO: FictionDTO = {
-      name: results[0]?.title,
-      type: results[0]?.type || MediaType.MOVIE,
-      provider: results[0]?.provider || FictionProvider.TMDB,
+      name: selectedFiction?.title || "",
+      type: selectedFiction?.type || MediaType.MOVIE,
+      provider: selectedFiction?.provider || FictionProvider.TMDB,
     };
-    setFictionDTO([fictionDTO]);
-  }, [results]);
+
+    if (selectedFiction?.type == MediaType.TV) {
+      fictionDTO.episode = selectedFiction.episode;
+    }
+    console.log(selectedFiction);
+    setFiction({ ...formData, fiction: fictionDTO });
+  }, [selectedFiction]);
 
   return (
     <>
@@ -170,14 +165,14 @@ export const SearchFiction = ({ mediaType, setFictionDTO }: any) => {
         placeholder={fictionPlaceholderType}
       />
 
-      {results.length > 0 && (
+      {fictions.length > 0 && (
         <div
           className="card"
           style={{
             marginTop: "15px",
           }}
         >
-          {results.map((result: Fiction) => (
+          {fictions.map((result: Fiction) => (
             <div
               key={result.id}
               className="row selected-title"
