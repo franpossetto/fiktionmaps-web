@@ -1,6 +1,6 @@
 import { EpisodeDTO } from "./dto/FictionDTO";
-import { FictionProvider } from "./FictionProvider";
 import { MediaType } from "./MediaType";
+import { FictionProvider } from "./providers/FictionProvider";
 
 export interface Fiction {
     title: string;

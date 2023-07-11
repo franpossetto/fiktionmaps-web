@@ -1,6 +1,8 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "../../components/shared/NavBar/NavBar";
-import "./Search.css";
+import { Outlet, useNavigate } from "react-router-dom";
+import "./FictionFeed.css";
+import { useState } from "react";
+import { useAuthContext } from "../../../contexts/AuthContext";
+import Navbar from "../../../components/shared/NavBar/NavBar";
 
 interface CardData {
   title: string;
@@ -120,7 +122,23 @@ const handleSignupClick = () => {
   console.log("Signup clicked");
 };
 
-export const SearchCard = () => {
+export const FictionFeed = () => {
+
+  const [error, setError] = useState("")
+  const { logout } = useAuthContext()
+  const navigate = useNavigate();
+  
+  async function handleLogout() {
+    setError("")
+
+    try {
+      await logout()
+      navigate("/login")
+    } catch {
+      setError("Failed to log out")
+    }
+  }
+
   return (
     <>
       <Navbar
@@ -134,6 +152,7 @@ export const SearchCard = () => {
       <div className="row">
         <div className="col-3">
           <div className="search-input-container">
+          <button onClick={()=>{ handleLogout()}}>logout</button>
             <input
               className="form-control search-input"
               type="search"

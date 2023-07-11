@@ -1,15 +1,15 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { MediaType } from "../../types/MediaType";
-import { SearchFiction } from "../../components/movies/SearchFiction";
-import { SearchPlace } from "../../components/places/SearchPlace";
-import { FictionDTO } from "../../types/dto/FictionDTO";
-import FictionContext from "../../context/FictionContext";
-import PlaceContext from "../../context/PlaceContext";
-import { LocationDTO } from "../../types/dto/LocationDTO";
-import { MapsProvider } from "../../types/providers/MapsProvider";
-import { Map2FictionService } from "../../services/Map2FictonService";
+import { ChangeEvent, useEffect, useState } from "react";
+import { MediaType } from "../../../types/MediaType";
+import { SearchFiction } from "../../../components/movies/SearchFiction";
+import { SearchPlace } from "../../../components/places/SearchPlace";
+import { FictionDTO } from "../../../types/dto/FictionDTO";
+import { LocationDTO } from "../../../types/dto/LocationDTO";
+import { MapsProvider } from "../../../types/providers/MapsProvider";
+import { Map2FictionService } from "../../../services/Map2FictonService";
 
 import "bootstrap-icons/font/bootstrap-icons.css";
+import PlaceContext from "../../../contexts/PlaceContext";
+import FictionContext from "../../../contexts/FictionContext";
 
 interface FormState {
   reset: boolean;
@@ -29,7 +29,7 @@ interface PlaceFormData {
   description: string;
 }
 
-export const AddFictionForm = () => {
+export const AddFiction = () => {
   const [formState, setFormState] = useState<FormState>({
     reset: true,
     query: "",

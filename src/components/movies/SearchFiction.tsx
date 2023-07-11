@@ -6,7 +6,7 @@ import { MediaType } from "../../types/MediaType";
 import { Fiction } from "../../types/Fiction";
 import { Season, TVSeason } from "../../types/Season";
 import { FictionDTO } from "../../types/dto/FictionDTO";
-import FictionContext from "../../context/FictionContext";
+import FictionContext from "../../contexts/FictionContext";
 import { FictionProvider } from "../../types/providers/FictionProvider";
 
 export const SearchFiction = ({ mediaType, setFiction }: any) => {

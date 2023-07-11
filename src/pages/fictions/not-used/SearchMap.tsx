@@ -1,5 +1,5 @@
 import { Loader } from "@googlemaps/js-api-loader";
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 interface MapProps {
   lat: number;
@@ -181,7 +181,7 @@ const darkMapStyle = [
   },
 ];
 
-function FictionFeedMap() {
+export const FictionFeed2 = () => {
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
     libraries: ["places"],
@@ -332,4 +332,4 @@ function FictionFeedMap() {
   );
 }
 
-export default FictionFeedMap;
+export default FictionFeed;

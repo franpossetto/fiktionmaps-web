@@ -10,13 +10,10 @@
 img {
     padding-top: 10px;
     padding-bottom: 10px;
-
-
 }
 
 .selected-title:hover {
     background-color: rgb(243, 243, 243);
-    /* color: #fff; */
 }
 
 .scrollbar {
