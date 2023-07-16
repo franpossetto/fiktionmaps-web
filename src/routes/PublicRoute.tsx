@@ -6,7 +6,7 @@ const PublicRoute = ({ children }: any) => {
   const location = useLocation();
 
   return (
-    !user ? children : <Navigate to="/search" state={{ from: location }} replace={true} />
+    !user ? children : <Navigate to="/api/docs" state={{ from: location }} replace={true} />
   );
 };
 

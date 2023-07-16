@@ -39,7 +39,7 @@ export const SignUp = () => {
     } else {
       // setcurrentUser(user);
       navigate('/api/docs'); 
-      console.log(user);
+      console.log(user['accessToken']);
     }
   };
 

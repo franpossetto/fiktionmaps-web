@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
 import { auth } from '../firebase';
+import { UserService } from '../services/UserService';
+import { UserDTO, UserRole } from '../services/dto/UserDTO';
 
 const AuthContext = createContext<any>(null);
 
@@ -25,8 +27,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   
   const signUpWithEmailAndPassword = async (email: string, password: string) => {
       try {
-        const user = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredentials.user;
+        
+        if (user) {
+        const userDto: UserDTO = {
+            externalUserId: user.uid,
+            name: "",
+            email: user.email || "",
+            password: "",
+            role: UserRole.USER, 
+        }
+
+        // Create an instance of UserService and call the create method
+        const userService = new UserService();
+        const response = await userService.create(userDto);
+        }
+
         return { user };
+
       } catch (err) {
         const message = (err as Error).message;
         throw new Error(message);
