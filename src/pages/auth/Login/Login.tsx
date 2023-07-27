@@ -31,25 +31,25 @@ export const Login = () => {
   };
   return (
     <>
-      <div className="container" style={{ height: "95vh", overflow: "hidden" }}>
-        <div className="row d-flex justify-content-center align-items-center" style={{ height: "100%" }}>
+      <div className="container">
+        <div>
           <div className="col-5">
-            <img src="../src/assets/fm_h.png" className="logo" style={{ width: "100%" }}></img>
+            <img src="../src/assets/fm_h.png" className="logo"></img>
           </div>
           <div className="col-5">
-            <form style={{ paddingLeft: 50, paddingRight: 50, paddingTop: 50 }} onSubmit={handleLogin}>
+            <form onSubmit={handleLogin}>
               <div className="form-group">
-                <label htmlFor="exampleInputEmail1" style={{ fontSize: "14px" }}>Email address</label>
-                <input type="email" className="form-control bg-transparent" id="exampleInputEmail1" aria-describedby="emailHelp" style={{ border: "1px solid #252527", marginBottom: "25px" }} value={email} onChange={handleEmailChange} />
+                <label htmlFor="exampleInputEmail1">Email address</label>
+                <input type="email" className="form-control bg-transparent" id="exampleInputEmail1" aria-describedby="emailHelp" value={email} onChange={handleEmailChange} />
               </div>
               <div className="form-group">
-                <label htmlFor="exampleInputPassword1" style={{ fontSize: "14px" }}>Password</label>
-                <input type="password" className="form-control bg-transparent" id="exampleInputPassword1" style={{ border: "1px solid #252527", marginBottom: "25px" }} value={password} onChange={handlePasswordChange} />
+                <label htmlFor="exampleInputPassword1">Password</label>
+                <input type="password" className="form-control bg-transparent" id="exampleInputPassword1" value={password} onChange={handlePasswordChange} />
               </div>
               {error && <div className="error">{error}</div>}
-              <button type="submit" className="btn btn-dark" style={{ width: "100%", height: "45px" }}>Login</button>
-              <div className="text-center" style={{ marginTop: "14px" }}>
-                <p className="d-block mx-auto" style={{ fontSize: "13px" }}>Don't have an account?<Link to={"/signup"} className="item-list">Create one</Link></p>
+              <button type="submit" className="btn btn-dark" >Login</button>
+              <div className="text-center" >
+                <p className="d-block mx-auto">Don't have an account?<Link to={"/signup"} className="item-list">Create one</Link></p>
               </div>
             </form>
           </div>

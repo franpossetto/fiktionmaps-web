@@ -1,4 +1,4 @@
-import "./EndPoint.css";
+//import "./EndPoint.css";
 import OptionalParameters from "./OptionalParameters";
 
 export interface EndpointProps {

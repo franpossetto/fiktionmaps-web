@@ -13,6 +13,7 @@ import APIDocs from "../pages/docs/APIDocs";
 import Fictions from "../pages/docs/resources/Fictions";
 import { FictionMap } from "../pages/fictions/map/FictionMap";
 import { FictionFeed } from "../pages/fictions/feed/FictionFeed";
+import Layout from "../components/shared/Layout/Layout";
 
 const AppRouter = () => {
 
@@ -52,6 +53,7 @@ const AppRouter = () => {
             } />
 
           <Route path="/add" element={<AddFiction />} />
+          <Route path="/content" element={<Layout />} />
           <Route path="/api/docs" element={<APIDocs />}>
             <>
               <Route path="/api/docs/introduction" element={<Introduction />} />

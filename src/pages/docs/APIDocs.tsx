@@ -4,6 +4,7 @@ import "./APIDocs.css";
 import Navbar from "../../components/shared/NavBar/NavBar";
 import { SideBar } from "../../components/shared/SideBar/SideBar";
 
+
 const handleHomeClick = () => {
   console.log("Home clicked");
 };

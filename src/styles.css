@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: "ITCAvantGardeProBk";
   src: url("../src/assets/font/ITCAvantGardePro-Bk.otf") format('opentype');;
@@ -10,7 +14,6 @@
 
 body {
     background-color: #0f1319;
-    /* background-color: #0f152f; */
     color: white;
     font-family: 'ITCAvantGardeProBk', 'Poppins', sans-serif;
     line-height: 2;
