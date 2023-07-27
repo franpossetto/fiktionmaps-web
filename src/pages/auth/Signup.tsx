@@ -45,10 +45,10 @@ export const SignUp = () => {
 
   return (
     <>
-      <div className="container" >
-        <div className="grid gap-6 mt-36 mb-3 md:grid-cols-2">
-          <div className="items-center">
-            <img src="../src/assets/fm_h.png" className="h-65" alt="Logo"></img>
+      <div className="container w-[66%] mt-36 mb-3 mx-36" >
+        <div className="grid gap-6 md:grid-cols-2 content-center">
+          <div>
+            <img src="../src/assets/fm_h.png" className="h-60" alt="Logo"></img>
           </div>
           <div>
             <form onSubmit={handleSignUp}>
@@ -94,10 +94,10 @@ export const SignUp = () => {
                   {error}
                 </div>
               )}
-              <div className="mt-10 mx-56">
+              <div className="mt-10">
                 <button
                   type="submit"
-                  className="px-6 py-2 text-white bg-black rounded-lg hover:bg-blue-900"
+                  className="px-44 py-2.5 text-white bg-black rounded-lg hover:bg-blue-900"
                 >
                   Create an Account
                 </button>
