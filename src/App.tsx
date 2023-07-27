@@ -5,7 +5,7 @@ import AppRouter from "./routes/routes";
 
 function App() {
   return <>
-  <AppRouter />;
+  <AppRouter />
   </>
 }
 
