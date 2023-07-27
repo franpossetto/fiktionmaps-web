@@ -45,69 +45,65 @@ export const SignUp = () => {
 
   return (
     <>
-      <div className="container" style={{ height: "95vh", overflow: "hidden" }}>
-        <div className="row d-flex justify-content-center align-items-center" style={{ height: "100%" }}>
-          <div className="col-5">
-            <img src="../src/assets/fm_h.png" className="logo" style={{ width: "100%" }} alt="Logo"></img>
+      <div className="container" >
+        <div className="grid gap-6 mt-36 mb-3 md:grid-cols-2">
+          <div className="items-center">
+            <img src="../src/assets/fm_h.png" className="h-65" alt="Logo"></img>
           </div>
-          <div className="col-5">
-            <form style={{ paddingLeft: 50, paddingRight: 50, paddingTop: 50 }} onSubmit={handleSignUp}>
+          <div>
+            <form onSubmit={handleSignUp}>
               <div className="form-group">
-                <label htmlFor="exampleInputEmail1" style={{ fontSize: "14px" }}>
+                <label className="block" htmlFor="exampleInputEmail1">
                   Email address
                 </label>
                 <input
                   type="email"
-                  className="form-control bg-transparent"
+                  className="mt-2 mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
-                  style={{ border: "1px solid #252527", marginBottom: "25px" }}
                   value={email}
                   onChange={handleEmailChange}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="exampleInputPassword1" style={{ fontSize: "14px" }}>
+                <label className="block" htmlFor="exampleInputPassword1">
                   Password
                 </label>
                 <input
                   type="password"
-                  className="form-control bg-transparent"
+                  className="mt-2 mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   id="exampleInputPassword1"
-                  style={{ border: "1px solid #252527", marginBottom: "25px" }}
                   value={password}
                   onChange={handlePasswordChange}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="exampleInputPassword2" style={{ fontSize: "14px" }}>
+                <label className="block" htmlFor="exampleInputPassword2">
                   Repeat Password
                 </label>
                 <input
                   type="password"
-                  className="form-control bg-transparent"
+                  className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   id="exampleInputPassword2"
-                  style={{ border: "1px solid #252527" }}
                   value={repeatPassword}
                   onChange={handleRepeatPasswordChange}
                 />
               </div>
               {error && (
-                <div className="error" style={{ color: "red", marginBottom: "10px" }}>
+                <div className="error">
                   {error}
                 </div>
               )}
-              <div className="form-group" style={{ marginTop: error ? "10px" : "20px" }}>
+              <div className="mt-10 mx-56">
                 <button
                   type="submit"
-                  className="btn btn-dark"
-                  style={{ width: "100%", height: "45px" }}
+                  className="px-6 py-2 text-white bg-black rounded-lg hover:bg-blue-900"
                 >
                   Create an Account
                 </button>
               </div>
-              <div className="text-center" style={{ marginTop: "14px" }}>
-                <p className="d-block mx-auto" style={{ fontSize: "13px" }}>
+              <div className="text-center">
+                <p className="d-block mx-auto">
                   Or you already have an account?
                   <Link to={"/login"} className="item-list">
                     Log in
@@ -119,13 +115,13 @@ export const SignUp = () => {
               </div>
               </div>
 
-              <div className="footer" style={{ height: "5vh" }}>
-              <Link to={"/api/docs"} style={{ textDecoration: "none" }}>
-              <p style={{ color: "#ffffff", textAlign: "center", marginTop: "10px" }}>
+              <footer>
+              <Link to={"/api/docs"}>
+              <p className="flex justify-center">
               Public API Docs
               </p>
               </Link>
-              </div>
+              </footer>
               </>
               );
   };
