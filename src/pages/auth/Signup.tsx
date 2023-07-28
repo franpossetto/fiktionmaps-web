@@ -46,7 +46,7 @@ export const SignUp = () => {
   return (
     <>
       <div className="container w-[66%] mt-36 mb-3 mx-36" >
-        <div className="grid gap-6 grid-cols-9 grid-flow-col content-center">
+        <div className="grid gap-10 grid-cols-9 grid-flow-col content-center">
           <div className="col-span-5">
             <img src="../src/assets/fm_h.png" className="h-60 mt-10" alt="Logo"></img>
           </div>
