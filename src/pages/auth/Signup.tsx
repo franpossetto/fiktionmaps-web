@@ -46,11 +46,11 @@ export const SignUp = () => {
   return (
     <>
       <div className="container w-[66%] mt-36 mb-3 mx-36" >
-        <div className="grid gap-6 md:grid-cols-2 content-center">
-          <div>
-            <img src="../src/assets/fm_h.png" className="h-60" alt="Logo"></img>
+        <div className="grid gap-6 grid-cols-9 grid-flow-col content-center">
+          <div className="col-span-5">
+            <img src="../src/assets/fm_h.png" className="h-60 mt-10" alt="Logo"></img>
           </div>
-          <div>
+          <div className="col-span-4">
             <form onSubmit={handleSignUp}>
               <div className="form-group">
                 <label className="block" htmlFor="exampleInputEmail1">
@@ -58,7 +58,7 @@ export const SignUp = () => {
                 </label>
                 <input
                   type="email"
-                  className="mt-2 mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="mb-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
                   value={email}
@@ -71,7 +71,7 @@ export const SignUp = () => {
                 </label>
                 <input
                   type="password"
-                  className="mt-2 mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   id="exampleInputPassword1"
                   value={password}
                   onChange={handlePasswordChange}
@@ -83,7 +83,7 @@ export const SignUp = () => {
                 </label>
                 <input
                   type="password"
-                  className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   id="exampleInputPassword2"
                   value={repeatPassword}
                   onChange={handleRepeatPasswordChange}
@@ -94,10 +94,10 @@ export const SignUp = () => {
                   {error}
                 </div>
               )}
-              <div className="mt-10">
+              <div className="mt-5 col-span-4">
                 <button
                   type="submit"
-                  className="px-44 py-2.5 text-white bg-black rounded-lg hover:bg-blue-900"
+                  className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-base rounded-lg text-base w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 mb-2"
                 >
                   Create an Account
                 </button>
@@ -110,12 +110,12 @@ export const SignUp = () => {
                   </Link>
                 </p>
               </div>
-              </form>
-              </div>
-              </div>
-              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
-              <footer>
+              <footer className="bottom-0">
               <Link to={"/api/docs"}>
               <p className="flex justify-center">
               Public API Docs
