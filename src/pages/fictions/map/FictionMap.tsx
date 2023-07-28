@@ -310,59 +310,19 @@ export const FictionMap = () => {
   }, [mapInstance]);
 
   return (
-    <div style={{ position: "relative", height: "100vh", width: "100%" }}>
+    <div className="absolute h-[100%] w-[100%]">
       <div
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          height: "60px",
-          backgroundColor: "transparent",
-          zIndex: 2,
-        }}
-      >
+      className="absolute ml-0 mr-0 h-16 bg-transparent z-10">
         <input
-          style={{
-            width: "400px",
-            height: "45px",
-            border: "1px solid #222121",
-            borderRadius: "5px 5px 0px 0px",
-            fontSize: "16px",
-            marginTop: "30px",
-            marginLeft: "30px",
-            flexGrow: 1,
-            color: "white",
-            backgroundColor: "black",
-          }}
-          className="form-control"
-          type="search"
+        className="w-80 h-12 border-solid rounded outline-none ring-4 ring-blue-800 ring-opacity-40 font-sm flex-grow bg-black font-white mt-8 ml-8"
           placeholder="Search"
           aria-label="Search"
         />
         <div
-          style={{
-            width: "400px",
-            position: "absolute",
-            left: 0,
-            right: 0,
-            height: "100px",
-            marginLeft: "30px",
-            backgroundColor: "rgb(18 18 21)",
-          }}
+        className="absolute w-80 mr-0 ml-8 h-28 bg-black"
         ></div>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 1,
-        }}
-      >
-        <div ref={mapRef} style={{ height: "100%", width: "100%" }} />
-      </div>
+      <div ref={mapRef} className="w-full h-full" />  
     </div>
   );
 };
