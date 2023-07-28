@@ -31,27 +31,31 @@ export const Login = () => {
   };
   return (
     <>
-      <div className="container">
-        <div>
-          <div className="flex h-50 shrink-10 items-center justify-center">
-              <img src="../src/assets/fm_h.png" className="h-40 mt-8"></img>
+      <div className="container w-[66%] mt-36 mb-3 mx-36">
+        <div className="grid gap-10 grid-cols-9 grid-flow-col content-center">
+          <div className="col-span-5">
+              <img src="../src/assets/fm_h.png" className="h-60"></img>
           </div>
-          <div className="flex items-center justify-center">
-          <div className="px-8 py-6 mt-4 text-lef shadow-lg">
+          <div className="col-span-4">
             <form onSubmit={handleLogin}>
-                <div className="flex space-x-4">
-                    <label htmlFor="exampleInputEmail1">Email address</label>
-                  <input type="email" className="form-control bg-transparent col" id="exampleInputEmail1" aria-describedby="emailHelp" value={email} onChange={handleEmailChange} />
+                <div className="form-group">
+                    <label className="block" htmlFor="exampleInputEmail1">Email address</label>
+                  <input type="email" 
+                  className="mb-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  id="exampleInputEmail1" 
+                  aria-describedby="emailHelp" 
+                  value={email} onChange={handleEmailChange} />
                 </div>
-                <div className="flex space-x-12">
-                  <label htmlFor="exampleInputPassword1">Password</label>
-                  <input type="password" className="form-control bg-transparent" id="exampleInputPassword1" value={password} onChange={handlePasswordChange} />
+                <div className="form-group">
+                  <label className="block" htmlFor="exampleInputPassword1">Password</label>
+                  <input type="password" 
+                  className="mb-6 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  id="exampleInputPassword1" value={password} onChange={handlePasswordChange} />
                 </div>
                 {error && <div className="error">{error}</div>}
-                <div className="flex items-baseline justify-between"></div>
-                <div className="flex items-baseline justify-between">
-                <button type="submit" className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900" >Login</button>
-                    <a href="#" className="text-sm text-blue-600 hover:underline">Forgot password?</a>
+                <div className="col-span-4">
+                <button type="submit" 
+                 className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-base rounded-lg text-base w-full dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 mb-2">Login</button>
                 </div>
                 <div className="text-center" >
                   <p className="d-block mx-auto">Don't have an account?<Link to={"/signup"} className="item-list">Create one</Link></p>
@@ -59,7 +63,6 @@ export const Login = () => {
               </form>
               </div>  
             </div>
-          </div>
           </div>
       <footer>
         <div className="container">
