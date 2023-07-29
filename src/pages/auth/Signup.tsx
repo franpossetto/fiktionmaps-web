@@ -45,49 +45,66 @@ export const SignUp = () => {
 
   return (
     <>
-      <div className="container w-[66%] mt-36 mb-3 mx-36" >
+      <div className="flex flex-col mt-36 mb-3 mx-28" >
         <div className="grid gap-6 md:grid-cols-2 content-center">
-          <div>
-            <img src="../src/assets/fm_h.png" className="h-60" alt="Logo"></img>
-          </div>
-          <div>
+        <div>
+            <img src="../src/assets/fm_h.png" className={"h-80"} alt="Logo"></img>
+        </div>
+          <div className="mr-40">
             <form onSubmit={handleSignUp}>
-              <div className="form-group">
-                <label className="block" htmlFor="exampleInputEmail1">
+              
+              <div className="mb-5">
+                <label className="block text-sm font-medium leading-6 text-white" htmlFor="exampleInputEmail1">
                   Email address
                 </label>
+                <div className="mt-2">
+
                 <input
                   type="email"
-                  className="mt-2 mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
                   value={email}
                   onChange={handleEmailChange}
                 />
               </div>
-              <div className="form-group">
-                <label className="block" htmlFor="exampleInputPassword1">
+              </div>
+
+              <div className="mb-5">
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-white">
                   Password
                 </label>
+                <div className="text-sm">
+                  <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300">
+                    Forgot password?
+                  </a>
+                </div>
+              </div>
+              <div className="mt-2">
                 <input
                   type="password"
-                  className="mt-2 mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                   id="exampleInputPassword1"
                   value={password}
                   onChange={handlePasswordChange}
                 />
               </div>
-              <div className="form-group">
-                <label className="block" htmlFor="exampleInputPassword2">
+
+              </div>
+              <div className="mb-5">
+                <label className="block text-sm font-medium leading-6 text-white" htmlFor="exampleInputPassword2">
                   Repeat Password
                 </label>
+                <div className="mt-2">
                 <input
                   type="password"
-                  className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                   id="exampleInputPassword2"
                   value={repeatPassword}
                   onChange={handleRepeatPasswordChange}
                 />
+                </div>
               </div>
               {error && (
                 <div className="error">
@@ -97,7 +114,7 @@ export const SignUp = () => {
               <div className="mt-10">
                 <button
                   type="submit"
-                  className="px-44 py-2.5 text-white bg-black rounded-lg hover:bg-blue-900"
+                  className="px-40 py-2.5 text-white bg-black rounded-lg hover:bg-blue-900"
                 >
                   Create an Account
                 </button>
@@ -115,13 +132,6 @@ export const SignUp = () => {
               </div>
               </div>
 
-              <footer>
-              <Link to={"/api/docs"}>
-              <p className="flex justify-center">
-              Public API Docs
-              </p>
-              </Link>
-              </footer>
               </>
               );
   };
