@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import { AuthProvider } from "../contexts/AuthContext";
-import { Login } from "../pages/auth/Login/Login";
+import { Login } from "../pages/auth/Login";
 import Introduction from "../pages/docs/guide/Introduction";
 import Quickstart from "../pages/docs/guide/Quickstart";
 import Authentication from "../pages/docs/guide/Authentication";
@@ -14,46 +14,86 @@ import Fictions from "../pages/docs/resources/Fictions";
 import { FictionMap } from "../pages/fictions/map/FictionMap";
 import { FictionFeed } from "../pages/fictions/feed/FictionFeed";
 import Layout from "../components/shared/Layout/Layout";
+import { ForgotPassword } from "../pages/auth/ForgotPassword";
+import { Profile } from "../pages/user/Profile";
+import Home from "../pages/home/Home";
 
 const AppRouter = () => {
-
-
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={
+          <Route
+            path="/"
+            element={
               <PublicRoute>
                 <Login />
               </PublicRoute>
-            } />
-
-            <Route path="/login" element={
+            }
+          />
+          <Route
+            path="/login"
+            element={
               <PublicRoute>
                 <Login />
               </PublicRoute>
-            } />
+            }
+          />
+          <Route
+            path="/forgotPassword"
+            element={
+              <PublicRoute>
+                <ForgotPassword />
+              </PublicRoute>
+            }
+          />
 
-            <Route path="/signup" element={
+          <Route
+            path="/signup"
+            element={
               <PublicRoute>
                 <SignUp />
               </PublicRoute>
-            } />
+            }
+          />
 
-            <Route path="/search" element={
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/search"
+            element={
               <PrivateRoute>
                 <FictionMap />
               </PrivateRoute>
-            } />
+            }
+          />
 
-          <Route path="/explore" element={
+          <Route
+            path="/explore"
+            element={
               <PrivateRoute>
                 <FictionFeed />
               </PrivateRoute>
-            } />
+            }
+          />
+
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
 
           <Route path="/add" element={<AddFiction />} />
-          <Route path="/content" element={<Layout />} />
           <Route path="/api/docs" element={<APIDocs />}>
             <>
               <Route path="/api/docs/introduction" element={<Introduction />} />
