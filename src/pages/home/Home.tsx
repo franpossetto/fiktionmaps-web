@@ -25,7 +25,7 @@ const actions = [
     initials: "S",
     href: "#",
     desc: "Movie, TVShow or Book",
-    bgColor: "bg-fikBlue",
+    bgColor: "bg-fikLightBlue",
     icon: PlusCircleIcon,
   },
 ];
@@ -82,7 +82,7 @@ export default function Home() {
         ))}
       </ul>
       <h1 className="text-black text-2xl font-semibold mt-14 mb-3">
-        Join the Community
+        Help the Community
       </h1>
       <h2 className="text-base text-gray-900 mb-5">
         You can also collaborate with the community, adding scenes in the ciries
