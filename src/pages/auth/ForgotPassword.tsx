@@ -79,7 +79,7 @@ export const ForgotPassword = () => {
               </div>
               <div className="text-center">
                 <p className="text-gray-300">
-                  You should receive an email soon.
+                  After reset, you should receive an email soon.
                   <Link
                     to={"/login"}
                     className="text-blue-500 hover:text-blue-400 ml-2 font-semibold"
