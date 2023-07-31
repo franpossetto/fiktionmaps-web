@@ -1,8 +1,7 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import { useEffect, useRef, useState } from "react";
-import "../feed/FictionFeed.css";
 
-export const FictionMap = () => {
+export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
 

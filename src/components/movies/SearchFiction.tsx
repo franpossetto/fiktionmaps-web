@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import TMDBService from "../../services/TMDBService";
 import "./SearchFiction.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import { MediaType } from "../../types/MediaType";
 import { Fiction } from "../../types/Fiction";
 import { Season, TVSeason } from "../../types/Season";

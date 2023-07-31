@@ -14,35 +14,30 @@ import {
   PlusCircleIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import LogoutModal from "../../../pages/auth/LogoutModal";
+import LogoutModal from "../../pages/auth/LogoutModal";
+import { useAuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const navigation = [
   {
     name: "Home",
     href: "/home",
     icon: HomeIcon,
-    current: true,
+    current: location.pathname === "/home",
     openModal: false,
   },
   {
     name: "Profile",
     href: "/profile",
     icon: UsersIcon,
-    current: false,
+    current: location.pathname === "/profile",
     openModal: false,
   },
   {
     name: "Map",
     href: "/search",
     icon: MapIcon,
-    current: false,
-    openModal: false,
-  },
-  {
-    name: "Create",
-    href: "#",
-    icon: PlusCircleIcon,
-    current: false,
+    current: location.pathname === "/search",
     openModal: false,
   },
   {
@@ -65,7 +60,20 @@ interface SideBarProps {
 
 export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [error, setError] = useState("");
+  const { logout } = useAuthContext();
+  const navigate = useNavigate();
 
+  async function handleLogout() {
+    setError("");
+
+    try {
+      await logout();
+      navigate("/login");
+    } catch {
+      setError("Failed to log out");
+    }
+  }
   return (
     <>
       <div>
@@ -127,7 +135,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       <img
                         src="./src/assets/fm_h2.png"
                         alt="f"
-                        className="h-14 mt-8"
+                        className="h-10 mt-8"
                       />
                     </div>
                     <nav className="flex flex-1 flex-col">
@@ -142,11 +150,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                                   : "text-gray-400 hover:text-white hover:bg-gray-800",
                                 "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                               )}
-                              onClick={(e) => {
-                                if (item.openModal) {
-                                  e.preventDefault();
-                                  setModalOpen(true);
-                                }
+                              onClick={() => {
+                                handleLogout();
                               }}
                             >
                               <item.icon
@@ -169,7 +174,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto lg:bg-gray-900 shadow-md shadow-slate-900 lg:pb-4">
           <div className="flex h-16 shrink-0 items-center justify-center">
-            <img src="./src/assets/fm_h2.png" alt="f" className="h-14 mt-8" />
+            <img src="./src/assets/fm_h2.png" alt="f" className="h-10 mt-8" />
           </div>
           <nav className="mt-8">
             <ul role="list" className="flex flex-col items-center space-y-1">

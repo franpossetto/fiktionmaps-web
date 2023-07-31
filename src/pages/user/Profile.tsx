@@ -1,13 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { MapPinIcon } from "@heroicons/react/24/outline";
+import { UserService } from "../../services/UserService";
 
 export const Profile = () => {
-  const [error, setError] = useState("");
-  const { logout } = useAuthContext();
-  const navigate = useNavigate();
-
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState("Francisco Possetto");
 
@@ -20,20 +17,20 @@ export const Profile = () => {
     console.log("Saved");
   };
 
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      navigate("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
-
   const handleCancel = () => {
     setEditing(false);
   };
+
+  const GetUsers = async () => {
+    const userService = new UserService();
+    const response = await userService.getCurrentUser();
+    console.log(response);
+  };
+
+  useEffect(() => {
+    GetUsers();
+  }, []);
+
   return (
     <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg">
@@ -49,7 +46,7 @@ export const Profile = () => {
           <dl className="divide-y divide-gray-100">
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-900">Full name</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <div className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                 {editing ? (
                   <input
                     type="text"
@@ -62,7 +59,7 @@ export const Profile = () => {
                     {name}
                   </dd>
                 )}
-              </dd>
+              </div>
             </div>
 
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

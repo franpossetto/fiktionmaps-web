@@ -29,7 +29,7 @@ export const Login = () => {
     if (error) {
       setError("El correo electrónico o la contraseña son incorrectos");
     } else {
-      navigate("/profile");
+      navigate("/home");
       console.log(user);
     }
   };
