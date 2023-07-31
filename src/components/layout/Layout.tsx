@@ -10,7 +10,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <>
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <main className="bg-slate-200 h-screen">{children}</main>
+      <main className="bg-slate-200 min-h-screen pb-[100px]">{children}</main>
     </>
   );
 }
