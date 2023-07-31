@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
-import Layout from "../components/shared/Layout";
+import Layout from "../components/layout/Layout";
 
 const PrivateRoute = ({ children }: any) => {
   const { user } = useAuthContext();
