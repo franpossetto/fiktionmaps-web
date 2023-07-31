@@ -10,6 +10,7 @@ import Home from "../pages/home/Home";
 import { AddScene } from "../pages/scenes/AddScene";
 import { Map } from "../pages/map/Map";
 import { AddFiction } from "../pages/fictions/AddFiction";
+import FictionTable from "../pages/fictions/FictionTable";
 
 const AppRouter = () => {
   return (
@@ -81,6 +82,14 @@ const AppRouter = () => {
             element={
               <PrivateRoute>
                 <AddFiction />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/fictions/table"
+            element={
+              <PrivateRoute>
+                <FictionTable />
               </PrivateRoute>
             }
           />

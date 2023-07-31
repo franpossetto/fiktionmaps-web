@@ -11,7 +11,7 @@ const items = [
   {
     name: "Fictions",
     initials: "F",
-    href: "#",
+    href: "/fictions/table",
     desc: "16 Fictions",
     bgColor: "bg-fikRed",
     icon: ListBulletIcon,
@@ -114,7 +114,13 @@ export default function Home() {
               >
                 {item.initials}
               </div>
-              <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
+              <div
+                className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white cursor-pointer"
+                onClick={() => {
+                  navigate(item.href);
+                  console.log(item.href);
+                }}
+              >
                 <div className="flex-1 truncate px-4 py-2 text-sm">
                   <a
                     href={item.href}
@@ -145,6 +151,7 @@ export default function Home() {
           You can also collaborate with the community, adding scenes in the
           ciries you visit.
         </h2>
+
         <ul role="list" className="mt-3 grid grid-cols-1 gap-5 ">
           {actions.map((item) => (
             <li key={item.name} className="flex w-1/3 rounded-md shadow-sm">
