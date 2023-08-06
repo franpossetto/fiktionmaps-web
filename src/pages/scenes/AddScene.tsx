@@ -1,4 +1,9 @@
+import { useEffect, useState } from "react";
+import { SearchPlace } from "../../components/places/SearchPlace";
+
 export const AddScene = () => {
+  const [place, setPlace] = useState();
+
   return (
     <form className="pl-32 pt-6 lg:w-[900px] w-[90%]">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg px-4 py-6 sm:px-6">
@@ -112,28 +117,23 @@ export const AddScene = () => {
           >
             Location
           </label>
-          <input
-            type="text"
-            name="location"
-            id="location"
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          />
-        </div>
+          <SearchPlace setPlace={setPlace} place={place} />
 
-        {/* Buttons at the bottom */}
-        <div className="flex justify-end gap-x-6 mt-5">
-          <button
-            type="button"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Create
-          </button>
+          {/* Buttons at the bottom */}
+          <div className="flex justify-end gap-x-6 mt-5">
+            <button
+              type="button"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Create
+            </button>
+          </div>
         </div>
       </div>
     </form>

@@ -1,9 +1,50 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import { useEffect, useRef, useState } from "react";
-
+import Search from "./Search";
+import { FictionService } from "../../services/FictionService";
+export interface Fiction {
+  id: number;
+  name: string;
+  imgUrl: string;
+  position: {
+    lat: number;
+    lng: number;
+  };
+  type: string;
+}
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
+  const [fictions, setFictions] = useState<Fiction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const GetFictions = async () => {
+    setIsLoading(true);
+    const fictionService = new FictionService();
+    const response = await fictionService.getFictionsByCity(1);
+
+    const fictions: Fiction[] = response.map((f: any) => {
+      const imgUrl = `http://localhost:8081${f.imgUrl}`;
+
+      return {
+        id: f.id,
+        name: f.name,
+        imgUrl: imgUrl,
+        position: {
+          lat: f.scenes[0].location.latitude,
+          lng: f.scenes[0].location.longitude,
+        },
+        type: f.type,
+      };
+    });
+
+    setFictions(fictions);
+    setIsLoading(false); // Desactivar la carga
+  };
+
+  useEffect(() => {
+    GetFictions();
+  }, []);
 
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
@@ -12,13 +53,6 @@ export const Map = () => {
   });
 
   const manhattanCoordinates = { lat: 40.7831, lng: -73.9712 };
-
-  const markersData = [
-    { position: { lat: 40.7831, lng: -73.9643 }, title: "Marker 1" },
-    { position: { lat: 40.7794, lng: -73.9631 }, title: "Marker 2" },
-    { position: { lat: 40.7681, lng: -73.9558 }, title: "Marker 3" },
-    { position: { lat: 40.7597, lng: -73.9727 }, title: "Marker 4" },
-  ];
 
   useEffect(() => {
     loader.load().then((google) => {
@@ -323,11 +357,11 @@ export const Map = () => {
   }, []);
 
   useEffect(() => {
-    if (mapInstance) {
-      markersData.forEach((markerData) => {
+    if (mapInstance && fictions) {
+      fictions.forEach((fiction) => {
         new google.maps.Marker({
-          position: markerData.position,
-          title: markerData.title,
+          position: fiction.position,
+          title: fiction.name,
           map: mapInstance,
         });
       });
@@ -336,14 +370,7 @@ export const Map = () => {
 
   return (
     <div className="absolute h-[100%] w-[100%]">
-      {/* <div className="absolute ml-0 mr-0 h-16 bg-transparent z-10">
-        <input
-          className="w-80 h-12 border-solid rounded outline-none ring-4 ring-blue-800 ring-opacity-40 font-sm flex-grow bg-black font-white mt-8 ml-8"
-          placeholder="Search"
-          aria-label="Search"
-        />
-        <div className="absolute w-80 mr-0 ml-8 h-28 bg-black"></div>
-      </div> */}
+      {!isLoading && <Search fictionList={fictions} />}
       <div ref={mapRef} className="w-full h-full" />
     </div>
   );
