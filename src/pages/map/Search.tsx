@@ -17,7 +17,7 @@ export default function Search({
 }: SearchProps) {
   const [query, setQuery] = useState("");
 
-  const filteredFictions =
+  let filteredFictions =
     query === ""
       ? []
       : fictions.filter((fiction: any) => {
@@ -28,6 +28,8 @@ export default function Search({
     <Combobox
       onChange={(fiction: any) => {
         setSelectedFiction([fiction]);
+        filteredFictions = [fiction];
+        setQuery(fiction.name);
       }}
     >
       <Combobox.Input
@@ -39,7 +41,7 @@ export default function Search({
       {filteredFictions.length > 0 && (
         <Combobox.Options
           static
-          className="ml-24 w-[360px] mb-2 max-h-72 scroll-py-2 bg-slate-900 overflow-y-auto py-2 text-sm text-white"
+          className="ml-24 w-[360px] mb-2 h-auto max-h-80 scroll-py-2 bg-slate-900 overflow-y-auto py-2 text-sm text-white"
         >
           {filteredFictions.map((fiction: any) => (
             <Combobox.Option
