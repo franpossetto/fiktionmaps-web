@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { UserDTO } from './dto/UserDTO';
-import _axios from '../config/axios';
+import {axiosWithToken, axiosWithoutToken} from '../config/axios';
 import { auth } from '../config/firebase';
 
 export class UserService {
@@ -8,7 +8,7 @@ export class UserService {
 
     async create(data: UserDTO): Promise<any> {
         try {
-            const response = await axios.post(`${this.baseUrl}/users`, data);
+            const response = await axiosWithoutToken.post(`${this.baseUrl}/users`, data);
             return response.data;
         } catch (error) {
             throw error;
@@ -17,7 +17,7 @@ export class UserService {
 
     async getAll(): Promise<any> {
         try {
-            const response = await _axios.get(`/users`);
+            const response = await axiosWithToken.get(`/users`);
             return response.data;
         } catch (error) {
             throw error;
@@ -27,7 +27,7 @@ export class UserService {
     async getCurrentUser(): Promise<any> {
         try {
             const uid = auth.currentUser?.uid;
-            const response = await _axios.get(`/users/${uid}`);
+            const response = await axiosWithToken.get(`/users/${uid}`);
             return response.data;
         } catch (error) {
             throw error;

@@ -3,12 +3,16 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import { auth } from './firebase';
 
-const _axios = axios.create({
+const axiosWithToken = axios.create({
   baseURL: 'http://localhost:8081/api/v1', 
 });
 
 
-_axios.interceptors.request.use(
+const axiosWithoutToken = axios.create({
+  baseURL: 'http://localhost:8081/api/v1', 
+});
+
+axiosWithToken.interceptors.request.use(
     async (config) => {
     const token = await auth.currentUser?.getIdToken();
     if (token) {
@@ -21,4 +25,4 @@ _axios.interceptors.request.use(
   }
 );
 
-export default _axios;
+export {axiosWithToken, axiosWithoutToken};

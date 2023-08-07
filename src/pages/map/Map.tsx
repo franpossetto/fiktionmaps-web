@@ -1,7 +1,8 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import { useEffect, useRef, useState } from "react";
 import Search from "./Search";
-import { FictionService } from "../../services/FictionService";
+import { useFictionService } from "../../services/useFictionService";
+
 export interface Fiction {
   id: number;
   name: string;
@@ -15,36 +16,32 @@ export interface Fiction {
 export const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const [fictions, setFictions] = useState<Fiction[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const GetFictions = async () => {
-    setIsLoading(true);
-    const fictionService = new FictionService();
-    const response = await fictionService.getFictionsByCity(1);
-
-    const fictions: Fiction[] = response.map((f: any) => {
-      const imgUrl = `http://localhost:8081${f.imgUrl}`;
-
-      return {
-        id: f.id,
-        name: f.name,
-        imgUrl: imgUrl,
-        position: {
-          lat: f.scenes[0].location.latitude,
-          lng: f.scenes[0].location.longitude,
-        },
-        type: f.type,
-      };
-    });
-
-    setFictions(fictions);
-    setIsLoading(false); // Desactivar la carga
-  };
+  const { getFictionsByCity } = useFictionService();
+  const { loading, data, error } = getFictionsByCity(1);
+  const [fictions, setFiction] = useState<Fiction[]>([]);
+  const [fictionFiltered, setfictionFiltered] = useState<Fiction[]>([]);
+  const [openSearch, setOpenSearch] = useState(false);
 
   useEffect(() => {
-    GetFictions();
-  }, []);
+    console.log(data);
+    if (data) {
+      const f = data.map((f: any) => {
+        const imgUrl = `http://localhost:8081${f.imgUrl}`;
+        return {
+          id: f.id,
+          name: f.name,
+          imgUrl: imgUrl,
+          position: {
+            lat: f.scenes[0].location.latitude,
+            lng: f.scenes[0].location.longitude,
+          },
+          type: f.type,
+        };
+      });
+      setFiction(f);
+      setfictionFiltered(f);
+    }
+  }, [data]);
 
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
@@ -356,22 +353,37 @@ export const Map = () => {
     });
   }, []);
 
+  const markersRef = useRef<google.maps.Marker[]>([]);
+
   useEffect(() => {
-    if (mapInstance && fictions) {
-      fictions.forEach((fiction) => {
-        new google.maps.Marker({
+    if (mapInstance && fictionFiltered) {
+      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current = [];
+
+      // Agregar los nuevos marcadores
+      fictionFiltered.forEach((fiction) => {
+        console.log(fiction);
+        const marker = new google.maps.Marker({
           position: fiction.position,
           title: fiction.name,
           map: mapInstance,
         });
+        markersRef.current.push(marker);
       });
     }
-  }, [mapInstance]);
+  }, [mapInstance, fictionFiltered]);
 
   return (
-    <div className="absolute h-[100%] w-[100%]">
-      {!isLoading && <Search fictionList={fictions} />}
-      <div ref={mapRef} className="w-full h-full" />
+    <div className="absolute h-[100%] w-[100%] flex ">
+      <div className="w-[480px] bg-transparent z-10">
+        {!loading && (
+          <Search
+            fictionList={fictions}
+            setSelectedFiction={setfictionFiltered}
+          />
+        )}
+      </div>
+      <div ref={mapRef} className="absolute w-full h-full z-1" />
     </div>
   );
 };

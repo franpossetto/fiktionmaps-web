@@ -8,12 +8,14 @@ function classNames(...classes: (string | boolean)[]) {
 }
 interface SearchProps {
   fictionList: Fiction[];
+  setSelectedFiction: React.Dispatch<React.SetStateAction<Fiction[]>>;
 }
 
-export default function Search({ fictionList }: SearchProps) {
+export default function Search({
+  fictionList: fictions,
+  setSelectedFiction,
+}: SearchProps) {
   const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(true);
-  const [fictions, setFictions] = useState<Fiction[]>(fictionList);
 
   const filteredFictions =
     query === ""
@@ -23,93 +25,54 @@ export default function Search({ fictionList }: SearchProps) {
         });
 
   return (
-    <Transition.Root
-      show={open}
-      as={Fragment}
-      afterLeave={() => setQuery("")}
-      appear
+    <Combobox
+      onChange={(fiction: any) => {
+        setSelectedFiction([fiction]);
+      }}
     >
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+      <Combobox.Input
+        className="mt-6 ml-24 w-[360px] border-0 bg-slate-950 px-4 py-2.5 text-white focus:ring-0 sm:text-sm"
+        placeholder="Search..."
+        onChange={(event) => setQuery(event.target.value)}
+      />
+
+      {filteredFictions.length > 0 && (
+        <Combobox.Options
+          static
+          className="ml-24 w-[360px] mb-2 max-h-72 scroll-py-2 bg-slate-900 overflow-y-auto py-2 text-sm text-white"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity" />
-        </Transition.Child>
+          {filteredFictions.map((fiction: any) => (
+            <Combobox.Option
+              key={fiction.id}
+              value={fiction}
+              className={({ active }) =>
+                classNames(
+                  "cursor-default select-none rounded-md px-4 py-2 flex flex-row",
+                  active && "bg-slate-900 text-white"
+                )
+              }
+            >
+              <img src={fiction.imgUrl} alt="" className="h-14 w-auto" />
+              <div className="flex flex-col">
+                <h1 className="px-2 font-semibold mb-1">{fiction.name}</h1>
+                <p className="px-2 text-slate-500">{fiction.type}</p>
+              </div>
+            </Combobox.Option>
+          ))}
+        </Combobox.Options>
+      )}
 
-        <div className="fixed inset-0 z-10 overflow-y-auto p-4 sm:p-6 md:p-20">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            <Dialog.Panel className="mx-auto max-w-xl transform rounded-xl bg-white p-2 shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-              <Combobox
-                onChange={(fiction: any) => (window.location = fiction.url)}
-              >
-                <Combobox.Input
-                  className="w-full rounded-md border-0 bg-gray-100 px-4 py-2.5 text-gray-900 focus:ring-0 sm:text-sm"
-                  placeholder="Search..."
-                  onChange={(event) => setQuery(event.target.value)}
-                />
-
-                {filteredFictions.length > 0 && (
-                  <Combobox.Options
-                    static
-                    className="-mb-2 max-h-72 scroll-py-2 overflow-y-auto py-2 text-sm text-gray-800"
-                  >
-                    {filteredFictions.map((fiction: any) => (
-                      <Combobox.Option
-                        key={fiction.id}
-                        value={fiction}
-                        className={({ active }) =>
-                          classNames(
-                            "cursor-default select-none rounded-md px-4 py-2 flex flex-row",
-                            active && "bg-slate-900 text-white"
-                          )
-                        }
-                      >
-                        <img
-                          src={fiction.imgUrl}
-                          alt=""
-                          className="h-14 w-auto"
-                        />
-                        <div className="flex flex-col">
-                          <h1 className="px-2 font-semibold mb-1">
-                            {fiction.name}
-                          </h1>
-                          <p className="px-2 text-slate-500">{fiction.type}</p>
-                        </div>
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
-                )}
-
-                {query !== "" && filteredFictions.length === 0 && (
-                  <div className="px-4 py-14 text-center sm:px-14">
-                    <UsersIcon
-                      className="mx-auto h-6 w-6 text-gray-400"
-                      aria-hidden="true"
-                    />
-                    <p className="mt-4 text-sm text-gray-900">
-                      No people found using that search term.
-                    </p>
-                  </div>
-                )}
-              </Combobox>
-            </Dialog.Panel>
-          </Transition.Child>
+      {query !== "" && filteredFictions.length === 0 && (
+        <div className="px-4 py-14 text-center sm:px-14">
+          <UsersIcon
+            className="mx-auto h-6 w-6 text-gray-400"
+            aria-hidden="true"
+          />
+          <p className="mt-4 text-sm text-gray-900">
+            No Fictions found using that search term.
+          </p>
         </div>
-      </Dialog>
-    </Transition.Root>
+      )}
+    </Combobox>
   );
 }
