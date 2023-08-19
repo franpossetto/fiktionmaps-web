@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { useFictionService } from "../../services/useFictionService";
+
 const fictions = [
   {
     title: "Pulp Fiction",
@@ -20,6 +23,10 @@ const fictions = [
 ];
 
 export default function FictionTable() {
+  const { getFictions } = useFictionService();
+  const { loading, data, error } = getFictions();
+
+  console.log(data);
   return (
     <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg p-10">
@@ -54,12 +61,12 @@ export default function FictionTable() {
                     >
                       Title
                     </th>
-                    <th
+                    {/* <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
                       Type
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -81,30 +88,38 @@ export default function FictionTable() {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {fictions.map((fiction) => (
-                    <tr key={fiction.title} className="even:bg-gray-50">
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                        {fiction.title}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {fiction.type}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {fiction.year}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {fiction.scenes}
-                      </td>
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                        <a
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          Edit<span className="sr-only">, {fiction.title}</span>
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
+                  {!loading ?
+                    data.map((fiction:any) => (
+                      <tr key={fiction.id} className="even:bg-gray-50">
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                          {fiction.name}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {fiction.type}
+                        </td>
+                        {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {fiction.year}
+                        </td> */}
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {fiction.scenes.lenght}
+                        </td>
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                          <a
+                            href="#"
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Edit<span className="sr-only">, {fiction.title}</span>
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  : 
+                  <tr>
+                  <td colSpan={5}>
+                    <h1>loading</h1>
+                  </td>
+                </tr>
+                  }
                 </tbody>
               </table>
             </div>

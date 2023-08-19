@@ -6,5 +6,9 @@ export const useFictionService = () => {
         return useAxios({ url: `/fictions?cityId=${fictionId}`, config: { method: "get" } });
     }
 
-    return {getFictionsByCity};
+    const getFictions = (): useAxiosResponse<any> => {
+        return useAxios({ url: "/fictions", config: { method: "get" } });
+    }
+
+    return {getFictionsByCity, getFictions};
 }
