@@ -1,14 +1,22 @@
+import { axiosWithToken } from '../config/axios';
 import { useAxios, useAxiosResponse } from '../config/useAxios';
 
 export const useFictionService = () => {
 
-    const getFictionsByCity = (fictionId: number): useAxiosResponse<any> => {
-        return useAxios({ url: `/fictions?cityId=${fictionId}`, config: { method: "get" } });
+    const getFictionsByCity = (cityId: number): useAxiosResponse<any> => {
+        return useAxios({ url: `/fictions?cityId=${cityId}`, config: { method: "get" } });
     }
 
     const getFictions = (): useAxiosResponse<any> => {
         return useAxios({ url: "/fictions", config: { method: "get" } });
     }
 
-    return {getFictionsByCity, getFictions};
+    const createFiction = (fiction: any) => {
+        return axiosWithToken.post("/fictions", fiction);
+    } 
+
+    const deleteFiction = (fictionId: any) => {
+        return axiosWithToken.delete(`/fictions/${fictionId}`);
+    }
+    return {getFictionsByCity, getFictions, createFiction, deleteFiction};
 }
