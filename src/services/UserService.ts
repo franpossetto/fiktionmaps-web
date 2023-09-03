@@ -1,10 +1,9 @@
-import axios from 'axios';
 import { UserDTO } from './dto/UserDTO';
 import {axiosWithToken, axiosWithoutToken} from '../config/axios';
 import { auth } from '../config/firebase';
 
 export class UserService {
-    baseUrl: string = 'http://localhost:8080/api/v1';
+    baseUrl: string = 'http://localhost:8081/api/v1';
 
     async create(data: UserDTO): Promise<any> {
         try {
@@ -28,6 +27,7 @@ export class UserService {
         try {
             const uid = auth.currentUser?.uid;
             const response = await axiosWithToken.get(`/users/${uid}`);
+            console.log(response);
             return response.data;
         } catch (error) {
             throw error;

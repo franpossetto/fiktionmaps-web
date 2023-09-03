@@ -7,29 +7,28 @@ import { UserService } from "../../services/UserService";
 export const Profile = () => {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState("Francisco Possetto");
+  const { user } = useAuthContext();
+  console.log(user);
 
   const handleEdit = () => {
     setEditing(true);
   };
-
+  
   const handleSave = () => {
     setEditing(false);
     console.log("Saved");
   };
-
+  
   const handleCancel = () => {
     setEditing(false);
   };
-
+  
   const GetUsers = async () => {
     const userService = new UserService();
     const response = await userService.getCurrentUser();
     console.log(response);
   };
-
-  useEffect(() => {
-    GetUsers();
-  }, []);
+  
 
   return (
     <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
@@ -56,7 +55,7 @@ export const Profile = () => {
                   />
                 ) : (
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 h-10 flex items-center">
-                    {name}
+                    {user.displayName  || "Mr nobody"}
                   </dd>
                 )}
               </div>
@@ -67,7 +66,7 @@ export const Profile = () => {
                 Email address
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                franciscopossetto@gmail.com
+                {user.email}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
