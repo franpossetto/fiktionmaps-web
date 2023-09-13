@@ -11,7 +11,8 @@ interface UseAxiosProps<T> {
 export interface useAxiosResponse<T> {
     loading: boolean,
     data: T | null,
-    error: AxiosError | null
+    error: AxiosError | null,
+    // retornr un re fetch -> pasar al use effect la fucnion
 } 
 
 export const useAxios = <T>({tokenRequired=true, url, config}: UseAxiosProps<T> ) => {

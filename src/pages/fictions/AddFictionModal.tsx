@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useFictionService } from "../../services/useFictionService";
 
@@ -29,6 +29,16 @@ const AddFictionModal: React.FC<LogoutModalProps> = ({
       const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setType(event.target.value);
       };
+
+      const cleanInputs = () => {
+        setFictionName("");
+        setType("");
+        setYear("");
+      }
+
+      useEffect( () => {
+        cleanInputs();
+      }, [modalOpen])
       
 
     enum Type {
@@ -51,8 +61,15 @@ const AddFictionModal: React.FC<LogoutModalProps> = ({
         })
         .catch((error) => {
             console.error('Error creating fiction:', error);
-        });
+        }).finally(()=>{
+          cleanInputs();
+        })
       };
+
+      const handleCancel = () => {
+        setModalOpen(false);
+        cleanInputs();
+      }
 
 
     
@@ -124,7 +141,7 @@ const AddFictionModal: React.FC<LogoutModalProps> = ({
                     >
                         Year
                     </label>
-                    <select className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                    <select className="block appearance-none w-full text-gray-900 bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                         id="fiction-year"
                         value={year}
                         onChange={handleYearChange}>
@@ -139,7 +156,7 @@ const AddFictionModal: React.FC<LogoutModalProps> = ({
                     </select>
                     <label htmlFor="fiction-type"
                         className="block text-sm font-medium leading-6 text-gray-900">Type</label>
-                    <select className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                    <select className="block appearance-none w-full text-gray-900 bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                         id="fiction-type"
                         value={type}
                         onChange={handleTypeChange}>
@@ -167,12 +184,12 @@ const AddFictionModal: React.FC<LogoutModalProps> = ({
                     handleCreateFictionClick()
                 }}
               >
-                Add Fiction2
+                Add Fiction
               </button>
               <button
                 type="button"
                 className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-sm"
-                onClick={() => setModalOpen(false)}
+                onClick={() => handleCancel()}
               >
                 Cancel
               </button>

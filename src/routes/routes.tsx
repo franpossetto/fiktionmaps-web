@@ -8,9 +8,9 @@ import { ForgotPassword } from "../pages/auth/ForgotPassword";
 import { Profile } from "../pages/user/Profile";
 import Home from "../pages/home/Home";
 import { AddScene } from "../pages/scenes/AddScene";
-import { Map } from "../pages/map/Map";
 import { AddFiction } from "../pages/fictions/AddFiction";
 import FictionTable from "../pages/fictions/FictionTable";
+import { MapView } from "../pages/map/MapView";
 
 const AppRouter = () => {
   return (
@@ -64,7 +64,7 @@ const AppRouter = () => {
             path="/search"
             element={
               <PrivateRoute>
-                <Map />
+                <MapView />
               </PrivateRoute>
             }
           />

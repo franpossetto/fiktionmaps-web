@@ -26,7 +26,7 @@ export default function FictionTable() {
       const sortedFictions: Fiction[] = [...data].sort((a, b) => a.name.localeCompare(b.name));
       setFictions(sortedFictions);
     }
-  }, [data, modalAddFictionOpen]);
+  }, [data]);
 
   const _deleteFiction = (fiction: any) => {
     setSelectedFiction(fiction);
