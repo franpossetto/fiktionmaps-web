@@ -11,6 +11,7 @@ import { AddScene } from "../pages/scenes/AddScene";
 import { AddFiction } from "../pages/fictions/AddFiction";
 import FictionTable from "../pages/fictions/FictionTable";
 import { MapView } from "../pages/map/MapView";
+import SceneTable from "../pages/scenes/SceneTable";
 
 const AppRouter = () => {
   return (
@@ -90,6 +91,14 @@ const AppRouter = () => {
             element={
               <PrivateRoute>
                 <FictionTable />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/scenes/table"
+            element={
+              <PrivateRoute>
+                <SceneTable />
               </PrivateRoute>
             }
           />

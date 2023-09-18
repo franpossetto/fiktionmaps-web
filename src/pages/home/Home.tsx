@@ -27,7 +27,7 @@ const items = [
   {
     name: "Scenes",
     initials: "S",
-    href: "#",
+    href: "/scenes/table",
     desc: "12 scenes",
     bgColor: "bg-fikLightBlue",
     icon: ListBulletIcon,
