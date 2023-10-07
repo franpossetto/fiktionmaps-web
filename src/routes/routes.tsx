@@ -12,106 +12,107 @@ import { AddFiction } from "../pages/fictions/AddFiction";
 import FictionTable from "../pages/fictions/FictionTable";
 import { MapView } from "../pages/map/MapView";
 import SceneTable from "../pages/scenes/SceneTable";
+import { SceneController } from "../contexts/SceneContext";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/forgotPassword"
-            element={
-              <PublicRoute>
-                <ForgotPassword />
-              </PublicRoute>
-            }
-          />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/forgotPassword"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
+            </PublicRoute>
+          }
+        />
 
-          <Route
-            path="/signup"
-            element={
-              <PublicRoute>
-                <SignUp />
-              </PublicRoute>
-            }
-          />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <SignUp />
+            </PublicRoute>
+          }
+        />
 
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            }
-          />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
 
-          <Route
-            path="/search"
-            element={
-              <PrivateRoute>
-                <MapView />
-              </PrivateRoute>
-            }
-          />
+        <Route
+          path="/search"
+          element={
+            <PrivateRoute>
+              <MapView />
+            </PrivateRoute>
+          }
+        />
 
-          <Route
-            path="/home"
-            element={
-              <PrivateRoute>
-                <Home />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/fictions/add"
-            element={
-              <PrivateRoute>
-                <AddFiction />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/fictions/table"
-            element={
-              <PrivateRoute>
-                <FictionTable />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/scenes/table"
-            element={
-              <PrivateRoute>
-                <SceneTable />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/scenes/add"
-            element={
-              <PrivateRoute>
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/fictions/add"
+          element={
+            <PrivateRoute>
+              <AddFiction />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/fictions/table"
+          element={
+            <PrivateRoute>
+              <FictionTable />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/scenes/table"
+          element={
+            <PrivateRoute>
+              <SceneTable />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/scenes/add"
+          element={
+            <PrivateRoute>
+              <SceneController>
                 <AddScene />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </AuthProvider>
+              </SceneController>
+            </PrivateRoute>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 };

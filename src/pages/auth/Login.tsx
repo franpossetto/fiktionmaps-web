@@ -1,4 +1,3 @@
-//Login.tsx
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useState } from "react";
@@ -25,7 +24,6 @@ export const Login = () => {
   const handleLogin = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
     const { user, error } = await loginWithEmailAndPassword(email, password);
-
     if (error) {
       setError("El correo electrónico o la contraseña son incorrectos");
     } else {

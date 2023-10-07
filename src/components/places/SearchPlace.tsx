@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { LocationDTO } from "../../types/dto/LocationDTO";
 import { MapsProvider } from "../../types/providers/MapsProvider";
-import PlaceContext from "../../contexts/PlaceContext";
+import { useSceneController } from "../../contexts/SceneContext";
 
-export const SearchPlace = ({ setPlace, reset }: any) => {
-  const formData = useContext(PlaceContext);
+export const SearchPlace = ({ reset }: any) => {
+  const { place, setPlace: setPlc } = useSceneController();
 
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
@@ -53,7 +53,6 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
     if (place) {
       setAutoCompleteValue(place.formatted_address);
 
-      // Find the locality in the address components
       let locality = "";
       let country = "";
 
@@ -74,10 +73,7 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
         city: locality,
         country: country,
       };
-
-      console.log(place);
-
-      setPlace({ ...formData, place: location });
+      setPlc({ place: location });
     }
   };
 

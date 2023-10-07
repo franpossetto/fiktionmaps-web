@@ -1,34 +1,32 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { UserService } from "../../services/UserService";
 
 export const Profile = () => {
   const [editing, setEditing] = useState(false);
-  const [name, setName] = useState("Francisco Possetto");
+  const [name, setName] = useState("");
   const { user } = useAuthContext();
   console.log(user);
 
   const handleEdit = () => {
     setEditing(true);
   };
-  
+
   const handleSave = () => {
     setEditing(false);
     console.log("Saved");
   };
-  
+
   const handleCancel = () => {
     setEditing(false);
   };
-  
-  const GetUsers = async () => {
+
+  const GetUser = async () => {
     const userService = new UserService();
     const response = await userService.getCurrentUser();
     console.log(response);
   };
-  
 
   return (
     <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
@@ -55,7 +53,7 @@ export const Profile = () => {
                   />
                 ) : (
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 h-10 flex items-center">
-                    {user.displayName  || "Mr nobody"}
+                    {user.displayName || "Mr nobody"}
                   </dd>
                 )}
               </div>
