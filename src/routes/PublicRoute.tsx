@@ -5,8 +5,10 @@ const PublicRoute = ({ children }: any) => {
   const { user } = useAuthContext();
   const location = useLocation();
 
-  return (
-    !user ? children : <Navigate to="/api/docs" state={{ from: location }} replace={true} />
+  return !user ? (
+    children
+  ) : (
+    <Navigate to="/profile" state={{ from: location }} replace={true} />
   );
 };
 

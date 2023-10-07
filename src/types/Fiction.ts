@@ -1,14 +1,15 @@
 import { EpisodeDTO } from "./dto/FictionDTO";
 import { MediaType } from "./MediaType";
 import { FictionProvider } from "./providers/FictionProvider";
+import { Scene } from "./Scene";
 
 export interface Fiction {
-    title: string;
+    name: string;
     id: number;
-    img: string;
+    imgUrl: string;
     overview: string;
     provider?: FictionProvider,
     type?: MediaType,
+    scenes?: Scene[]
     episode?: EpisodeDTO,
 }
-  
