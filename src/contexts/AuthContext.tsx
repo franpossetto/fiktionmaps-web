@@ -1,8 +1,21 @@
-import React, { createContext, useState, useEffect, ReactNode, useContext } from 'react';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
-import { auth } from '../firebase';
-import { UserService } from '../services/UserService';
-import { UserDTO, UserRole } from '../services/dto/UserDTO';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useContext,
+} from "react";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+  User,
+} from "firebase/auth";
+import { auth } from "../config/firebase";
+import { UserService } from "../services/UserService";
+import { UserDTO, UserRole } from "../services/dto/UserDTO";
 
 const AuthContext = createContext<any>(null);
 
@@ -11,9 +24,8 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   const loginWithEmailAndPassword = async (email: string, password: string) => {
     try {
@@ -24,34 +36,43 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       throw new Error(message);
     }
   };
-  
-  const signUpWithEmailAndPassword = async (email: string, password: string) => {
-      try {
-        const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredentials.user;
-        
-        if (user) {
+
+  const signUpWithEmailAndPassword = async (
+    email: string,
+    password: string
+  ) => {
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      //TODO catch error if user already exists in firebase. If the user exist, return a message saying the email is in use.
+
+      const user = userCredentials.user;
+
+      if (user) {
         const userDto: UserDTO = {
-            externalUserId: user.uid,
-            name: "",
-            email: user.email || "",
-            password: "",
-            role: UserRole.USER, 
-        }
+          externalUserId: user.uid,
+          name: "",
+          email: user.email || "",
+          password: "",
+          role: UserRole.USER,
+        };
 
         // Create an instance of UserService and call the create method
         const userService = new UserService();
         const response = await userService.create(userDto);
-        }
-
-        return { user };
-
-      } catch (err) {
-        const message = (err as Error).message;
-        throw new Error(message);
       }
-    };
-  
+
+      return { user };
+    } catch (err) {
+      const message = (err as Error).message;
+      throw new Error(message);
+    }
+  };
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -61,10 +82,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return { error: message };
     }
   };
-  
-  // function resetPassword(email) {
-  //   return auth.sendPasswordResetEmail(email)
-  // }
+
+  const resetPassword = async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      console.log("Email enviado");
+    } catch (error) {
+      console.error(
+        "Error al enviar el correo de restablecimiento de contraseña",
+        error
+      );
+    }
+  };
 
   // function updateEmail(email) {
   //   return currentUser.updateEmail(email)
@@ -79,28 +108,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     loginWithEmailAndPassword,
     signUpWithEmailAndPassword,
     logout,
-    // resetPassword,
+    resetPassword,
     // updateEmail,
     // updatePassword
-  }
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(user => {
-        setUser(user)
-        setLoading(false)
-      })
-  
-      return unsubscribe;
-    }, []);
-  
-
-
-    return (
-      <AuthContext.Provider value={_auth}>
-        {!loading && children}
-      </AuthContext.Provider>
-    );
   };
-  
-  export const useAuthContext = () => {
-    return useContext(AuthContext);
-  }
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  return (
+    <AuthContext.Provider value={_auth}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuthContext = () => {
+  return useContext(AuthContext);
+};

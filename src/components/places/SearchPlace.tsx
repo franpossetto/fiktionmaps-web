@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { LocationDTO } from "../../types/dto/LocationDTO";
 import { MapsProvider } from "../../types/providers/MapsProvider";
-import PlaceContext from "../../contexts/PlaceContext";
+import { useSceneController } from "../../contexts/SceneContext";
 
-export const SearchPlace = ({ setPlace, reset }: any) => {
-  const formData = useContext(PlaceContext);
+export const SearchPlace = ({ reset }: any) => {
+  const { place, setPlace: setPlc } = useSceneController();
 
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
@@ -53,7 +53,6 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
     if (place) {
       setAutoCompleteValue(place.formatted_address);
 
-      // Find the locality in the address components
       let locality = "";
       let country = "";
 
@@ -74,10 +73,7 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
         city: locality,
         country: country,
       };
-
-      console.log(place);
-
-      setPlace({ ...formData, place: location });
+      setPlc({ place: location });
     }
   };
 
@@ -85,7 +81,7 @@ export const SearchPlace = ({ setPlace, reset }: any) => {
     <>
       <input
         type="text"
-        className="form-control"
+        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-3"
         placeholder="Enter Location"
         ref={(ref) => (inputRef.current = ref)}
       />
