@@ -11,7 +11,10 @@ export default {
         fikYellow: '#f4d534',
         fikLightBlue: '#1db5de',
         fikBlue: "#3d4f71"
-      }
+      },
+      fontFamily: {
+        'clash': ['ITCAvantGardePro-Bk', 'sans']
+      },
     }
   },
   plugins: [

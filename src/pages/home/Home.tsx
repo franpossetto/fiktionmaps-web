@@ -6,33 +6,8 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-
-const items = [
-  {
-    name: "Fictions",
-    initials: "F",
-    href: "/fictions/table",
-    desc: "16 Fictions",
-    bgColor: "bg-fikRed",
-    icon: ListBulletIcon,
-  },
-  {
-    name: "Cities",
-    initials: "C",
-    href: "#",
-    desc: "12 Cities",
-    bgColor: "bg-fikYellow",
-    icon: ListBulletIcon,
-  },
-  {
-    name: "Scenes",
-    initials: "S",
-    href: "/scenes/table",
-    desc: "12 scenes",
-    bgColor: "bg-fikLightBlue",
-    icon: ListBulletIcon,
-  },
-];
+import { useFictionService } from "../../services/useFictionService";
+import { useEffect, useState } from "react";
 
 const actions = [
   {
@@ -86,6 +61,71 @@ function classNames(...classes) {
 
 export default function Home() {
   const navigate = useNavigate();
+  const { getTotals } = useFictionService();
+
+  const [items, setItems] = useState([
+    {
+      name: "Fictions",
+      initials: "F",
+      href: "/fictions/table",
+      desc: "",
+      bgColor: "bg-fikRed",
+      icon: ListBulletIcon,
+    },
+    {
+      name: "Cities",
+      initials: "C",
+      href: "#",
+      desc: "",
+      bgColor: "bg-fikYellow",
+      icon: ListBulletIcon,
+    },
+    {
+      name: "Scenes",
+      initials: "S",
+      href: "/scenes/table",
+      desc: "",
+      bgColor: "bg-fikBlue",
+      icon: ListBulletIcon,
+    },
+    {
+      name: "Locations",
+      initials: "L",
+      href: "#",
+      desc: "",
+      bgColor: "bg-fikLightBlue",
+      icon: ListBulletIcon,
+    },
+  ]);
+
+  const fetchData = () => {
+    if (data) {
+      console.log(data);
+      setItems((prevItems) => [
+        {
+          ...prevItems[0],
+          desc: `${data.fictions} Fictions`,
+        },
+        {
+          ...prevItems[1],
+          desc: `${data.cities} Cities`,
+        },
+        {
+          ...prevItems[2],
+          desc: `${data.scenes} Scenes`,
+        },
+        {
+          ...prevItems[3],
+          desc: `${data.locations} Locations`,
+        },
+      ]);
+    }
+  };
+
+  const { loading, data, error } = getTotals();
+  useEffect(() => {
+    fetchData();
+  }, [data]);
 
   return (
     <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">

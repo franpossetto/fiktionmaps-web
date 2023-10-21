@@ -1,4 +1,4 @@
-import { UserDTO } from './dto/UserDTO';
+import { UserDTO } from '../types/dto/UserDTO';
 import {axiosWithToken, axiosWithoutToken} from '../config/axios';
 import { auth } from '../config/firebase';
 

@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import mapStyles from "./styles.json";
 import FictionInfoComponent from "./FictionInfo";
 import { useMapController } from "../../contexts/MapContext";
+import { Fiction } from "../../types/Fiction";
+import { Scene } from "../../types/Scene";
 
 export default function Map() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -27,7 +29,10 @@ export default function Map() {
     loader.load().then((google) => {
       if (mapRef.current) {
         const map = new google.maps.Map(mapRef.current, {
-          center: city,
+          center: {
+            lat: city?.latitude || 0, 
+            lng: city?.longitude || 0, 
+          }, 
           zoom: 15,
           disableDefaultUI: false,
           mapTypeControl: false,
@@ -39,7 +44,7 @@ export default function Map() {
         setMapInstance(map);
       }
     });
-  }, []);
+  }, [city]);
 
   const markersRef = useRef<google.maps.Marker[]>([]);
 
@@ -47,9 +52,9 @@ export default function Map() {
     if (mapInstance && fictionsSelected) {
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
-      fictionsSelected?.forEach((fiction: any) => {
+      fictionsSelected?.forEach((fiction: Fiction) => {
         if (fiction.scenes.length > 0) {
-          fiction.scenes.forEach((scene: any) => {
+          fiction.scenes.forEach((scene: Scene) => {
             const marker = new google.maps.Marker({
               position: {
                 lat: scene.location.latitude,

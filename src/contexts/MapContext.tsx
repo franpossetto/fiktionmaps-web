@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import { Fiction } from "../types/Fiction";
+
+import { City } from "../types/City";
 const noop = () => Promise.resolve();
 
 type MapContext = {
   fictions?: Fiction[];
   fictionsSelected?: Fiction[];
-  city: any;
+  city?: City;
   loading: boolean;
   setFictions: (f: any) => void;
   setFictionsSelected: (f: any) => void;
@@ -25,9 +27,10 @@ const MapControllerContext = React.createContext<MapContext>({
 });
 
 export const MapController = ({ children }: { children: React.ReactNode }) => {
+
   const [fictions, setFictions] = useState<Fiction[]>();
   const [fictionsSelected, setFictionsSelected] = useState<Fiction[]>();
-  const [city, setCity] = useState<any>({ lat: 40.7831, lng: -73.9712 });
+  const [city, setCity] = useState<City>();
   const [loading, setLoading] = useState<boolean>(true);
 
   return (

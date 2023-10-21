@@ -12,15 +12,15 @@ export interface useAxiosResponse<T> {
     loading: boolean,
     data: T | null,
     error: AxiosError | null,
-    // retornr un re fetch -> pasar al use effect la fucnion
+    refetch: () => void,
 } 
 
 export const useAxios = <T>({tokenRequired=true, url, config}: UseAxiosProps<T> ) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<AxiosError | null>(null);
     const [data, setData] = useState<T | null>(null);
-
-    useEffect(()=>{
+    
+    const refetch = () => {
         let axiosinstance: AxiosInstance = axiosWithToken;
 
         if(!tokenRequired){
@@ -36,9 +36,13 @@ export const useAxios = <T>({tokenRequired=true, url, config}: UseAxiosProps<T> 
         }).finally(()=>{
             setLoading(false);
         })
+    }
+
+    useEffect(()=>{
+        refetch();
     },[])
 
-    return {loading, data, error};    
+    return {loading, data, error, refetch};    
 }
 
 export const useRequest = <T>() => {

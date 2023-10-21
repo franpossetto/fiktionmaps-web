@@ -15,7 +15,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { UserService } from "../services/UserService";
-import { UserDTO, UserRole } from "../services/dto/UserDTO";
+import { UserDTO, UserRole } from "../types/dto/UserDTO";
 
 const AuthContext = createContext<any>(null);
 
