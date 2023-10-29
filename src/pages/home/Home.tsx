@@ -75,7 +75,7 @@ export default function Home() {
     {
       name: "Cities",
       initials: "C",
-      href: "#",
+      href: "/cities/table",
       desc: "",
       bgColor: "bg-fikYellow",
       icon: ListBulletIcon,

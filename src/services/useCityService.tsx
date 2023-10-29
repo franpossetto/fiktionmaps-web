@@ -1,3 +1,4 @@
+import { axiosWithToken } from "../config/axios";
 import { useAxios, useAxiosResponse } from "../config/useAxios";
 
 export const useCityService = () => {
@@ -15,10 +16,15 @@ export const useCityService = () => {
       config: { method: "get" },
     });
   };
+
+  const deleteCity = (cityId: number) => {
+    return axiosWithToken.delete(`/cities/${cityId}`);
+  };
   
 
   return {
     getCities,
-    getCityById
+    getCityById,
+    deleteCity
   };
 };

@@ -1,6 +1,7 @@
-import { UserDTO } from '../types/dto/UserDTO';
+import { UserDTO, UserRole } from '../types/dto/UserDTO';
 import {axiosWithToken, axiosWithoutToken} from '../config/axios';
 import { auth } from '../config/firebase';
+import { NOTFOUND } from 'dns';
 
 export class UserService {
     baseUrl: string = 'http://localhost:8081/api/v1';
@@ -8,6 +9,16 @@ export class UserService {
     async create(data: UserDTO): Promise<any> {
         try {
             const response = await axiosWithoutToken.post(`${this.baseUrl}/users`, data);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async update(data: UserDTO): Promise<any> {
+        try {
+            const response = await axiosWithToken.put(`${this.baseUrl}/users/${data.id}`, data);
+            console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -27,11 +38,21 @@ export class UserService {
         try {
             const uid = auth.currentUser?.uid;
             const response = await axiosWithToken.get(`/users/${uid}`);
-            console.log(response);
             return response.data;
-        } catch (error) {
+        } catch (error: any) {
+            if (error.response && error.response.status === 404) {
+                const user: UserDTO = {
+                    name: "",
+                    email: auth.currentUser?.email || "",
+                    externalUserId: auth.currentUser?.uid,
+                    role: UserRole.USER
+                }
+                this.create(user);
+            }
             throw error;
         }
     }
+
+    
     
 }

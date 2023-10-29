@@ -2,31 +2,79 @@ import { useEffect, useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { UserService } from "../../services/UserService";
+import { UserDTO, UserRole } from "../../types/dto/UserDTO";
 
+interface UserObject {
+  name?: string,
+  email?: string,
+  country?: string,
+  about?: string
+};
 export const Profile = () => {
   const [editing, setEditing] = useState(false);
+  const [userObject, setUserObject] = useState<UserObject>();
   const [name, setName] = useState("");
   const { user } = useAuthContext();
-  console.log(user);
+  const [loggedUser, setLoggedUser] = useState<any>();
+
+  const userService = new UserService();
 
   const handleEdit = () => {
     setEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setEditing(false);
-    console.log("Saved");
+    
+    console.log(user)
+    const userDto: UserDTO = {
+      name: loggedUser?.name || "",
+      email: loggedUser.email || "",
+      externalUserId: user.uid,
+      password: "",
+      role: UserRole.USER,
+      id: loggedUser?.id.toString(),
+    };
+
+    console.log(userDto)
+    const response = await userService.update(userDto);
+    console.log(response)
+    setUserObject(undefined);
   };
 
   const handleCancel = () => {
     setEditing(false);
   };
 
-  const GetUser = async () => {
+  const getUserInfo = async () => {
     const userService = new UserService();
     const response = await userService.getCurrentUser();
-    console.log(response);
+    setLoggedUser(response);
   };
+
+  useEffect(()=>{
+    getUserInfo();
+  },[])
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoggedUser(prevState => ({ ...prevState, name: e.target.value }));
+  };
+  
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoggedUser(prevState => ({ ...prevState, email: e.target.value }));
+
+  };
+  
+  const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoggedUser(prevState => ({ ...prevState, country: e.target.value }));
+  
+  };
+  
+  const handleAboutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoggedUser(prevState => ({ ...prevState, about: e.target.value }));
+  
+  };
+  
 
   return (
     <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
@@ -47,14 +95,14 @@ export const Profile = () => {
                 {editing ? (
                   <input
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={loggedUser?.name}
+                    onChange={handleNameChange}
                     className="border rounded px-3 py-2 w-full h-10"
                   />
                 ) : (
-                  <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 h-10 flex items-center">
-                    {user.displayName || "Mr nobody"}
-                  </dd>
+                  <dd className={`mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 h-10 flex items-center ${loggedUser?.name ? '' : 'italic text-gray-400'}`}>
+                  {loggedUser?.name || 'Not Specified'}
+                </dd>
                 )}
               </div>
             </div>
@@ -64,25 +112,57 @@ export const Profile = () => {
                 Email address
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {user.email}
+                {editing ? (
+                  <input
+                    type="text"
+                    value={loggedUser?.email}
+                    onChange={handleEmailChange}
+                    className="border rounded px-3 py-2 w-full h-10"
+                  />
+                ) : (
+                  <dd className={`mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 h-10 flex items-center ${loggedUser?.email ? '' : 'italic text-gray-400'}`}>
+                    {loggedUser?.email || 'Not Specified'}
+                  </dd>
+                )}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-900">Country</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                Argentina
+                {editing ? (
+                  <input
+                    type="text"
+                    value={loggedUser?.country}
+                    onChange={handleCountryChange}
+                    className="border rounded px-3 py-2 w-full h-10"
+                  />
+                ) : (
+                  <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 h-10 flex items-center">
+                    <dd className={`mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 h-10 flex items-center ${loggedUser?.country ? '' : 'italic text-gray-400'}`}>
+                      {loggedUser?.country || 'Not Specified'}
+                    </dd>
+                  </dd>
+                )}
               </dd>
             </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            {/* <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-900">About</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
-                incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
-                consequat sint. Sit id mollit nulla mollit nostrud in ea officia
-                proident. Irure nostrud pariatur mollit ad adipisicing
-                reprehenderit deserunt qui eu.
+                {editing ? (
+                  <input
+                    type="text"
+                    value={loggedUser?.about}
+                    onChange={handleAboutChange}
+                    className="border rounded px-3 py-2 w-full h-10"
+                  />
+                ) : (
+                  <dd className={`mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 h-10 flex items-center ${loggedUser?.about ? '' : 'italic text-gray-400'}`}>
+                    {loggedUser?.about || 'Not Specified'}
+                  </dd>
+                )}
               </dd>
-            </div>
+
+            </div> */}
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium leading-6 text-gray-900">
                 Places
@@ -101,7 +181,7 @@ export const Profile = () => {
                       <div className="ml-4 flex min-w-0 flex-1 gap-2">
                         <span className="truncate font-medium">Movies</span>
                         <span className="flex-shrink-0 text-gray-400">
-                          Added 14 scenes
+                          Added 0 scenes
                         </span>
                       </div>
                     </div>
@@ -145,7 +225,7 @@ export const Profile = () => {
                       <div className="ml-4 flex min-w-0 flex-1 gap-2">
                         <span className="truncate font-medium">Books</span>
                         <span className="flex-shrink-0 text-gray-400">
-                          Added 101 Scenes
+                          Added 0 Scenes
                         </span>
                       </div>
                     </div>
@@ -190,7 +270,6 @@ export const Profile = () => {
             )}
           </div>
         </div>
-        {/*...*/}
       </div>
     </div>
   );
