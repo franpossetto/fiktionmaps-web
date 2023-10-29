@@ -1,10 +1,10 @@
 export interface UserDTO {
     id?: string;
-    externalUserId: string;
+    externalUserId?: string;
     name: string;
     email: string;
     password?: string;
-    role: UserRole;
+    role?: UserRole;
 }
 
 export enum UserRole {

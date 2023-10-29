@@ -3,15 +3,7 @@ import { useFictionService } from "../../services/useFictionService";
 import LogoutModal from "../auth/LogoutModal";
 import AddFictionModal from "./AddFictionModal";
 import DeleteFictionModal from "./DeleteFictionModal";
-
-type Fiction = {
-  name: string;
-  type: string;
-  id: any;
-  year: string;
-  scenes: any;
-  fictionType: string;
-};
+import { Fiction } from "../../types/Fiction";
 
 export default function FictionTable() {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
