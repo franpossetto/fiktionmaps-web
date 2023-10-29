@@ -42,9 +42,7 @@ export const SignUp = () => {
     if (error) {
       setError("El correo electrónico o la contraseña son incorrectos");
     } else {
-      // setcurrentUser(user);
-      navigate("/api/docs");
-      console.log(user["accessToken"]);
+      navigate("/");
     }
   };
 
@@ -56,6 +54,9 @@ export const SignUp = () => {
             src="../src/assets/fm_h.png"
             className="object-cover h-52 lg:h-72 xl:h-72"
           ></img>
+          <h1 className="flex justify-center text-lg ">
+            Connecting people with movies through cities
+          </h1>
         </div>
         <div>
           <form onSubmit={handleSignUp}>
