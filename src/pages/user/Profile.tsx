@@ -25,8 +25,6 @@ export const Profile = () => {
 
   const handleSave = async () => {
     setEditing(false);
-    
-    console.log(user)
     const userDto: UserDTO = {
       name: loggedUser?.name || "",
       email: loggedUser.email || "",
@@ -34,11 +32,10 @@ export const Profile = () => {
       password: "",
       role: UserRole.USER,
       id: loggedUser?.id.toString(),
+      country: loggedUser.country,
     };
 
-    console.log(userDto)
-    const response = await userService.update(userDto);
-    console.log(response)
+    await userService.update(userDto);
     setUserObject(undefined);
   };
 
@@ -62,17 +59,10 @@ export const Profile = () => {
   
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoggedUser(prevState => ({ ...prevState, email: e.target.value }));
-
   };
   
   const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoggedUser(prevState => ({ ...prevState, country: e.target.value }));
-  
-  };
-  
-  const handleAboutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoggedUser(prevState => ({ ...prevState, about: e.target.value }));
-  
   };
   
 
@@ -163,7 +153,7 @@ export const Profile = () => {
               </dd>
 
             </div> */}
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            {/* <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium leading-6 text-gray-900">
                 Places
               </dt>
@@ -240,7 +230,7 @@ export const Profile = () => {
                   </li>
                 </ul>
               </dd>
-            </div>
+            </div> */}
           </dl>
         </div>
         <div className="flex justify-end px-4 py-6 sm:gap-4 sm:px-6 bg-slate-100 ">

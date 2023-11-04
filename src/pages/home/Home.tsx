@@ -8,6 +8,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useFictionService } from "../../services/useFictionService";
 import { useEffect, useState } from "react";
+import { useAuthContext } from "../../contexts/AuthContext";
+import { UserService } from "../../services/UserService";
 
 const actions = [
   {
@@ -60,8 +62,20 @@ function classNames(...classes) {
 }
 
 export default function Home() {
+  const [loggedUser, setLoggedUser] = useState<any>();
   const navigate = useNavigate();
   const { getTotals } = useFictionService();
+  const { user } = useAuthContext();
+
+  const getUserInfo = async () => {
+    const userService = new UserService();
+    const response = await userService.getCurrentUser();
+    setLoggedUser(response);
+  };
+
+  useEffect(()=>{
+    getUserInfo();
+  },[])
 
   const [items, setItems] = useState([
     {
@@ -91,7 +105,7 @@ export default function Home() {
     {
       name: "Locations",
       initials: "L",
-      href: "#",
+      href: "/locations/table",
       desc: "",
       bgColor: "bg-fikLightBlue",
       icon: ListBulletIcon,
@@ -131,7 +145,7 @@ export default function Home() {
     <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg p-10">
         <h1 className="text-black text-3xl font-bold mb-3">
-          Welcome, Francisco!
+          Welcome { loggedUser?.name}!
         </h1>
         <h2 className="text-base text-gray-900">
           In this section you can find information about what you can do in
