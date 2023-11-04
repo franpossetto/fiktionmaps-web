@@ -13,6 +13,9 @@
 
 Fiktion Maps is an interactive platform connecting people with fictions movies through the cities they were filmed in. The goal is to provide users with a novel way to explore their favorite movies by discovering and visiting real-life filming locations.
 
+![Fiktion Maps Demo](https://github.com/franpossetto/m2f-client/blob/main/src/assets/demo.gif)
+
+## Catalogue Overview
 
 ![Cities](https://img.shields.io/badge/Cities-18+-blue.svg?&style=for-the-badge)
 ![Movies](https://img.shields.io/badge/Movies-328+-brightgreen.svg?&style=for-the-badge)
