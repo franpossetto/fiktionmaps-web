@@ -1,9 +1,9 @@
 import { MapsProvider } from "../providers/MapsProvider";
 
 export interface LocationDTO {
-    id: string;
+    id?: string;
     formatted_address: string;
-    name: string;
+    name?: string;
     latitude: number,
     longitude: number,
     place_id: string;

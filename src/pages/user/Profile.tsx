@@ -54,15 +54,15 @@ export const Profile = () => {
   },[])
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoggedUser(prevState => ({ ...prevState, name: e.target.value }));
+    setLoggedUser((prevState: any) => ({ ...prevState, name: e.target.value }));
   };
   
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoggedUser(prevState => ({ ...prevState, email: e.target.value }));
+    setLoggedUser((prevState: any) => ({ ...prevState, email: e.target.value }));
   };
   
   const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoggedUser(prevState => ({ ...prevState, country: e.target.value }));
+    setLoggedUser((prevState: any) => ({ ...prevState, country: e.target.value }));
   };
   
 

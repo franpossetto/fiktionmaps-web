@@ -35,11 +35,11 @@ import { useMapController } from '../../contexts/MapContext'
 import { Fiction } from '../../types/Fiction'
 import { FictionImage } from './FictionImage'
 
-function classNames(...classes) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const FictionSelect = ({ onClose }) => {
+export const FictionSelect = ({ onClose }: { onClose: any }) => {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(true)
 
@@ -108,7 +108,7 @@ export const FictionSelect = ({ onClose }) => {
                   />
                 </div>
 
-                {filteredItems?.length > 0 && (
+                {filteredItems?.length && filteredItems?.length > 0 && (
                   <Combobox.Options static className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3">
                     {filteredItems?.map((item) => (
                       <Combobox.Option

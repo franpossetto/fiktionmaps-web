@@ -53,7 +53,7 @@ export default function Map() {
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
       fictionsSelected?.forEach((fiction: Fiction) => {
-        if (fiction.scenes.length > 0) {
+        if (fiction?.scenes?.length && fiction.scenes.length > 0) {
           fiction.scenes.forEach((scene: Scene) => {
             const marker = new google.maps.Marker({
               position: {

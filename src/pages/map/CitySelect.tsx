@@ -33,11 +33,11 @@ import { useCityService } from '../../services/useCityService'
 import { City } from '../../types/City'
 import { useMapController } from '../../contexts/MapContext'
 
-function classNames(...classes) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const CitySelect = ({ onClose }) => {
+export const CitySelect = ({ onClose }: {onClose: any}) => {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(true)
 
