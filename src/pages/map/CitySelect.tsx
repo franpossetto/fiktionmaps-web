@@ -102,6 +102,7 @@ export const CitySelect = ({ onClose }) => {
                     className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
                     placeholder="Search..."
                     onChange={(event) => setQuery(event.target.value)}
+                    autoComplete="off"
                   />
                 </div>
 

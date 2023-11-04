@@ -5,6 +5,7 @@ export interface UserDTO {
     email: string;
     password?: string;
     role?: UserRole;
+    country: string;
 }
 
 export enum UserRole {

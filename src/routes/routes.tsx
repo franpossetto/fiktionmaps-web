@@ -14,6 +14,7 @@ import { MapView } from "../pages/map/MapView";
 import SceneTable from "../pages/scenes/SceneTable";
 import { SceneController } from "../contexts/SceneContext";
 import CityTable from "../pages/cities/CityTable";
+import LocationTable from "../pages/locations/LocationTable";
 
 const AppRouter = () => {
   return (
@@ -120,6 +121,14 @@ const AppRouter = () => {
             </PrivateRoute>
           }
         />
+        <Route
+        path="/locations/table"
+        element={
+          <PrivateRoute>
+            <LocationTable />
+          </PrivateRoute>
+        }
+      />
       </Routes>
     </BrowserRouter>
   );
