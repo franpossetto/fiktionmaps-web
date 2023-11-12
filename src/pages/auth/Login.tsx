@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useState } from "react";
+import logo from "../../assets/fm_h.png"
 
 export const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -36,7 +37,7 @@ export const Login = () => {
       <div className="flex flex-col lg:flex-row justify-center xl:space-x-16 lg:space-x-16 md:space-x-0 sm:space-x-0 h-screen items-center">
         <div>
           <img
-            src="../src/assets/fm_h.png"
+            src={logo} 
             className="object-cover h-52 lg:h-72 xl:h-72"
           ></img>
           <h1 className="flex justify-center text-lg ">

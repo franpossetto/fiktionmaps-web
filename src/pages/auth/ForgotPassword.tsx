@@ -2,6 +2,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useState } from "react";
+import logo from "../../assets/fm_h.png"
 
 export const ForgotPassword = () => {
   const [email, setEmail] = useState<string>("");
@@ -36,7 +37,7 @@ export const ForgotPassword = () => {
       <div className="flex flex-col justify-center space-x-16 md:space-x-0 h-screen items-center">
         <div>
           <img
-            src="../src/assets/fm_h.png"
+            src={logo}
             className="object-cover h-52 lg:h-32 xl:h-32 mb-7"
           ></img>
         </div>
