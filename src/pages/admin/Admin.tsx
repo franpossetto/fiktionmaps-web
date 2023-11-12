@@ -61,7 +61,7 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Home() {
+export default function Admin() {
   const [loggedUser, setLoggedUser] = useState<any>();
   const navigate = useNavigate();
   const { getTotals } = useFictionService();

@@ -1,12 +1,21 @@
 export interface Scene {
     // fiction
-    id: number;
+    id?: number;
     name: string;
     description: string;
+    screenShot?: string,
+    season: string,
+    episodeName: string,
+    episodeNumber: string,
     location: {
-        // id
+        id: number;
         latitude: number;
         longitude: number;
-        formatted_address: string;
+        formattedAddress: string;
+        placeId: string;
     };
+    startAt: number;
+    endAt: number;
+    segmentType?: any;
+    userId: number;
 }

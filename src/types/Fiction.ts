@@ -12,4 +12,5 @@ export interface Fiction {
     type?: MediaType,
     scenes?: Scene[]
     episode?: EpisodeDTO,
+    duration: number
 }

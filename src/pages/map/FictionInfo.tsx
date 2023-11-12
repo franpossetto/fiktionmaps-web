@@ -15,62 +15,65 @@ const FictionInfo: React.FC<FictionInfoProps> = ({ fiction, scene }) => {
 
   useEffect(() => {
     const fetchImage = () => {
-      const a = fiction.imgUrl.replace("/img/", "");
-      const imageRef: StorageReference = ref(storage, a);
+      let sceneImg = scene.screenShot;
+      console.log(sceneImg)
+      if (sceneImg == null) {
+        sceneImg = fiction.imgUrl.replace("/img/", ""); 
+      }
+      const imageRef: StorageReference = ref(storage, sceneImg);
 
       getDownloadURL(ref(imageRef))
         .then((url) => {
           setImageUrl(url);
         })
         .catch((error) => {
-          switch (error.code) {
-            case "storage/object-not-found":
-              break;
-            case "storage/unauthorized":
-              break;
-            case "storage/canceled":
-              break;
-            case "storage/unknown":
-              break;
-          }
+
         });
     };
 
     fetchImage();
-  }, []);
+  }, [scene.screenShot, fiction.imgUrl]);
+
+  const handleError = (e: any) => {
+    e.target.onerror = null;
+    e.target.src = "src/assets/fm_v.png";
+  };
+
+  const imageStyle = {
+    height: "7rem", 
+    width: scene.screenShot ? "11rem" : "auto", 
+    objectFit: scene.screenShot ? 'cover' as const : 'contain' as const,
+    backgroundColor: "black"
+  };
 
   return (
-    <div className="h-auto w-[450px]">
+    <div className="h-auto w-[420px]" >
       <div className="px-1 flex flex-row">
         <img
           src={imageUrl}
           alt=""
-          className="h-44 w-auto"
-          style={{ backgroundColor: "black" }}
-          onError={(e: any) => {
-            e.target.onerror = null;
-            e.target.src = "src/assets/fm_v.png";
-          }}
+          style={imageStyle}
+          onError={handleError}
         />
         <div className="flex flex-col justify-between">
           <div>
-            <h1 className="px-2 text-slate-900">
+            <h2 className="px-2 text-[15px] text-slate-900">
               {fiction.name} - {fiction.type}
+            </h2>
+            <h1 className="text-[15px] px-3 font-semibold mb-1 text-slate-900">
+              {scene.name}
             </h1>
-            <h1 className="text-lg px-3 font-semibold mb-1 text-slate-900">
-              {scene.name}{" "}
-            </h1>
-            <p className="px-3 text-slate-700">{scene.description} </p>
+            <p className="px-3 text-slate-700">{scene.description}</p>
           </div>
           <a
-            className="px-3 text-black underline underline-offset-2 text-xs text"
+            className="px-3 text-black underline underline-offset-2 text-xs"
             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-              scene.location.formatted_address
+              scene.location.formattedAddress
             )}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {scene.location.formatted_address}
+            {scene.location.formattedAddress}
           </a>
         </div>
       </div>

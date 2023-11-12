@@ -6,7 +6,7 @@ import { Login } from "../pages/auth/Login";
 import { SignUp } from "../pages/auth/Signup";
 import { ForgotPassword } from "../pages/auth/ForgotPassword";
 import { Profile } from "../pages/user/Profile";
-import Home from "../pages/home/Home";
+import Home from "../pages/admin/Admin";
 import { AddScene } from "../pages/scenes/AddScene";
 import { AddFiction } from "../pages/fictions/AddFiction";
 import FictionTable from "../pages/fictions/FictionTable";
@@ -64,7 +64,7 @@ const AppRouter = () => {
         />
 
         <Route
-          path="/search"
+          path="/home"
           element={
             <PrivateRoute>
               <MapView />
@@ -73,7 +73,7 @@ const AppRouter = () => {
         />
 
         <Route
-          path="/home"
+          path="/admin"
           element={
             <PrivateRoute>
               <Home />
@@ -100,7 +100,9 @@ const AppRouter = () => {
           path="/scenes/table"
           element={
             <PrivateRoute>
-              <SceneTable />
+              <SceneController>
+                <SceneTable />
+              </SceneController>
             </PrivateRoute>
           }
         /> <Route

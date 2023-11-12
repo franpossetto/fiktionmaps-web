@@ -1,5 +1,6 @@
 import { axiosWithToken } from "../config/axios";
 import { useAxios, useAxiosResponse } from "../config/useAxios";
+import { Scene } from "../types/Scene";
 
 export const useFictionService = () => {
   
@@ -30,6 +31,10 @@ export const useFictionService = () => {
     return useAxios({ url: "/fictions/totals", config: { method: "get" } });
   };
 
+  const addSceneToFiction = (fictionId: any, scene:Scene) => {
+    return axiosWithToken.post(`/fictions/${fictionId}/scenes`, scene);
+  };
+
   return {
     getFictionsByCity,
     getFictions,
@@ -37,5 +42,6 @@ export const useFictionService = () => {
     deleteFiction,
     getScenes,
     getTotals,
+    addSceneToFiction,
   };
 };

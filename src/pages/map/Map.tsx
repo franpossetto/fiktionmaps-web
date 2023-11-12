@@ -1,16 +1,20 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import mapStyles from "./styles.json";
+import darkMapStyles from "./dark_styles.json";
+import lightMapStyles from "./light_styles.json";
+
 import FictionInfoComponent from "./FictionInfo";
 import { useMapController } from "../../contexts/MapContext";
 import { Fiction } from "../../types/Fiction";
 import { Scene } from "../../types/Scene";
+import Layout from "../../components/layout/Layout";
+import FictionInfoSide from "./FictionInfoSide";
 
 export default function Map() {
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const openInfoWindowRef = useRef<google.maps.InfoWindow | null>(null); //reemplazable por un react dialog
+  const openInfoWindowRef = useRef<google.maps.InfoWindow | null>(null); 
   const {
     fictions,
     loading: ldg,
@@ -24,6 +28,7 @@ export default function Map() {
     version: "weekly",
     libraries: ["places"],
   });
+
 
   useEffect(() => {
     loader.load().then((google) => {
@@ -39,7 +44,7 @@ export default function Map() {
           zoomControl: false,
           fullscreenControl: false,
           streetViewControl: false,
-          styles: mapStyles,
+          styles: darkMapStyles,
         });
         setMapInstance(map);
       }
@@ -48,11 +53,45 @@ export default function Map() {
 
   const markersRef = useRef<google.maps.Marker[]>([]);
 
+
   useEffect(() => {
     if (mapInstance && fictionsSelected) {
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
+      
+    
+      // const svgMarker = {
+      //   path: "M 0, 0 m -7.5, 0 a 7.5,7.5 0 1,0 15,0 a 7.5,7.5 0 1,0 -15,0",
+      //   fillColor: "black",  
+      //   fillOpacity: 0.7,  
+      //   strokeWeight: 2,
+      //   strokeColor: "white",  // Borde blanco
+      //   scale: 1.1,
+      //   anchor: new google.maps.Point(0, 7.5),
+      // };
+
+      const markerIcon = {
+        url: '../../../src/assets/pinnn.png',
+        scaledSize: new google.maps.Size(46, 46), // ancho y alto en píxeles
+      }
+          
+      const normalIcon = {
+        url: '../../../src/assets/pinnn.png',
+        scaledSize: new google.maps.Size(39, 39), // Tamaño normal
+      };
+
+      let currentSelectedMarker: any = null;
+
+      mapInstance.addListener("click", () => {
+        if (currentSelectedMarker) {
+          console.log(currentSelectedMarker)
+          currentSelectedMarker.setIcon(normalIcon);
+          currentSelectedMarker = null;
+        }
+      });
+
       fictionsSelected?.forEach((fiction: Fiction) => {
+        console.log(fiction)
         if (fiction?.scenes?.length && fiction.scenes.length > 0) {
           fiction.scenes.forEach((scene: Scene) => {
             const marker = new google.maps.Marker({
@@ -60,41 +99,78 @@ export default function Map() {
                 lat: scene.location.latitude,
                 lng: scene.location.longitude,
               },
+              icon: markerIcon,
               title: scene.description,
               map: mapInstance,
             });
             markersRef.current.push(marker);
+            // marker.addListener("mouseover", () => {
+            //   if (openInfoWindowRef.current) {
+            //     openInfoWindowRef.current.close();
+            //     openInfoWindowRef.current = null;
+            //   }
+
+            //   const div = document.createElement("div");
+            //   const infoWindow = new google.maps.InfoWindow();
+            //   ReactDOM.render(
+            //     <>
+            //       <style>{`
+            //                 .gm-style .gm-style-iw-c button {
+            //                   top: 2px !important;
+            //                   right: 2px !important;
+            //                 }
+            //               `}</style>
+            //       <FictionInfoComponent fiction={fiction} scene={scene} />
+            //     </>,
+            //     div
+            //   );
+
+            //   infoWindow.setContent(div);
+            //   openInfoWindowRef.current = infoWindow;
+            //   infoWindow.open(mapInstance, marker);
+            //   const markerPosition = marker.getPosition();
+            //   if (markerPosition) {
+            //     mapInstance.panTo(markerPosition);
+            //   }
+
+            // }); 
+            
             marker.addListener("click", () => {
               if (openInfoWindowRef.current) {
                 openInfoWindowRef.current.close();
                 openInfoWindowRef.current = null;
               }
 
+
               const div = document.createElement("div");
               const infoWindow = new google.maps.InfoWindow();
               ReactDOM.render(
-                //reemplazable por un react dialog
                 <>
-                  <style>{`
-                            .gm-style .gm-style-iw-c button {
-                              top: 2px !important;
-                              right: 2px !important;
-                            }
-                          `}</style>
-                  <FictionInfoComponent fiction={fiction} scene={scene} />
+                 
+                    <FictionInfoSide fiction={fiction} scene={scene} />
                 </>,
                 div
               );
 
               infoWindow.setContent(div);
               openInfoWindowRef.current = infoWindow;
-              infoWindow.open(mapInstance, marker);
+              const markerPosition = marker.getPosition();
+              if (markerPosition) {
+                mapInstance.panTo(markerPosition);
+              }
+
             });
+
           });
         }
       });
+      
     }
   }, [mapInstance, fictionsSelected]);
 
-  return <div ref={mapRef} className="absolute w-full h-full z-1" />;
+  return(
+
+    <div ref={mapRef} className="absolute w-full h-full z-1" />
+
+  ); 
 }

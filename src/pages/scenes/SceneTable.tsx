@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFictionService } from "../../services/useFictionService";
 import { Scene } from "../../types/Scene";
+import AddSceneModal from "./AddSceneModal";
 
 export default function SceneTable() {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
@@ -110,7 +111,7 @@ export default function SceneTable() {
                           {scene.description}
                         </td> */}
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {scene.location.formatted_address}
+                          {scene.location.formattedAddress}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {scene.location.latitude}
@@ -151,8 +152,8 @@ export default function SceneTable() {
           </div>
         </div>
       </div>
-      {/* <AddFictionModal modalOpen={modalAddFictionOpen} setModalOpen={setModalAddFictionOpen} setFictions = {setFictions}/>
-        <DeleteFictionModal modalOpen={modalDeleteFictionOpen} setModalOpen={setModalDeleteFictionOpen} fictionToDelete={selectedFiction} setFictions = {setFictions}/> */}
+      <AddSceneModal modalOpen={modalAddFictionOpen} setModalOpen={setModalAddFictionOpen}/>
+        {/* <DeleteFictionModal modalOpen={modalDeleteFictionOpen} setModalOpen={setModalDeleteFictionOpen} fictionToDelete={selectedFiction} setFictions = {setFictions}/> */}
     </div>
   );
 }

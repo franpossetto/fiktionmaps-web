@@ -1,15 +1,15 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import Layout from "../components/layout/Layout";
 
-const PublicRoute = ({ children }: any) => {
+const PublicRouteWithBar = ({ children }: any) => {
   const { user } = useAuthContext();
+
   const location = useLocation();
 
-  return !user ? (
-    children
-  ) : (
-    <Navigate to="/home" state={{ from: location }} replace={true} />
-  );
+  return(
+      <Layout>{children}</Layout>
+  ) 
 };
 
-export default PublicRoute;
+export default PublicRouteWithBar;

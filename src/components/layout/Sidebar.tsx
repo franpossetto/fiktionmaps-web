@@ -2,52 +2,17 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
-  CalendarIcon,
-  ChartPieIcon,
-  DocumentDuplicateIcon,
-  FolderIcon,
   HomeIcon,
   UsersIcon,
   XMarkIcon,
-  CogIcon,
-  MapIcon,
-  PlusCircleIcon,
+  PencilSquareIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/fm_h2.png";
-const navigation = [
-  {
-    name: "Home",
-    href: "/home",
-    icon: HomeIcon,
-    current: location.pathname === "/home",
-    openModal: false,
-  },
-  {
-    name: "Profile",
-    href: "/profile",
-    icon: UsersIcon,
-    current: location.pathname === "/profile",
-    openModal: false,
-  },
-  {
-    name: "Map",
-    href: "/search",
-    icon: MapIcon,
-    current: location.pathname === "/search",
-    openModal: false,
-  },
-  {
-    name: "Logout",
-    href: "#",
-    icon: ArrowRightOnRectangleIcon,
-    current: false,
-    openModal: true,
-  },
-];
+
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -74,6 +39,38 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       setError("Failed to log out");
     }
   }
+
+  const navigation = [
+    {
+      name: "Home",
+      href: "/home",
+      icon: HomeIcon,
+      current: location.pathname === "/home",
+      openModal: false,
+    },
+    {
+      name: "Profile",
+      href: "/profile",
+      icon: UsersIcon,
+      current: location.pathname === "/profile",
+      openModal: false,
+    },
+    {
+      name: "Admin",
+      href: "/admin",
+      icon: PencilSquareIcon,
+      current: location.pathname === "/admin",
+      openModal: false,
+    },
+    {
+      name: "Logout",
+      href: "#",
+      icon: ArrowRightOnRectangleIcon,
+      current: false,
+      openModal: true,
+      action: handleLogout,
+    },
+  ];
   return (
     <>
       <div>
@@ -146,9 +143,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                                   : "text-gray-400 hover:text-white hover:bg-gray-800",
                                 "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                               )}
-                              onClick={() => {
-                                handleLogout();
-                              }}
+                              {...(item.action && { onClick: item.action })}
                             >
                               <item.icon
                                 className="h-6 w-6 shrink-0"
@@ -167,7 +162,6 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
           </Dialog>
         </Transition.Root>
 
-        {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto lg:bg-gray-900 shadow-md shadow-slate-900 lg:pb-4">
           <div className="flex h-16 shrink-0 items-center justify-center">
             <img src={logo} alt="f" className="h-10 mt-8" />

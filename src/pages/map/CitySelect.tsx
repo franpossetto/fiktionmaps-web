@@ -62,8 +62,8 @@ export const CitySelect = ({ onClose }: {onClose: any}) => {
 
 
     const setCityAndClose = (selectedCity: City) => {
-        setCity(selectedCity);  // Aquí actualizamos el contexto o estado con el nombre de la ciudad
-        setOpen(false);  // Cerramos el cuadro de diálogo
+        setCity(selectedCity);  
+        setOpen(false); 
     }
 
   return (
