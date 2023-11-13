@@ -82,7 +82,6 @@ export default function Map() {
 
       mapInstance.addListener("click", () => {
         if (currentSelectedMarker) {
-          console.log(currentSelectedMarker)
           currentSelectedMarker.setIcon(normalIcon);
           currentSelectedMarker = null;
         }
