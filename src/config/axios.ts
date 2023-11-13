@@ -4,12 +4,12 @@ import 'firebase/auth';
 import { auth } from './firebase';
 
 const axiosWithToken = axios.create({
-  baseURL: 'http://localhost:8081/api/v1', 
+  baseURL: import.meta.env.VITE_BASE_URL + '/api/v1', 
 });
 
 
 const axiosWithoutToken = axios.create({
-  baseURL: 'http://localhost:8081/api/v1', 
+  baseURL: import.meta.env.VITE_GMAPS_API_KEY + '/api/v1', 
 });
 
 axiosWithToken.interceptors.request.use(

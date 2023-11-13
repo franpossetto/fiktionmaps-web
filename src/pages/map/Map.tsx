@@ -3,13 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import darkMapStyles from "./dark_styles.json";
 import lightMapStyles from "./light_styles.json";
-
-import FictionInfoComponent from "./FictionInfo";
 import { useMapController } from "../../contexts/MapContext";
 import { Fiction } from "../../types/Fiction";
 import { Scene } from "../../types/Scene";
-import Layout from "../../components/layout/Layout";
 import FictionInfoSide from "./FictionInfoSide";
+import pin from '../../../src/assets/pin.png';
 
 export default function Map() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -71,12 +69,12 @@ export default function Map() {
       // };
 
       const markerIcon = {
-        url: '../../../src/assets/pinnn.png',
+        url: pin,
         scaledSize: new google.maps.Size(46, 46), // ancho y alto en píxeles
       }
           
       const normalIcon = {
-        url: '../../../src/assets/pinnn.png',
+        url: pin,
         scaledSize: new google.maps.Size(39, 39), // Tamaño normal
       };
 
@@ -91,7 +89,6 @@ export default function Map() {
       });
 
       fictionsSelected?.forEach((fiction: Fiction) => {
-        console.log(fiction)
         if (fiction?.scenes?.length && fiction.scenes.length > 0) {
           fiction.scenes.forEach((scene: Scene) => {
             const marker = new google.maps.Marker({
