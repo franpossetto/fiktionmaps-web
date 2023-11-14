@@ -17,14 +17,6 @@ import { Combobox, Dialog, Transition } from '@headlessui/react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import {
   ExclamationCircleIcon,
-  LinkIcon,
-  PencilSquareIcon,
-  GlobeAmericasIcon,
-  PhotoIcon,
-  TableCellsIcon,
-  VideoCameraIcon,
-  ViewColumnsIcon,
-  Bars4Icon,
 } from '@heroicons/react/24/outline'
 import { useCityService } from '../../services/useCityService'
 import { City } from '../../types/City'
