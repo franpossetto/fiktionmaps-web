@@ -18,13 +18,11 @@ interface FictionInfoSideProps {
 
 const FictionInfoSide: React.FC<FictionInfoSideProps> = ({ fiction, scene }) => {
   const [open, setOpen] = useState(true)
-console.log(scene)
   const [imageUrl, setImageUrl] = useState<string | undefined>();
 
   useEffect(() => {
     const fetchImage = () => {
       let sceneImg = scene.screenShot;
-      console.log(sceneImg)
       if (sceneImg == null) {
         sceneImg = fiction.imgUrl.replace("/img/", ""); 
       }
