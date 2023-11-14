@@ -58,15 +58,15 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
 
   const filteredItems =
     query === ''
-      ? fictions // Cambio aquí
+      ? fictions 
       : fictions?.filter((item) => {
           return item.name.toLowerCase().includes(query.toLowerCase());
         });
 
 
     const setFictionAndClose = (selectedFiction: Fiction) => {
-        sendFictionsToMap([selectedFiction]);  // Aquí actualizamos el contexto o estado con el nombre de la ciudad
-        setOpen(false);  // Cerramos el cuadro de diálogo
+        sendFictionsToMap([selectedFiction]);  
+        setOpen(false); 
     }
 
   return (
