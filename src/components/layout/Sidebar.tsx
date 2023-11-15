@@ -55,13 +55,13 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       current: location.pathname === "/profile",
       openModal: false,
     },
-    {
-      name: "Admin",
-      href: "/admin",
-      icon: PencilSquareIcon,
-      current: location.pathname === "/admin",
-      openModal: false,
-    },
+    // {
+    //   name: "Admin",
+    //   href: "/admin",
+    //   icon: PencilSquareIcon,
+    //   current: location.pathname === "/admin",
+    //   openModal: false,
+    // },
     {
       name: "Logout",
       href: "#",
