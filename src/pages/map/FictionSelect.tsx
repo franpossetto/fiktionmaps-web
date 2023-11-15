@@ -18,8 +18,6 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import {
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline'
-import { useCityService } from '../../services/useCityService'
-import { City } from '../../types/City'
 import { useMapController } from '../../contexts/MapContext'
 import { Fiction } from '../../types/Fiction'
 import { FictionImage } from './FictionImage'
