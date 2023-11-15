@@ -4,7 +4,7 @@ import { auth } from '../config/firebase';
 import { NOTFOUND } from 'dns';
 
 export class UserService {
-    baseUrl: string = 'http://localhost:8081/api/v1';
+    baseUrl: string = import.meta.env.VITE_BASE_URL + '/api/v1';
 
     async create(data: UserDTO): Promise<any> {
         try {
