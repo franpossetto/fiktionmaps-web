@@ -67,7 +67,7 @@ export const Profile = () => {
   
 
   return (
-    <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
+    <div className="px-5 pt-6 sm:pl-32 sm:pt-6 w-[100%] sm:w-[90%] lg:w-[1200px]">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg">
         <div className="px-4 py-6 sm:px-6">
           <h3 className="text-base font-semibold leading-7 text-gray-900">

@@ -8,6 +8,7 @@ import { Fiction } from "../../types/Fiction";
 import { Scene } from "../../types/Scene";
 import FictionInfoSide from "./FictionInfoSide";
 import pin from '../../../src/assets/pin.png';
+import { MarkerClusterer } from "@react-google-maps/api";
 
 export default function Map() {
   const mapRef = useRef<HTMLDivElement>(null);

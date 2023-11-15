@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useState } from "react";
-import logo from "../../assets/fm_h.png"
+import logoDesktop from "../../assets/fm_h.png"
+import logoMobile from "../../assets/fm_v.png"
 
 export const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -34,19 +35,30 @@ export const Login = () => {
   };
   return (
     <>
-      <div className="flex flex-col lg:flex-row justify-center xl:space-x-16 lg:space-x-16 md:space-x-0 sm:space-x-0 h-screen items-center">
+      <div className="flex flex-col lg:flex-row justify-center mx-10 xl:space-x-16 lg:space-x-16 md:space-x-0 sm:space-x-0 h-screen items-center">
         <div>
-          <img
-            src={logo} 
-            className="object-cover h-52 lg:h-72 xl:h-72"
-          ></img>
-          <h1 className="flex justify-center text-lg ">
+        <div>
+        {/* Logo para escritorio */}
+        <img
+      src={logoDesktop}
+      className="hidden sm:block object-cover h-52 lg:h-72 xl:h-72"
+      alt="Logo Desktop"
+    />
+
+    {/* Logo para móvil */}
+    <img
+      src={logoMobile}
+      className="block sm:hidden mx-auto object-cover w-[100%]" 
+      alt="Logo Mobile"
+    />
+      </div>
+          <h1 className="flex justify-center text-lg">
             Connecting people with movies through cities
           </h1>
         </div>
-        <div>
+        <div className="w-[100%] mx-10 sm:w-[420px]">
           <form onSubmit={handleLogin}>
-            <div className="w-[400px]">
+            <div>
               <label htmlFor="inputEmail">Email address</label>
               <input
                 type="email"
