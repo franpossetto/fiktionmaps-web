@@ -57,17 +57,6 @@ export default function Map() {
     if (mapInstance && fictionsSelected) {
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
-      
-    
-      // const svgMarker = {
-      //   path: "M 0, 0 m -7.5, 0 a 7.5,7.5 0 1,0 15,0 a 7.5,7.5 0 1,0 -15,0",
-      //   fillColor: "black",  
-      //   fillOpacity: 0.7,  
-      //   strokeWeight: 2,
-      //   strokeColor: "white",  // Borde blanco
-      //   scale: 1.1,
-      //   anchor: new google.maps.Point(0, 7.5),
-      // };
 
       const markerIcon = {
         url: pin,
@@ -101,7 +90,45 @@ export default function Map() {
               map: mapInstance,
             });
             markersRef.current.push(marker);
-            // marker.addListener("mouseover", () => {
+
+            marker.addListener("click", () => {
+              if (openInfoWindowRef.current) {
+                openInfoWindowRef.current.close();
+                openInfoWindowRef.current = null;
+              }
+
+              const div = document.createElement("div");
+              const infoWindow = new google.maps.InfoWindow();
+              ReactDOM.render(
+                <>
+                    <FictionInfoSide fiction={fiction} scene={scene} />
+                </>,
+                div
+              );
+
+              infoWindow.setContent(div);
+              openInfoWindowRef.current = infoWindow;
+              const markerPosition = marker.getPosition();
+              if (markerPosition) {
+                mapInstance.panTo(markerPosition);
+              }
+
+            });
+
+          });
+        }
+      });
+      
+    }
+  }, [mapInstance, fictionsSelected]);
+
+  return(
+
+    <div ref={mapRef} className="absolute w-full h-full z-1" />
+
+  ); 
+}
+     // marker.addListener("mouseover", () => {
             //   if (openInfoWindowRef.current) {
             //     openInfoWindowRef.current.close();
             //     openInfoWindowRef.current = null;
@@ -131,43 +158,3 @@ export default function Map() {
             //   }
 
             // }); 
-            
-            marker.addListener("click", () => {
-              if (openInfoWindowRef.current) {
-                openInfoWindowRef.current.close();
-                openInfoWindowRef.current = null;
-              }
-
-
-              const div = document.createElement("div");
-              const infoWindow = new google.maps.InfoWindow();
-              ReactDOM.render(
-                <>
-                 
-                    <FictionInfoSide fiction={fiction} scene={scene} />
-                </>,
-                div
-              );
-
-              infoWindow.setContent(div);
-              openInfoWindowRef.current = infoWindow;
-              const markerPosition = marker.getPosition();
-              if (markerPosition) {
-                mapInstance.panTo(markerPosition);
-              }
-
-            });
-
-          });
-        }
-      });
-      
-    }
-  }, [mapInstance, fictionsSelected]);
-
-  return(
-
-    <div ref={mapRef} className="absolute w-full h-full z-1" />
-
-  ); 
-}

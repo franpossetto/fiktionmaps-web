@@ -3,6 +3,8 @@ import { useAuthContext } from "../../contexts/AuthContext";
 import { useState } from "react";
 import logoDesktop from "../../assets/fm_h.png"
 import logoMobile from "../../assets/fm_v.png"
+import { toast } from 'react-toastify';
+
 
 export const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -25,12 +27,10 @@ export const Login = () => {
 
   const handleLogin = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-    const { user, error } = await loginWithEmailAndPassword(email, password);
-    if (error) {
-      setError("El correo electrónico o la contraseña son incorrectos");
-    } else {
-      navigate("/home");
-      console.log(user);
+    try{
+      const { user } = await loginWithEmailAndPassword(email, password);
+    } catch {
+      toast.error("User or password are incorrect");
     }
   };
   return (
@@ -38,14 +38,11 @@ export const Login = () => {
       <div className="flex flex-col lg:flex-row justify-center mx-10 xl:space-x-16 lg:space-x-16 md:space-x-0 sm:space-x-0 h-screen items-center">
         <div>
         <div>
-        {/* Logo para escritorio */}
         <img
       src={logoDesktop}
       className="hidden sm:block object-cover h-52 lg:h-72 xl:h-72"
       alt="Logo Desktop"
     />
-
-    {/* Logo para móvil */}
     <img
       src={logoMobile}
       className="block sm:hidden mx-auto object-cover w-[100%]" 
@@ -118,3 +115,4 @@ export const Login = () => {
     </>
   );
 };
+

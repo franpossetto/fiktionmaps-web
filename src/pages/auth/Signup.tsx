@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
 import logo from "../../assets/fm_h.png"
+import { toast } from "react-toastify";
 
 export const SignUp = () => {
   const [email, setEmail] = useState<string>("");
@@ -38,12 +39,10 @@ export const SignUp = () => {
 
   const handleSignUp = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-    const { user, error } = await signUpWithEmailAndPassword(email, password);
-
-    if (error) {
-      setError("El correo electrónico o la contraseña son incorrectos");
-    } else {
-      navigate("/");
+    try{
+      const { user } = await signUpWithEmailAndPassword(email, password);
+    } catch{
+      toast.error("Email must be specified and passwords must be equals");
     }
   };
 
