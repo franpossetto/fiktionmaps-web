@@ -4,6 +4,7 @@ import React, {
   useEffect,
   ReactNode,
   useContext,
+  PropsWithChildren,
 } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -130,4 +131,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 export const useAuthContext = () => {
   return useContext(AuthContext);
+};
+
+export const ProtectedItem: React.FC<
+  PropsWithChildren<{ fallback: ReactNode }>
+> = ({ children, fallback }) => {
+  const { user } = useAuthContext();
+
+  // Auth Logic to decided if we should reder the item or not
+  if (user) {
+    return children;
+  } else {
+    return fallback;
+  }
 };

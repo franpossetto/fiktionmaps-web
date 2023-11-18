@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, PropsWithChildren, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -41,14 +41,6 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
 
   const navigation = [
     {
-      name: "Home",
-      href: "/home",
-      icon: HomeIcon,
-      current: location.pathname === "/home",
-      openModal: false,
-      private: false,
-    },
-    {
       name: "Profile",
       href: "/profile",
       icon: UsersIcon,
@@ -74,7 +66,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       action: handleLogout,
       private: false,
     },
-  ].filter((item) => (user ? item.name !== "Login" : item.private == false));
+  ];
 
   return (
     <>
@@ -138,25 +130,50 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="-mx-2 flex-1 space-y-1">
+                        {/* HOME */}
+                        <li>
+                          <a
+                            href="/home"
+                            className={classNames(
+                              location.pathname === "/home"
+                                ? "bg-gray-800 text-white"
+                                : "text-gray-400 hover:text-white hover:bg-gray-800",
+                              "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                            )}
+                            onClick={(e) => {}}
+                          >
+                            <HomeIcon
+                              className="h-6 w-6 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Home
+                          </a>
+                        </li>
+
                         {navigation.map((item) => (
-                          <li key={item.name}>
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                item.current
-                                  ? "bg-gray-800 text-white"
-                                  : "text-gray-400 hover:text-white hover:bg-gray-800",
-                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                              )}
-                              {...(item.action && { onClick: item.action })}
-                            >
-                              <item.icon
-                                className="h-6 w-6 shrink-0"
-                                aria-hidden="true"
-                              />
-                              {item.name}
-                            </a>
-                          </li>
+                          <SidebarRenderProtectedItems
+                            key={item.name}
+                            privateRoute={item.private}
+                          >
+                            <li>
+                              <a
+                                href={item.href}
+                                className={classNames(
+                                  item.current
+                                    ? "bg-gray-800 text-white"
+                                    : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                  "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                                )}
+                                {...(item.action && { onClick: item.action })}
+                              >
+                                <item.icon
+                                  className="h-6 w-6 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                {item.name}
+                              </a>
+                            </li>
+                          </SidebarRenderProtectedItems>
                         ))}
                       </ul>
                     </nav>
@@ -173,30 +190,50 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
           </div>
           <nav className="mt-8">
             <ul role="list" className="flex flex-col items-center space-y-1">
+              <li>
+                <a
+                  href="/home"
+                  className={classNames(
+                    location.pathname === "/home"
+                      ? "bg-gray-800 text-white"
+                      : "text-gray-400 hover:text-white hover:bg-gray-800",
+                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                  )}
+                  {...(item.action && { onClick: item.action })}
+                >
+                  <HomeIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                  Home
+                </a>
+              </li>
               {navigation.map((item) => (
-                <li key={item.name}>
-                  <a
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-800 text-white"
-                        : "text-gray-400 hover:text-white hover:bg-gray-800",
-                      "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
-                    )}
-                    onClick={(e) => {
-                      if (item.openModal) {
-                        e.preventDefault();
-                        setModalOpen(true);
-                      }
-                    }}
-                  >
-                    <item.icon
-                      className="h-6 w-6 shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span className="sr-only">{item.name}</span>
-                  </a>
-                </li>
+                <SidebarRenderProtectedItems
+                  key={item.name}
+                  privateRoute={item.private}
+                >
+                  <li>
+                    <a
+                      href={item.href}
+                      className={classNames(
+                        item.current
+                          ? "bg-gray-800 text-white"
+                          : "text-gray-400 hover:text-white hover:bg-gray-800",
+                        "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
+                      )}
+                      onClick={(e) => {
+                        if (item.openModal) {
+                          e.preventDefault();
+                          setModalOpen(true);
+                        }
+                      }}
+                    >
+                      <item.icon
+                        className="h-6 w-6 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span className="sr-only">{item.name}</span>
+                    </a>
+                  </li>
+                </SidebarRenderProtectedItems>
               ))}
             </ul>
           </nav>
@@ -217,3 +254,14 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
     </>
   );
 }
+
+export const SidebarRenderProtectedItems: React.FC<
+  PropsWithChildren<{ privateRoute: boolean }>
+> = ({ children, privateRoute }) => {
+  const { user } = useAuthContext();
+
+  if (privateRoute && user) return children;
+  if (!privateRoute && !user) return children;
+
+  return null;
+};
