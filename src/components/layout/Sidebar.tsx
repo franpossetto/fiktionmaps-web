@@ -13,7 +13,6 @@ import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/fm_h2.png";
 
-
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
@@ -26,7 +25,7 @@ interface SideBarProps {
 export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [error, setError] = useState("");
-  const { logout } = useAuthContext();
+  const { logout, user } = useAuthContext();
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -47,6 +46,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       icon: HomeIcon,
       current: location.pathname === "/home",
       openModal: false,
+      private: false,
     },
     {
       name: "Profile",
@@ -54,14 +54,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       icon: UsersIcon,
       current: location.pathname === "/profile",
       openModal: false,
+      private: true,
     },
-    // {
-    //   name: "Admin",
-    //   href: "/admin",
-    //   icon: PencilSquareIcon,
-    //   current: location.pathname === "/admin",
-    //   openModal: false,
-    // },
     {
       name: "Logout",
       href: "#",
@@ -69,8 +63,19 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       current: false,
       openModal: true,
       action: handleLogout,
+      private: true,
     },
-  ];
+    {
+      name: "Login",
+      href: "#",
+      icon: ArrowRightOnRectangleIcon,
+      current: false,
+      openModal: true,
+      action: handleLogout,
+      private: false,
+    },
+  ].filter((item) => (user ? item.name !== "Login" : item.private == false));
+
   return (
     <>
       <div>
