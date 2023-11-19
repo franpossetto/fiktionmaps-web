@@ -15,19 +15,20 @@ import SceneTable from "../pages/scenes/SceneTable";
 import { SceneController } from "../contexts/SceneContext";
 import CityTable from "../pages/cities/CityTable";
 import LocationTable from "../pages/locations/LocationTable";
+import Layout from "../components/layout/Layout";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
+      <Route
           path="/"
           element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
+            <Layout>
+              <MapView />
+            </Layout>
           }
-        />
+        />        
         <Route
           path="/login"
           element={
@@ -44,7 +45,6 @@ const AppRouter = () => {
             </PublicRoute>
           }
         />
-
         <Route
           path="/signup"
           element={
@@ -53,7 +53,6 @@ const AppRouter = () => {
             </PublicRoute>
           }
         />
-
         <Route
           path="/profile"
           element={
@@ -62,16 +61,14 @@ const AppRouter = () => {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/home"
           element={
-            <PrivateRoute>
+            <Layout>
               <MapView />
-            </PrivateRoute>
+            </Layout>
           }
         />
-
         <Route
           path="/admin"
           element={
@@ -105,14 +102,15 @@ const AppRouter = () => {
               </SceneController>
             </PrivateRoute>
           }
-        /> <Route
-        path="/cities/table"
-        element={
-          <PrivateRoute>
-            <CityTable />
-          </PrivateRoute>
-        }
-      />
+        />
+        <Route
+          path="/cities/table"
+          element={
+            <PrivateRoute>
+              <CityTable />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/scenes/add"
           element={
@@ -124,13 +122,13 @@ const AppRouter = () => {
           }
         />
         <Route
-        path="/locations/table"
-        element={
-          <PrivateRoute>
-            <LocationTable />
-          </PrivateRoute>
-        }
-      />
+          path="/locations/table"
+          element={
+            <PrivateRoute>
+              <LocationTable />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

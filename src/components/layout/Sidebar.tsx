@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, PropsWithChildren, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -13,7 +13,6 @@ import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/fm_h2.png";
 
-
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
@@ -26,8 +25,9 @@ interface SideBarProps {
 export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [error, setError] = useState("");
-  const { logout } = useAuthContext();
+  const { logout, user } = useAuthContext();
   const navigate = useNavigate();
+
 
   async function handleLogout() {
     setError("");
@@ -40,28 +40,16 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
     }
   }
 
+
   const navigation = [
-    {
-      name: "Home",
-      href: "/home",
-      icon: HomeIcon,
-      current: location.pathname === "/home",
-      openModal: false,
-    },
     {
       name: "Profile",
       href: "/profile",
       icon: UsersIcon,
       current: location.pathname === "/profile",
       openModal: false,
+      private: true,
     },
-    // {
-    //   name: "Admin",
-    //   href: "/admin",
-    //   icon: PencilSquareIcon,
-    //   current: location.pathname === "/admin",
-    //   openModal: false,
-    // },
     {
       name: "Logout",
       href: "#",
@@ -69,8 +57,18 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       current: false,
       openModal: true,
       action: handleLogout,
+      private: true,
+    },
+    {
+      name: "Login",
+      href: "/login",
+      icon: UsersIcon,
+      current: false,
+      openModal: false,
+      private: false,
     },
   ];
+
   return (
     <>
       <div>
@@ -126,32 +124,54 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       </button>
                     </div>
                   </Transition.Child>
-
                   <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-2 ring-1 ring-white/10">
                     <div className="flex h-16 shrink-0 items-center">
                       <img src={logo} alt="f" className="h-10 mt-8" />
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="-mx-2 flex-1 space-y-1">
+                        <li>
+                          <a
+                            href="/home"
+                            className={classNames(
+                              location.pathname === "/home"
+                                ? "bg-gray-800 text-white"
+                                : "text-gray-400 hover:text-white hover:bg-gray-800",
+                              "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                            )}
+                            onClick={(e) => {}}
+                          >
+                            <HomeIcon
+                              className="h-6 w-6 shrink-0"
+                              aria-hidden="true"
+                            />
+                          </a>
+                        </li>
+
                         {navigation.map((item) => (
-                          <li key={item.name}>
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                item.current
-                                  ? "bg-gray-800 text-white"
-                                  : "text-gray-400 hover:text-white hover:bg-gray-800",
-                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                              )}
-                              {...(item.action && { onClick: item.action })}
-                            >
-                              <item.icon
-                                className="h-6 w-6 shrink-0"
-                                aria-hidden="true"
-                              />
-                              {item.name}
-                            </a>
-                          </li>
+                          <SidebarRenderProtectedItems
+                            key={item.name}
+                            privateRoute={item.private}
+                          >
+                            <li>
+                              <a
+                                href={item.href}
+                                className={classNames(
+                                  item.current
+                                    ? "bg-gray-800 text-white"
+                                    : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                  "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                                )}
+                                {...(item.action && { onClick: item.action })}
+                              >
+                                <item.icon
+                                  className="h-6 w-6 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                {item.name}
+                              </a>
+                            </li>
+                          </SidebarRenderProtectedItems>
                         ))}
                       </ul>
                     </nav>
@@ -168,30 +188,49 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
           </div>
           <nav className="mt-8">
             <ul role="list" className="flex flex-col items-center space-y-1">
+              <li>
+                <a
+                  href="/home"
+                  className={classNames(
+                    location.pathname === "/home"
+                      ? "bg-gray-800 text-white"
+                      : "text-gray-400 hover:text-white hover:bg-gray-800",
+                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                  )}
+                  
+                >
+                  <HomeIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                </a>
+              </li>
               {navigation.map((item) => (
-                <li key={item.name}>
-                  <a
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-800 text-white"
-                        : "text-gray-400 hover:text-white hover:bg-gray-800",
-                      "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
-                    )}
-                    onClick={(e) => {
-                      if (item.openModal) {
-                        e.preventDefault();
-                        setModalOpen(true);
-                      }
-                    }}
-                  >
-                    <item.icon
-                      className="h-6 w-6 shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span className="sr-only">{item.name}</span>
-                  </a>
-                </li>
+                <SidebarRenderProtectedItems
+                  key={item.name}
+                  privateRoute={item.private}
+                >
+                  <li>
+                    <a
+                      href={item.href}
+                      className={classNames(
+                        item.current
+                          ? "bg-gray-800 text-white"
+                          : "text-gray-400 hover:text-white hover:bg-gray-800",
+                        "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
+                      )}
+                      onClick={(e) => {
+                        if (item.openModal) {
+                          e.preventDefault();
+                          setModalOpen(true);
+                        }
+                      }}
+                    >
+                      <item.icon
+                        className="h-6 w-6 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span className="sr-only">{item.name}</span>
+                    </a>
+                  </li>
+                </SidebarRenderProtectedItems>
               ))}
             </ul>
           </nav>
@@ -212,3 +251,14 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
     </>
   );
 }
+
+export const SidebarRenderProtectedItems: React.FC<
+  PropsWithChildren<{ privateRoute: boolean }>
+> = ({ children, privateRoute }) => {
+  const { user } = useAuthContext();
+
+  if (privateRoute && user) return children;
+  if (!privateRoute && !user) return children;
+
+  return null;
+};
