@@ -15,14 +15,20 @@ import SceneTable from "../pages/scenes/SceneTable";
 import { SceneController } from "../contexts/SceneContext";
 import CityTable from "../pages/cities/CityTable";
 import LocationTable from "../pages/locations/LocationTable";
-import { Redirect } from "react-router-dom";
 import Layout from "../components/layout/Layout";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Redirect to="/home" />} />
+      <Route
+          path="/"
+          element={
+            <Layout>
+              <MapView />
+            </Layout>
+          }
+        />        
         <Route
           path="/login"
           element={
