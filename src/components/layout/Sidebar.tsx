@@ -145,6 +145,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                               className="h-6 w-6 shrink-0"
                               aria-hidden="true"
                             />
+                            Home
                           </a>
                         </li>
 

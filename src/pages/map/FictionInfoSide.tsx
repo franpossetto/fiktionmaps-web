@@ -52,10 +52,13 @@ const FictionInfoSide: React.FC<FictionInfoSideProps> = ({ fiction, scene }) => 
     backgroundColor: "black"
   };
 
+  const imgDivSideStyle = scene.screenShot ? "relative h-40 sm:h-56": "relative px-3";
+  const imgSideStyle = scene.screenShot ? "absolute h-full w-full object-cover":"block h-full w-full object-cover";
+
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <div className="fixed inset-0" />
+      <Dialog as="div" className="relative z-20" onClose={setOpen}>
+        <div className="fixed inset-0"/>
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
@@ -93,20 +96,13 @@ const FictionInfoSide: React.FC<FictionInfoSideProps> = ({ fiction, scene }) => 
                     <div>
                       <div className="pb-1 sm:pb-6">
                         <div>
-                          <div className="relative h-40 sm:h-56">
+                          <div className={imgDivSideStyle}>
                             <img
-                              className="absolute h-full w-full object-cover"
+                              className={imgSideStyle}
                               src={imageUrl}
                               alt=""
                             />
                           </div>
-                           {/* <div className="relative">
-                            <img
-                              className="px-10 w-full object-cover"
-                              src={imageUrl}
-                              alt=""
-                            />
-                          </div> */}
                           <div className="mt-6 px-4 sm:mt-8 sm:flex sm:items-end sm:px-6">
                             <div className="sm:flex-1">
                               <div>
@@ -122,11 +118,11 @@ const FictionInfoSide: React.FC<FictionInfoSideProps> = ({ fiction, scene }) => 
                                 type="range"
                                 className="progress-bar w-full h-2 appearance-none bg-slate-200"
                                 value={scene.startAt}
-                                readOnly // La barra de progreso es solo de lectura
+                                readOnly 
                               />
                               <p className='text-slate-700 text-sm ml-2'>{fiction.duration}</p>
                             </div>
-                              <div className="mt-5 flex flex-wrap space-y-3 sm:space-x-3 sm:space-y-0">
+                              {/* <div className="mt-5 flex flex-wrap space-y-3 sm:space-x-3 sm:space-y-0">
                                 <button
                                   type="button"
                                   className="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:flex-1"
@@ -188,7 +184,7 @@ const FictionInfoSide: React.FC<FictionInfoSideProps> = ({ fiction, scene }) => 
                                     </Transition>
                                   </Menu>
                                 </div>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>
@@ -205,17 +201,22 @@ const FictionInfoSide: React.FC<FictionInfoSideProps> = ({ fiction, scene }) => 
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Location</dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{scene.location.formattedAddress}</dd>
+                          <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Address</dt>
+
+                          <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
+                              <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(scene.location.formattedAddress)}`} target="_blank" rel="noopener noreferrer">
+                                {scene.location.formattedAddress}
+                              </a>
+                            </dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Duration</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{fiction.duration} min</dd>
                           </div>
                           <div>
-                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Director</dt>
+                            <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">IMDB</dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                              <time dateTime="1988-06-23">Woody</time>
+                              <time dateTime="1988-06-23">{fiction.externalId}</time>
                             </dd>
                           </div>
                         </dl>
