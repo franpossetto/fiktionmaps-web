@@ -64,12 +64,12 @@ export const MapView = () => {
   }, [fictionsSelected]);
 
   return (
-    <div className="h-[100%] w-[100%] flex ">
+    <div className="h-[100%] w-[100%] flex">
       <div className="flex w-[100%] justify-between z-10">
         <div className="w-[480px] bg-transparent font-semibold">
           <button
             type="button"
-            className="rounded-md whitespace-nowrap bg-black/60 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-white/20 mt-6 h-10 mx-3 md:mx-28"
+            className="rounded-md whitespace-nowrap bg-black/60 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-white/20 mt-6 h-10 ml-3 lg:ml-28"
             onClick={() => setFictionIsOpen(!isFictionOpen)}
           >
             {selectedFiction}
