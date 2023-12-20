@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Combobox } from "@headlessui/react";
 import { useMapController } from "../../contexts/MapContext";
 import { useFictionService } from "../../services/useFictionService";
-import { FictionImage } from "../map/FictionImage";
+import { FictionImage } from "../fictions/FictionImage";
 import { Fiction } from "../../types/Fiction";
 
 function classNames(...classes: (string | boolean)[]) {

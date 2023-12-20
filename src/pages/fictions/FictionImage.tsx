@@ -33,7 +33,9 @@ export const FictionImage = ({ imgUrl }: FictionImageProps) => {
       }
     };
 
-    fetchImage();
+    if(imgUrl!=null){
+      fetchImage();
+    }
   }, []);
 
   return imageUrl !== undefined ? (
