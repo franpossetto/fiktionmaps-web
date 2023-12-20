@@ -1,12 +1,12 @@
 import { axiosWithToken } from "../config/axios";
 import { useAxios, useAxiosResponse } from "../config/useAxios";
+import { Place } from "../types/Place";
 import { Scene } from "../types/Scene";
 
 export const useFictionService = () => {
-  
   const getFictionsByCity = (cityId: number): useAxiosResponse<any> => {
     return useAxios({
-      url: `/fictions?cityId=${cityId}`,
+      url: `/fictions/${cityId}`,
       config: { method: "get" },
     });
   };
@@ -24,15 +24,27 @@ export const useFictionService = () => {
   };
 
   const getScenes = (): useAxiosResponse<any> => {
-    return useAxios({ url: "/fictions/scenes", config: { method: "get" } });
+    return useAxios({ url: "/scenes", config: { method: "get" } });
+  };
+
+  const getPlaces = (): useAxiosResponse<any> => {
+    return useAxios({ url: "/places", config: { method: "get" } });
   };
 
   const getTotals = (): useAxiosResponse<any> => {
     return useAxios({ url: "/fictions/totals", config: { method: "get" } });
   };
 
-  const addSceneToFiction = (fictionId: any, scene:Scene) => {
+  const addSceneToFiction = (fictionId: any, scene: Scene) => {
     return axiosWithToken.post(`/fictions/${fictionId}/scenes`, scene);
+  };
+
+  const addPlaceToFiction = (fictionId: any, place: Place) => {
+    return axiosWithToken.post(`/fictions/${fictionId}/places`, place);
+  };
+
+  const deletePlaceFromFiction = (placeId: any) => {
+    return axiosWithToken.delete(`/places/${placeId}`);
   };
 
   return {
@@ -41,7 +53,10 @@ export const useFictionService = () => {
     createFiction,
     deleteFiction,
     getScenes,
+    getPlaces,
     getTotals,
     addSceneToFiction,
+    addPlaceToFiction,
+    deletePlaceFromFiction,
   };
 };

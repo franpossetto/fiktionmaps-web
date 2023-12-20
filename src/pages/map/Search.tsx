@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { UsersIcon } from "@heroicons/react/24/outline";
 import { Combobox } from "@headlessui/react";
 import { useMapController } from "../../contexts/MapContext";
-import { FictionImage } from "./FictionImage";
+import { FictionImage } from "../fictions/FictionImage";
 import { Fiction } from "../../types/Fiction";
 
 function classNames(...classes: (string | boolean)[]) {

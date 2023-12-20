@@ -1,7 +1,7 @@
 import { EpisodeDTO } from "./dto/FictionDTO";
 import { MediaType } from "./MediaType";
+import { Place } from "./Place";
 import { FictionProvider } from "./providers/FictionProvider";
-import { Scene } from "./Scene";
 
 export interface Fiction {
     name: string;
@@ -10,8 +10,9 @@ export interface Fiction {
     overview: string;
     provider?: FictionProvider,
     type?: MediaType,
-    scenes?: Scene[]
+    places?: Place[]
     episode?: EpisodeDTO,
     duration: number,
     externalId: string;
+    year: string
 }

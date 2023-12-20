@@ -1,0 +1,109 @@
+[
+  {
+    "featureType": "landscape.man_made",
+    "stylers": [
+      {
+        "color": "#f8f7f7"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.man_made",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#f8f7f7"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#f5f0e5"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#a9eac2"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#c3f1d5"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#9dddc1"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.sports_complex",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#a9eac2"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#8ba5c1"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#7292b3"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#dbe0e8"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#90daee"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "color": "#188fa2"
+      }
+    ]
+  }
+]

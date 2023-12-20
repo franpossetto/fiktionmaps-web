@@ -4,7 +4,7 @@ export interface City {
     placeId: string;
     latitude: number;
     longitude: number;
-    provider: string; // Esto se puede expandir si hay otros proveedores.
+    provider: string;
     code: string;
-    locations: any[]; // Asumiendo que es un arreglo, pero el tipo de ítems dentro del arreglo no está especificado.
+    locations: any[];
 }

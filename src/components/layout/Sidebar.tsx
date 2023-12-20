@@ -7,6 +7,8 @@ import {
   XMarkIcon,
   PencilSquareIcon,
   ArrowRightOnRectangleIcon,
+  ChatBubbleLeftIcon,
+  CircleStackIcon,
 } from "@heroicons/react/24/outline";
 import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
@@ -47,6 +49,22 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       href: "/profile",
       icon: UsersIcon,
       current: location.pathname === "/profile",
+      openModal: false,
+      private: true,
+    },
+    {
+      name: "Collaboration",
+      href: "/collaboration",
+      icon: ChatBubbleLeftIcon,
+      current: location.pathname === "/collaboration",
+      openModal: false,
+      private: true,
+    },
+    {
+      name: "Admin",
+      href: "/admin",
+      icon: CircleStackIcon,
+      current: location.pathname === "/admin",
       openModal: false,
       private: true,
     },

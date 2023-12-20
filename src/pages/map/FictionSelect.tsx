@@ -12,23 +12,21 @@
   }
   ```
 */
-import { Fragment, useEffect, useState } from 'react'
-import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import {
-  ExclamationCircleIcon,
-} from '@heroicons/react/24/outline'
-import { useMapController } from '../../contexts/MapContext'
-import { Fiction } from '../../types/Fiction'
-import { FictionImage } from './FictionImage'
+import { Fragment, useEffect, useState } from "react";
+import { Combobox, Dialog, Transition } from "@headlessui/react";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { useMapController } from "../../contexts/MapContext";
+import { Fiction } from "../../types/Fiction";
+import { FictionImage } from "../fictions/FictionImage";
 
 function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export const FictionSelect = ({ onClose }: { onClose: any }) => {
-  const [query, setQuery] = useState('')
-  const [open, setOpen] = useState(true)
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(true);
 
   const {
     fictions,
@@ -38,26 +36,25 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
     setFictionsSelected: sendFictionsToMap,
   } = useMapController();
 
-
-  
-
- 
-
   const filteredItems =
-    query === ''
-      ? fictions 
+    query === ""
+      ? fictions
       : fictions?.filter((item) => {
           return item.name.toLowerCase().includes(query.toLowerCase());
         });
 
-
-    const setFictionAndClose = (selectedFiction: Fiction) => {
-        sendFictionsToMap([selectedFiction]);  
-        setOpen(false); 
-    }
+  const setFictionAndClose = (selectedFiction: Fiction) => {
+    sendFictionsToMap([selectedFiction]);
+    setOpen(false);
+  };
 
   return (
-    <Transition.Root show={open} as={Fragment} afterLeave={() => setQuery('')} appear>
+    <Transition.Root
+      show={open}
+      as={Fragment}
+      afterLeave={() => setQuery("")}
+      appear
+    >
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
@@ -82,7 +79,11 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-              <Combobox onChange={(selectedFiction: Fiction) => setFictionAndClose(selectedFiction)}>
+              <Combobox
+                onChange={(selectedFiction: Fiction) =>
+                  setFictionAndClose(selectedFiction)
+                }
+              >
                 <div className="relative">
                   <MagnifyingGlassIcon
                     className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
@@ -96,30 +97,40 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
                 </div>
 
                 {filteredItems?.length && filteredItems?.length > 0 && (
-                  <Combobox.Options static className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3">
+                  <Combobox.Options
+                    static
+                    className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3"
+                  >
                     {filteredItems?.map((item) => (
                       <Combobox.Option
                         key={item.id}
                         value={item}
                         className={({ active }) =>
-                          classNames('flex cursor-default select-none rounded-xl p-3', active && 'bg-gray-100')
+                          classNames(
+                            "flex cursor-default select-none rounded-xl p-3",
+                            active && "bg-gray-100"
+                          )
                         }
                       >
                         {({ active }) => (
                           <>
-                          
                             <FictionImage imgUrl={item.imgUrl} />
 
                             <div className="ml-4 flex-auto">
                               <p
                                 className={classNames(
-                                  'text-sm font-medium',
-                                  active ? 'text-gray-900' : 'text-gray-700'
+                                  "text-sm font-medium",
+                                  active ? "text-gray-900" : "text-gray-700"
                                 )}
                               >
                                 {item.name}
                               </p>
-                              <p className={classNames('text-sm', active ? 'text-gray-700' : 'text-gray-500')}>
+                              <p
+                                className={classNames(
+                                  "text-sm",
+                                  active ? "text-gray-700" : "text-gray-500"
+                                )}
+                              >
                                 {item.type}
                               </p>
                             </div>
@@ -130,15 +141,20 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
                   </Combobox.Options>
                 )}
 
-                {query !== '' && filteredItems?.length === 0 && (
+                {query !== "" && filteredItems?.length === 0 && (
                   <div className="px-6 py-14 text-center text-sm sm:px-14">
                     <ExclamationCircleIcon
                       type="outline"
                       name="exclamation-circle"
                       className="mx-auto h-6 w-6 text-gray-400"
                     />
-                    <p className="mt-4 font-semibold text-gray-900">No results found</p>
-                    <p className="mt-2 text-gray-500">No components found for this search term. Please try again.</p>
+                    <p className="mt-4 font-semibold text-gray-900">
+                      No results found
+                    </p>
+                    <p className="mt-2 text-gray-500">
+                      No components found for this search term. Please try
+                      again.
+                    </p>
                   </div>
                 )}
               </Combobox>
@@ -147,5 +163,5 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
         </div>
       </Dialog>
     </Transition.Root>
-  )
-}
+  );
+};

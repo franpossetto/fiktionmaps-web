@@ -16,6 +16,8 @@ import { SceneController } from "../contexts/SceneContext";
 import CityTable from "../pages/cities/CityTable";
 import LocationTable from "../pages/locations/LocationTable";
 import Layout from "../components/layout/Layout";
+import CollaborationView from "../pages/collaboration/CollaborationView";
+import PlaceTable from "../pages/places/PlaceTable";
 
 const AppRouter = () => {
   return (
@@ -78,6 +80,14 @@ const AppRouter = () => {
           }
         />
         <Route
+          path="/collaboration"
+          element={
+            <PrivateRoute>
+              <CollaborationView />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/fictions/add"
           element={
             <PrivateRoute>
@@ -90,6 +100,16 @@ const AppRouter = () => {
           element={
             <PrivateRoute>
               <FictionTable />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/places/table"
+          element={
+            <PrivateRoute>
+              <SceneController>
+                <PlaceTable />
+              </SceneController>
             </PrivateRoute>
           }
         />

@@ -12,9 +12,9 @@
   }
   ```
 */
-import { Fragment, useEffect, useState } from 'react'
-import { Combobox, Dialog, Transition } from '@headlessui/react'
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { Fragment, useEffect, useState } from "react";
+import { Combobox, Dialog, Transition } from "@headlessui/react";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import {
   CalendarIcon,
   CodeBracketIcon,
@@ -28,25 +28,23 @@ import {
   VideoCameraIcon,
   ViewColumnsIcon,
   Bars4Icon,
-} from '@heroicons/react/24/outline'
-import { useCityService } from '../../services/useCityService'
-import { City } from '../../types/City'
-import { useMapController } from '../../contexts/MapContext'
+} from "@heroicons/react/24/outline";
+import { useCityService } from "../../services/useCityService";
+import { City } from "../../types/City";
+import { useMapController } from "../../contexts/MapContext";
 
 function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
-export const CitySelect = ({ onClose }: {onClose: any}) => {
-  const [query, setQuery] = useState('')
-  const [open, setOpen] = useState(true)
+export const CitySelect = ({ onClose }: { onClose: any }) => {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(true);
 
-  const { getCities} = useCityService();
+  const { getCities } = useCityService();
   const { loading, data, error } = getCities();
   const [cities, setCities] = useState<City[]>([]);
-  const {
-    setCity,
-  } = useMapController();
+  const { setCity } = useMapController();
   useEffect(() => {
     if (data) {
       setCities(data);
@@ -54,20 +52,24 @@ export const CitySelect = ({ onClose }: {onClose: any}) => {
   }, [data]);
 
   const filteredItems =
-    query === ''
-      ? cities // Cambio aquí
+    query === ""
+      ? cities
       : cities?.filter((item) => {
           return item.name.toLowerCase().includes(query.toLowerCase());
         });
 
-
-    const setCityAndClose = (selectedCity: City) => {
-        setCity(selectedCity);  
-        setOpen(false); 
-    }
+  const setCityAndClose = (selectedCity: City) => {
+    setCity(selectedCity);
+    setOpen(false);
+  };
 
   return (
-    <Transition.Root show={open} as={Fragment} afterLeave={() => setQuery('')} appear>
+    <Transition.Root
+      show={open}
+      as={Fragment}
+      afterLeave={() => setQuery("")}
+      appear
+    >
       <Dialog as="div" className="relative z-10" onClose={onClose}>
         <Transition.Child
           as={Fragment}
@@ -92,7 +94,9 @@ export const CitySelect = ({ onClose }: {onClose: any}) => {
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-              <Combobox onChange={(selectedCity: any) => setCityAndClose(selectedCity)}>
+              <Combobox
+                onChange={(selectedCity: any) => setCityAndClose(selectedCity)}
+              >
                 <div className="relative">
                   <MagnifyingGlassIcon
                     className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
@@ -107,37 +111,49 @@ export const CitySelect = ({ onClose }: {onClose: any}) => {
                 </div>
 
                 {filteredItems.length > 0 && (
-                  <Combobox.Options static className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3">
+                  <Combobox.Options
+                    static
+                    className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3"
+                  >
                     {filteredItems.map((item) => (
                       <Combobox.Option
                         key={item.id}
                         value={item}
                         className={({ active }) =>
-                          classNames('flex cursor-default select-none rounded-xl p-3', active && 'bg-gray-100')
+                          classNames(
+                            "flex cursor-default select-none rounded-xl p-3",
+                            active && "bg-gray-100"
+                          )
                         }
                       >
                         {({ active }) => (
                           <>
                             <div
                               className={classNames(
-                                'flex h-10 w-10 flex-none items-center justify-center rounded-lg',
-                                'bg-indigo-500'
+                                "flex h-10 w-10 flex-none items-center justify-center rounded-lg",
+                                "bg-indigo-500"
                               )}
                             >
-                              <GlobeAmericasIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                              <GlobeAmericasIcon
+                                className="h-6 w-6 text-white"
+                                aria-hidden="true"
+                              />
                             </div>
-                                  {/* <img src="https://i.pinimg.com/564x/07/de/bc/07debc501882b0c2bebb3ff84059a22e.jpg" style={{height:"75px"}} alt="Ejemplo de imagen" /> */}
-
                             <div className="ml-4 flex-auto">
                               <p
                                 className={classNames(
-                                  'text-sm font-medium',
-                                  active ? 'text-gray-900' : 'text-gray-700'
+                                  "text-sm font-medium",
+                                  active ? "text-gray-900" : "text-gray-700"
                                 )}
                               >
                                 {item.name}
                               </p>
-                              <p className={classNames('text-sm', active ? 'text-gray-700' : 'text-gray-500')}>
+                              <p
+                                className={classNames(
+                                  "text-sm",
+                                  active ? "text-gray-700" : "text-gray-500"
+                                )}
+                              >
                                 itemDescription
                               </p>
                             </div>
@@ -148,15 +164,20 @@ export const CitySelect = ({ onClose }: {onClose: any}) => {
                   </Combobox.Options>
                 )}
 
-                {query !== '' && filteredItems.length === 0 && (
+                {query !== "" && filteredItems.length === 0 && (
                   <div className="px-6 py-14 text-center text-sm sm:px-14">
                     <ExclamationCircleIcon
                       type="outline"
                       name="exclamation-circle"
                       className="mx-auto h-6 w-6 text-gray-400"
                     />
-                    <p className="mt-4 font-semibold text-gray-900">No results found</p>
-                    <p className="mt-2 text-gray-500">No components found for this search term. Please try again.</p>
+                    <p className="mt-4 font-semibold text-gray-900">
+                      No results found
+                    </p>
+                    <p className="mt-2 text-gray-500">
+                      No components found for this search term. Please try
+                      again.
+                    </p>
                   </div>
                 )}
               </Combobox>
@@ -165,5 +186,5 @@ export const CitySelect = ({ onClose }: {onClose: any}) => {
         </div>
       </Dialog>
     </Transition.Root>
-  )
-}
+  );
+};
