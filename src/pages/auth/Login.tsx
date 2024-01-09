@@ -1,10 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useState } from "react";
-import logoDesktop from "../../assets/fm_h.png"
-import logoMobile from "../../assets/fm_v.png"
-import { toast } from 'react-toastify';
-
+import logoDesktop from "../../assets/fm_h.png";
+import logoMobile from "../../assets/fm_v.png";
+import { toast } from "react-toastify";
 
 export const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -27,7 +26,7 @@ export const Login = () => {
 
   const handleLogin = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-    try{
+    try {
       const { user } = await loginWithEmailAndPassword(email, password);
     } catch {
       toast.error("User or password are incorrect");
@@ -37,23 +36,23 @@ export const Login = () => {
     <>
       <div className="flex flex-col lg:flex-row justify-center mx-10 xl:space-x-16 lg:space-x-16 md:space-x-0 sm:space-x-0 h-screen items-center">
         <div>
-        <div>
-        <img
-      src={logoDesktop}
-      className="hidden sm:block object-cover h-52 lg:h-72 xl:h-72"
-      alt="Logo Desktop"
-    />
-    <img
-      src={logoMobile}
-      className="block sm:hidden mx-auto object-cover w-[100%]" 
-      alt="Logo Mobile"
-    />
-      </div>
-          <h1 className="flex justify-center text-lg">
+          <div>
+            <img
+              src={logoDesktop}
+              className="hidden sm:block object-cover h-52 lg:h-72 xl:h-72"
+              alt="Logo Desktop"
+            />
+            <img
+              src={logoMobile}
+              className="block sm:hidden mx-auto object-cover w-[100%]"
+              alt="Logo Mobile"
+            />
+          </div>
+          <h1 className="flex justify-center text-lg text-white">
             Connecting people with movies through cities
           </h1>
         </div>
-        <div className="w-[100%] mx-10 sm:w-[420px]">
+        <div className="w-[100%] mx-10 sm:w-[420px] text-white">
           <form onSubmit={handleLogin}>
             <div>
               <label htmlFor="inputEmail">Email address</label>
@@ -115,4 +114,3 @@ export const Login = () => {
     </>
   );
 };
-

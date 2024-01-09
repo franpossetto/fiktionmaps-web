@@ -2,20 +2,18 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { LocationDTO } from "../../types/dto/LocationDTO";
 import { MapsProvider } from "../../types/providers/MapsProvider";
-import { useSceneController } from "../../contexts/SceneContext";
+import { usePlaceController } from "../../contexts/PlaceContext";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { Place } from "../../types/Place";
+import DefaultPlace from "../../pages/places/DefaultPlace";
+import placeholder from "../../pages/places/Placeholder";
 
 interface SearchPlaceProps {
   selectedPlace?: Place;
-  placeholder?: string;
 }
 
-export const SearchPlace = ({
-  selectedPlace,
-  placeholder,
-}: SearchPlaceProps) => {
-  const { place, setPlace: setPlc } = useSceneController();
+export const SearchPlace = ({ selectedPlace }: SearchPlaceProps) => {
+  const { place: plc, setPlace: setPlc } = usePlaceController();
   const [isDisabled, setIsDisabled] = useState(false);
 
   const loader = new Loader({
@@ -31,6 +29,10 @@ export const SearchPlace = ({
 
   let autocomplete: any;
   let isAutocompleteLoaded = false;
+
+  useEffect(() => {
+    if (selectedPlace) setPlc(selectedPlace);
+  }, []);
 
   useEffect(() => {
     loader
@@ -51,57 +53,31 @@ export const SearchPlace = ({
     };
   }, []);
 
-  const [autoCompleteValue, setAutoCompleteValue] = useState("");
   const inputRef: any = useRef();
 
   const handlePlaceChanged = () => {
-    const place = autocomplete.getPlace();
+    const placeAutoComplete = autocomplete.getPlace();
 
-    if (!place || !place.geometry) {
+    if (!placeAutoComplete || !placeAutoComplete.geometry) {
       inputRef.current.value = "";
       return;
     }
 
-    let locality = "",
-      country = "";
-    place.address_components.forEach((component) => {
-      if (component.types.includes("locality")) {
-        locality = component.long_name;
-      }
-      if (component.types.includes("country")) {
-        country = component.long_name;
-      }
-    });
+    const newLocation = GetDataFromAutoComplete(placeAutoComplete);
 
-    const location: LocationDTO = {
-      formatted_address: place.formatted_address,
-      latitude: place.geometry.location.lat(),
-      longitude: place.geometry.location.lng(),
-      place_id: place.place_id,
-      provider: MapsProvider.GOOGLE_MAPS,
-      city: locality,
-      country: country,
-    };
-    setPlc({ place: location });
+    setPlc((prevPlc: Place) => {
+      return {
+        ...prevPlc,
+        location: newLocation,
+      };
+    });
     setIsDisabled(true);
   };
 
   const handleReset = () => {
-    const defaultLocation = {
-      formatted_address: "1575 York Ave, New York, NY 10028, USA",
-      latitude: 40.7744823,
-      longitude: -73.9484961,
-      place_id: "ChIJp6aZ8LlYwokRoXWttn1Qz9c",
-      provider: MapsProvider.GOOGLE_MAPS,
-      city: "New York",
-      country: "United States",
-    };
-
-    setPlc({ place: defaultLocation });
-    setIsDisabled(false); // Volver a habilitar el campo de entrada
-
-    // Actualizar el valor del input para mostrar la dirección de Nueva York
-    inputRef.current.value = defaultLocation.formatted_address;
+    setPlc(null);
+    setIsDisabled(false);
+    inputRef.current.value = null;
   };
 
   return (
@@ -109,7 +85,11 @@ export const SearchPlace = ({
       <input
         type="text"
         className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        placeholder={placeholder}
+        placeholder={
+          selectedPlace
+            ? selectedPlace?.location.formattedAddress
+            : placeholder.location
+        }
         ref={inputRef}
         disabled={isDisabled}
       />
@@ -124,4 +104,31 @@ export const SearchPlace = ({
       )}
     </div>
   );
+};
+
+// Get Data from AutoComplete
+const GetDataFromAutoComplete = (placeAutoComplete: any) => {
+  let locality = "",
+    country = "";
+
+  placeAutoComplete.address_components.forEach((component: any) => {
+    if (component.types.includes("locality")) {
+      locality = component.long_name;
+    }
+    if (component.types.includes("country")) {
+      country = component.long_name;
+    }
+  });
+
+  const location: LocationDTO = {
+    formattedAddress: placeAutoComplete.formatted_address,
+    latitude: placeAutoComplete.geometry.location.lat(),
+    longitude: placeAutoComplete.geometry.location.lng(),
+    placeId: placeAutoComplete.place_id,
+    provider: MapsProvider.GOOGLE_MAPS,
+    country: country,
+    cityId: null,
+  };
+
+  return location;
 };

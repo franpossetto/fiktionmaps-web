@@ -32,6 +32,7 @@ import {
 import { useCityService } from "../../services/useCityService";
 import { City } from "../../types/City";
 import { useMapController } from "../../contexts/MapContext";
+import { SelectNoResults } from "../../components/common/SelectNoResults";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -165,20 +166,7 @@ export const CitySelect = ({ onClose }: { onClose: any }) => {
                 )}
 
                 {query !== "" && filteredItems.length === 0 && (
-                  <div className="px-6 py-14 text-center text-sm sm:px-14">
-                    <ExclamationCircleIcon
-                      type="outline"
-                      name="exclamation-circle"
-                      className="mx-auto h-6 w-6 text-gray-400"
-                    />
-                    <p className="mt-4 font-semibold text-gray-900">
-                      No results found
-                    </p>
-                    <p className="mt-2 text-gray-500">
-                      No components found for this search term. Please try
-                      again.
-                    </p>
-                  </div>
+                  <SelectNoResults />
                 )}
               </Combobox>
             </Dialog.Panel>

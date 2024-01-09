@@ -1,18 +1,13 @@
 import { Scene } from "./Scene";
+import { LocationDTO } from "./dto/LocationDTO";
 
 export interface Place {
   id?: number;
   name: string;
   description: string;
   screenshot?: string;
-  fiction_id: number;
-  location: {
-    id?: number;
-    latitude: number;
-    longitude: number;
-    formattedAddress: string;
-    placeId: string;
-  };
-  userId: number;
+  fictionId: number;
+  location: LocationDTO;
   scenes: Scene[];
+  published: boolean;
 }

@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { LocationDTO } from "../../types/dto/LocationDTO";
-import { useSceneController } from "../../contexts/SceneContext";
+import { usePlaceController } from "../../contexts/PlaceContext";
 import { Loader } from "@googlemaps/js-api-loader";
-import lightMapStyles from "../../assets/map/actual_styles.json";
-import { MapsProvider } from "../../types/providers/MapsProvider";
+import DefaultPlace from "./DefaultPlace";
 
 const PlaceDetails = () => {
-  const { place, setPlace: setPlc } = useSceneController();
+  const { place, setPlace: setPlc } = usePlaceController();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [marker, setMarker] = useState<google.maps.Marker | null>(null);
-  const mapRef = useRef<HTMLDivElement | null>(null);
+  const [initialCenter, setInitialCenter] = useState<any>();
 
+  const mapRef = useRef<HTMLDivElement | null>(null);
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
     version: "weekly",
@@ -18,22 +17,25 @@ const PlaceDetails = () => {
   });
 
   useEffect(() => {
-    const defaultLocation = {
-      formatted_address: "1575 York Ave, New York, NY 10028, USA",
-      latitude: 40.7744823,
-      longitude: -73.9484961,
-      place_id: "ChIJp6aZ8LlYwokRoXWttn1Qz9c",
-      provider: MapsProvider.GOOGLE_MAPS,
-      city: "New York",
-      country: "United States",
-    };
-    setPlc({ place: defaultLocation });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setInitialCenter({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    } else {
+      setInitialCenter({
+        lat: DefaultPlace.location.latitude,
+        lng: DefaultPlace.location.longitude,
+      });
+    }
   }, []);
 
   useEffect(() => {
+    console.log(initialCenter);
     loader.load().then((google) => {
-      if (mapRef.current && !map) {
-        const initialCenter = { lat: 0, lng: 0 };
+      if (mapRef.current && !map && initialCenter) {
         const mapInstance = new google.maps.Map(mapRef.current, {
           center: initialCenter,
           zoom: 11,
@@ -53,15 +55,15 @@ const PlaceDetails = () => {
         setMarker(markerInstance);
       }
     });
-  }, [map]);
+  }, [place, initialCenter]);
 
   useEffect(() => {
-    if (place && map && marker) {
+    if (place && map) {
       const newCenter = {
-        lat: place.place.latitude,
-        lng: place.place.longitude,
+        lat: place?.location.latitude,
+        lng: place?.location.longitude,
       };
-      marker.setPosition(newCenter);
+      marker?.setPosition(newCenter);
       map.setCenter(newCenter);
     }
   }, [place, map, marker]);
