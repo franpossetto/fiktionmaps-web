@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
 import { Fiction } from "../types/Fiction";
+import { Place } from "../types/Place";
+
 const noop = () => Promise.resolve();
 
-type SceneContext = {
+type PlaceContext = {
   fiction?: Fiction;
-  place?: any;
+  place?: Place;
   scene?: any;
   loading: boolean;
   setFiction: (f: Fiction) => void;
@@ -13,7 +15,7 @@ type SceneContext = {
   setLoading: (ldg: boolean) => void;
 };
 
-const SceneControllerContext = React.createContext<SceneContext>({
+const PlaceControllerContext = React.createContext<PlaceContext>({
   fiction: undefined,
   place: undefined,
   scene: undefined,
@@ -24,18 +26,18 @@ const SceneControllerContext = React.createContext<SceneContext>({
   setLoading: noop,
 });
 
-export const SceneController = ({
+export const PlaceController = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
   const [fiction, setFiction] = useState<Fiction>();
-  const [place, setPlace] = useState<any>();
+  const [place, setPlace] = useState<Place>();
   const [scene, setScene] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
 
   return (
-    <SceneControllerContext.Provider
+    <PlaceControllerContext.Provider
       value={{
         fiction,
         place,
@@ -48,7 +50,7 @@ export const SceneController = ({
       }}
     >
       {children}
-    </SceneControllerContext.Provider>
+    </PlaceControllerContext.Provider>
   );
 };
-export const useSceneController = () => useContext(SceneControllerContext);
+export const usePlaceController = () => useContext(PlaceControllerContext);

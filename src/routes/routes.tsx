@@ -12,7 +12,7 @@ import { AddFiction } from "../pages/fictions/AddFiction";
 import FictionTable from "../pages/fictions/FictionTable";
 import { MapView } from "../pages/map/MapView";
 import SceneTable from "../pages/scenes/SceneTable";
-import { SceneController } from "../contexts/SceneContext";
+import { PlaceController } from "../contexts/PlaceContext";
 import CityTable from "../pages/cities/CityTable";
 import LocationTable from "../pages/locations/LocationTable";
 import Layout from "../components/layout/Layout";
@@ -23,14 +23,14 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-      <Route
+        <Route
           path="/"
           element={
             <Layout>
               <MapView />
             </Layout>
           }
-        />        
+        />
         <Route
           path="/login"
           element={
@@ -71,7 +71,7 @@ const AppRouter = () => {
             </Layout>
           }
         />
-        <Route
+        {/* <Route
           path="/admin"
           element={
             <PrivateRoute>
@@ -102,24 +102,24 @@ const AppRouter = () => {
               <FictionTable />
             </PrivateRoute>
           }
-        />
+        /> */}
         <Route
-          path="/places/table"
+          path="/table/place"
           element={
             <PrivateRoute>
-              <SceneController>
+              <PlaceController>
                 <PlaceTable />
-              </SceneController>
+              </PlaceController>
             </PrivateRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/scenes/table"
           element={
             <PrivateRoute>
-              <SceneController>
+              <PlaceController>
                 <SceneTable />
-              </SceneController>
+              </PlaceController>
             </PrivateRoute>
           }
         />
@@ -135,9 +135,9 @@ const AppRouter = () => {
           path="/scenes/add"
           element={
             <PrivateRoute>
-              <SceneController>
+              <PlaceController>
                 <AddScene />
-              </SceneController>
+              </PlaceController>
             </PrivateRoute>
           }
         />
@@ -148,7 +148,7 @@ const AppRouter = () => {
               <LocationTable />
             </PrivateRoute>
           }
-        />
+        /> */}
       </Routes>
     </BrowserRouter>
   );

@@ -30,7 +30,6 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const { logout, user } = useAuthContext();
   const navigate = useNavigate();
 
-
   async function handleLogout() {
     setError("");
 
@@ -42,7 +41,6 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
     }
   }
 
-
   const navigation = [
     {
       name: "Profile",
@@ -53,16 +51,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       private: true,
     },
     {
-      name: "Collaboration",
-      href: "/collaboration",
-      icon: ChatBubbleLeftIcon,
-      current: location.pathname === "/collaboration",
-      openModal: false,
-      private: true,
-    },
-    {
       name: "Admin",
-      href: "/admin",
+      href: "/table/place",
       icon: CircleStackIcon,
       current: location.pathname === "/admin",
       openModal: false,
@@ -216,7 +206,6 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       : "text-gray-400 hover:text-white hover:bg-gray-800",
                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                   )}
-                  
                 >
                   <HomeIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
                 </a>

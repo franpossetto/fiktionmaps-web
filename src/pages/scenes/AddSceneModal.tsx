@@ -6,7 +6,7 @@ import { InputSearchFiction } from "./InputSearchFiction";
 import { useMapController } from "../../contexts/MapContext";
 import { Fiction } from "../../types/Fiction";
 import { Scene } from "../../types/Scene";
-import { useSceneController } from "../../contexts/SceneContext";
+import { usePlaceController } from "../../contexts/PlaceContext";
 
 interface LogoutModalProps {
   modalOpen: boolean;
@@ -17,11 +17,10 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
   modalOpen,
   setModalOpen,
 }) => {
- 
   const [place, setPlace] = useState();
   const [fictionToSave, setFictionToSave] = useState<Fiction>();
   const { fictionsSelected } = useMapController();
-  const { place:plc } = useSceneController();
+  const { place: plc } = usePlaceController();
 
   useEffect(() => {
     if (fictionsSelected?.length == 1) {
@@ -31,7 +30,6 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
     }
     console.log(fictionsSelected);
   }, [fictionsSelected]);
-
 
   const [sceneName, setSceneName] = useState<string>("");
   const [sceneDescription, setSceneDescription] = useState<string>("");
@@ -43,12 +41,10 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
   const [sceneScreenShot, setSceneScreenShot] = useState<any>();
   const [sceneSegmentType, setSceneSegmentType] = useState<any>();
 
-
   function handleCancel(): void {
     throw new Error("Function not implemented.");
   }
 
-  
   const cleanInputs = () => {
     setSceneName("");
     setSceneDescription("");
@@ -59,15 +55,13 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
     setSceneEndAt(0);
     setSceneScreenShot("");
     setSceneSegmentType("");
-
   };
 
   const { addSceneToFiction } = useFictionService();
 
   const handleCreateSceneClick = () => {
+    console.log(plc);
 
-    console.log(plc)
-    
     const scene: Scene = {
       name: sceneName,
       description: sceneDescription,
@@ -83,7 +77,7 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
         placeId: plc.place.place_id,
         id: plc.place.id,
       },
-      userId:1,
+      userId: 1,
     };
 
     console.log(scene);
@@ -102,11 +96,15 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
       });
   };
 
-  const handleSceneNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSceneNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setSceneName(event.target.value);
   };
 
-  const handleSceneDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleSceneDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setSceneDescription(event.target.value);
   };
 
@@ -156,108 +154,107 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
                     >
                       Add Scene
                     </Dialog.Title>
-                        <h2 className="my-5 text-black text-sm">
-                          To add a new Scene, select the Fiction and add information about the
-                          Scene. The location is mandatory!
-                        </h2>
-                        <div className="space-x-4 flex items-center">
-                          <div className="flex items-center">
-                            <input
-                              id="movie"
-                              name="genre"
-                              type="radio"
-                              checked
-                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                            />
-                            <label
-                              htmlFor="movie"
-                              className="block text-sm font-medium leading-6 text-gray-900 ml-2"
-                            >
-                              Movie
-                            </label>
-                          </div>
-                          <div className="flex items-center">
-                            <input
-                              id="tv-show"
-                              name="genre"
-                              type="radio"
-                              disabled
-                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                            />
-                            <label
-                              htmlFor="tv-show"
-                              className="block text-sm font-medium leading-6 text-gray-900 ml-2"
-                            >
-                              TV Show
-                            </label>
-                          </div>
-                          <div className="flex items-center">
-                            <input
-                              id="book"
-                              name="genre"
-                              type="radio"
-                              disabled
-                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                            />
-                            <label
-                              htmlFor="book"
-                              className="block text-sm font-medium leading-6 text-gray-900 ml-2"
-                            >
-                              Book
-                            </label>
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <label
-                            htmlFor="fiction-name"
-                            className="block text-sm font-medium leading-6 text-gray-900"
-                          >
-                            Fiction Name
-                          </label>
-                          
-                          <InputSearchFiction />
-                          <label
-                            htmlFor="scene-name"
-                            className="block text-sm font-medium leading-6 text-gray-900 mt-3"
-                          >
-                            Scene Name
-                          </label>
-                          <input
-                            type="text"
-                            name="scene-name"
-                            id="scene-name"
-                            value={sceneName}
-                            onChange={handleSceneNameChange}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          />
-                        </div>
-                        <div className="mt-4"></div>
-                        <div className="mt-4">
-                          <label
-                            htmlFor="scene-description"
-                            className="block text-sm font-medium leading-6 text-gray-900"
-                          >
-                            Scene Description
-                          </label>
-                          <textarea
-                            id="scene-description"
-                            name="scene-description"
-                            rows={3}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            value={sceneDescription}
-                            onChange={handleSceneDescriptionChange}
-                          />
-                        </div>
-                        <div className="mt-4">
-                          <label
-                            htmlFor="location"
-                            className="block text-sm font-medium leading-6 text-gray-900"
-                          >
-                            Location
-                          </label>
-                          <SearchPlace setPlace={setPlace} place={place} />
-                          
-                        </div>
+                    <h2 className="my-5 text-black text-sm">
+                      To add a new Scene, select the Fiction and add information
+                      about the Scene. The location is mandatory!
+                    </h2>
+                    <div className="space-x-4 flex items-center">
+                      <div className="flex items-center">
+                        <input
+                          id="movie"
+                          name="genre"
+                          type="radio"
+                          checked
+                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        />
+                        <label
+                          htmlFor="movie"
+                          className="block text-sm font-medium leading-6 text-gray-900 ml-2"
+                        >
+                          Movie
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          id="tv-show"
+                          name="genre"
+                          type="radio"
+                          disabled
+                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        />
+                        <label
+                          htmlFor="tv-show"
+                          className="block text-sm font-medium leading-6 text-gray-900 ml-2"
+                        >
+                          TV Show
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          id="book"
+                          name="genre"
+                          type="radio"
+                          disabled
+                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        />
+                        <label
+                          htmlFor="book"
+                          className="block text-sm font-medium leading-6 text-gray-900 ml-2"
+                        >
+                          Book
+                        </label>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <label
+                        htmlFor="fiction-name"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Fiction Name
+                      </label>
+
+                      <InputSearchFiction />
+                      <label
+                        htmlFor="scene-name"
+                        className="block text-sm font-medium leading-6 text-gray-900 mt-3"
+                      >
+                        Scene Name
+                      </label>
+                      <input
+                        type="text"
+                        name="scene-name"
+                        id="scene-name"
+                        value={sceneName}
+                        onChange={handleSceneNameChange}
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                    <div className="mt-4"></div>
+                    <div className="mt-4">
+                      <label
+                        htmlFor="scene-description"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Scene Description
+                      </label>
+                      <textarea
+                        id="scene-description"
+                        name="scene-description"
+                        rows={3}
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        value={sceneDescription}
+                        onChange={handleSceneDescriptionChange}
+                      />
+                    </div>
+                    <div className="mt-4">
+                      <label
+                        htmlFor="location"
+                        className="block text-sm font-medium leading-6 text-gray-900"
+                      >
+                        Location
+                      </label>
+                      <SearchPlace setPlace={setPlace} place={place} />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -4,20 +4,42 @@ import { Place } from "../../types/Place";
 import { AddPlaceModal } from "./AddPlaceModal";
 import DeletePlaceModal from "./DeletePlaceModal";
 import { EditPlaceModal } from "./EditPlaceModal";
+import { Fiction } from "../../types/Fiction";
+import {
+  TrashIcon,
+  PencilIcon,
+  DocumentCheckIcon,
+} from "@heroicons/react/24/solid";
+import { ApprovePlaceModal } from "./ApprovePlaceModal";
+import { PlaceImage } from "./components/PlaceImage";
+import { PlaceImageSmall } from "./components/PlaceImageSmall";
+
+type FictionHashTable = {
+  [key: number]: Fiction;
+};
 
 export const PlaceTable = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
-  const [selectedFiction, setSelectedFiction] = useState();
-  const { getPlaces, deletePlaceFromFiction } = useFictionService();
-  const { loading, data, error } = getPlaces();
+  const { getPlaces, deletePlaceFromFiction, getFictions } =
+    useFictionService();
+  const { loading, data, error, refetch } = getPlaces();
+  const { data: fictions } = getFictions();
+
   const [places, setPlaces] = useState<Place[]>([]);
 
   const [modalEditPlaceOpen, setModalEditPlaceOpen] = useState<boolean>(false);
   const [modalDeletePlaceOpen, setModalDeletePlaceOpen] =
     useState<boolean>(false);
+  const [modalApprovePlaceOpen, setModalApprovePlaceOpen] =
+    useState<boolean>(false);
 
   const [placeToDelete, setPlaceToDelete] = useState();
-  const [placeToEdit, setPlaceToEdit] = useState();
+  const [placeToEdit, setPlaceToEdit] = useState<Place>();
+  const [placeToApprove, setPlaceToApprove] = useState<Place>();
+
+  const [fictionHashTable, setFictionHashTable] = useState<FictionHashTable>(
+    {}
+  );
 
   useEffect(() => {
     if (data) {
@@ -28,7 +50,17 @@ export const PlaceTable = () => {
     }
   }, [data]);
 
-  const editPlace = (place: any) => {
+  useEffect(() => {
+    if (fictions) {
+      const newHashTable: FictionHashTable = {};
+      fictions.forEach((fiction: Fiction) => {
+        newHashTable[fiction.id] = fiction;
+      });
+      setFictionHashTable(newHashTable);
+    }
+  }, [fictions]);
+
+  const editPlace = (place: Place) => {
     setPlaceToEdit(place);
     setModalEditPlaceOpen(true);
   };
@@ -38,8 +70,13 @@ export const PlaceTable = () => {
     setModalDeletePlaceOpen(true);
   };
 
+  const approvePlace = (place: any) => {
+    setPlaceToApprove(place);
+    setModalApprovePlaceOpen(true);
+  };
+
   return (
-    <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
+    <div className="pl-32 pr-12 pt-6 lg:w-[100%] w-[90%]">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg p-10">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
@@ -60,7 +97,7 @@ export const PlaceTable = () => {
             </button>
           </div>
         </div>
-        <div className="mt-8 flow-root">
+        <div className="mt-8 flow-root text-xs">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <table className="min-w-full divide-y divide-gray-300">
@@ -68,15 +105,39 @@ export const PlaceTable = () => {
                   <tr>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                      className="py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3"
                     >
-                      Id
+                      #
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                      className="py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3"
                     >
-                      Name
+                      Image
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3"
+                    >
+                      Place Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3"
+                    >
+                      Fiction
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3"
+                    >
+                      Description
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3"
+                    >
+                      State
                     </th>
                     <th
                       scope="col"
@@ -88,28 +149,71 @@ export const PlaceTable = () => {
                 </thead>
                 <tbody className="bg-white">
                   {!loading ? (
-                    places.map((place: Place) => (
+                    places.map((place: Place, index) => (
                       <tr key={place.id} className="even:bg-gray-50">
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                          {place.id}
+                        <td
+                          className="whitespace-nowrap py-1 font-normal text-gray-900 sm:pl-3"
+                          style={{ width: "1%" }}
+                        >
+                          {index + 1}
                         </td>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                        <td
+                          className="whitespace-nowrap py-1 font-normal text-gray-900 sm:pl-3"
+                          style={{ width: "5%" }}
+                        >
+                          <PlaceImageSmall place={place} />
+                        </td>
+                        <td
+                          className="whitespace-nowrap py-1 font-normal text-gray-900 sm:pl-3"
+                          style={{ width: "20%" }}
+                        >
                           {place.name}
                         </td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
+                        {fictionHashTable && (
+                          <td
+                            className="whitespace-nowrap px-3 py-1 font-normal"
+                            style={{ width: "20%" }}
+                          >
+                            <span className="bg-slate-100 text-black py-1 px-2 rounded-lg">
+                              {fictionHashTable[place.fictionId]?.name}
+                            </span>
+                          </td>
+                        )}
+                        <td
+                          className="whitespace-nowrap py-1 font-normal text-gray-900 sm:pl-3"
+                          style={{ width: "30%" }}
+                        >
+                          {place.description.length > 50
+                            ? `${place.description.substring(0, 50)}...`
+                            : place.description}
+                        </td>
+
+                        <td className="whitespace-nowrap py-1 font-normal">
+                          {place.published ? (
+                            <button className="rounded-lg text-gray-800  px-3 py-[3px] bg-emerald-100">
+                              Approved
+                            </button>
+                          ) : (
+                            <button
+                              className="rounded-lg text-gray-800 px-3 py-[3px] bg-amber-100 hover:bg-amber-300"
+                              onClick={() => approvePlace(place)}
+                            >
+                              In Review
+                            </button>
+                          )}
+                        </td>
+                        <td className="relative whitespace-nowrap py-2 text-right font-medium">
                           <button
-                            className="text-indigo-600 hover:text-indigo-900"
+                            className="rounded-lg px-3 py-[3px] text-gray-800 hover:bg-gray-300 bg-gray-100"
                             onClick={() => editPlace(place)}
                           >
                             Edit
                           </button>
-                        </td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                           <button
-                            className="text-red-600 hover:text-indigo-900"
+                            className="rounded-lg text-gray-800 px-3 py-[3px] ml-2 bg-red-100 hover:bg-red-300"
                             onClick={() => deletePlace(place)}
                           >
-                            Delete
+                            Delete{" "}
                           </button>
                         </td>
                       </tr>
@@ -130,19 +234,26 @@ export const PlaceTable = () => {
       <AddPlaceModal
         modalOpen={modalAddFictionOpen}
         setModalOpen={setModalAddFictionOpen}
+        setPlaces={setPlaces}
       />
       {placeToEdit && (
         <EditPlaceModal
           modalOpen={modalEditPlaceOpen}
           setModalOpen={setModalEditPlaceOpen}
           placeToEdit={placeToEdit}
-          setPlaceToEdit={setPlaceToEdit}
+          setPlaces={setPlaces}
         />
       )}
       <DeletePlaceModal
         modalOpen={modalDeletePlaceOpen}
         setModalOpen={setModalDeletePlaceOpen}
         placeToDelete={placeToDelete}
+        setPlaces={setPlaces}
+      />
+      <ApprovePlaceModal
+        modalOpen={modalApprovePlaceOpen}
+        setModalOpen={setModalApprovePlaceOpen}
+        placeToApprove={placeToApprove}
         setPlaces={setPlaces}
       />
     </div>

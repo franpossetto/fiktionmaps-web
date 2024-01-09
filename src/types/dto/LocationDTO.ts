@@ -1,13 +1,13 @@
 import { MapsProvider } from "../providers/MapsProvider";
 
 export interface LocationDTO {
-    id?: string;
-    formatted_address: string;
-    name?: string;
-    latitude: number,
-    longitude: number,
-    place_id: string;
-    provider: MapsProvider
-    city: string,
-    country: string
+  id?: string;
+  formattedAddress: string;
+  name?: string;
+  latitude: number;
+  longitude: number;
+  placeId: string;
+  provider?: MapsProvider.GOOGLE_MAPS;
+  cityId?: any;
+  country?: string;
 }

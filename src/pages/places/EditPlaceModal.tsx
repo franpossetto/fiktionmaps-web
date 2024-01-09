@@ -1,51 +1,44 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchPlace } from "../../components/places/SearchPlace";
 import { PlaceFictionSelector } from "./PlaceFictionSelector";
 import { ModalWrapper } from "../../components/common/ModalWrapper";
-import { title } from "process";
 import PlaceDetails from "./PlaceDetails";
-import { useSceneController } from "../../contexts/SceneContext";
-import { Fiction } from "../../types/Fiction";
+import { usePlaceController } from "../../contexts/PlaceContext";
 import { useFictionService } from "../../services/useFictionService";
 import { Place } from "../../types/Place";
 import { toast } from "react-toastify";
 
-interface LogoutModalProps {
+interface EditModalProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  placeToEdit: any;
-  setPlaceToEdit: React.Dispatch<React.SetStateAction<any>>;
+  placeToEdit: Place;
+  setPlaces: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export const EditPlaceModal: React.FC<LogoutModalProps> = ({
+export const EditPlaceModal: React.FC<EditModalProps> = ({
   modalOpen,
   setModalOpen,
   placeToEdit,
-  setPlaceToEdit,
+  setPlaces,
 }) => {
-  const [placeName, setPlaceName] = useState(placeToEdit.name);
-  const [placeDescription, setPlaceDescription] = useState(
-    placeToEdit.description
-  );
+  const [placeName, setPlaceName] = useState<string>();
+  const [placeDescription, setPlaceDescription] = useState<string>();
 
-  const [placeFiction, setPlaceFiction] = useState();
-  const [place, setPlace] = useState<Place>();
+  const { updatePlaceFromFiction } = useFictionService();
+  const { place } = usePlaceController();
 
-  const { addPlaceToFiction } = useFictionService();
-  const { place: plc, fiction: fct } = useSceneController();
-
-  const [fiction, setFiction] = useState<Fiction>();
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
 
-  useEffect(() => {
-    setPlace(placeToEdit);
-  }, []);
+  const { getFictionById } = useFictionService();
+  const { loading, data, error } = getFictionById(placeToEdit.fictionId);
+  const [fictionName, setSetFictionName] = useState<string>("");
 
   useEffect(() => {
-    setFiction(fct);
-  }, [fct]);
+    if (data) {
+      setSetFictionName(data.name);
+    }
+  }, [data]);
 
   const handlePlaceNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setPlaceName(e.target.value);
@@ -55,54 +48,63 @@ export const EditPlaceModal: React.FC<LogoutModalProps> = ({
   ) => setPlaceDescription(e.target.value);
 
   const handleFictionPlaceSave = () => {
-    validateForm();
     const pl: Place = {
-      name: placeName,
-      description: placeDescription,
+      name: placeName || placeToEdit.name,
+      description: placeDescription || placeToEdit.description,
       location: {
-        latitude: plc?.place.latitude,
-        longitude: plc?.place.longitude,
-        formattedAddress: plc?.place.formatted_address,
-        placeId: plc?.place.place_id,
+        latitude: place?.location.latitude || placeToEdit.location.latitude,
+        longitude: place?.location.longitude || placeToEdit.location.longitude,
+        formattedAddress:
+          place?.location.formattedAddress ||
+          placeToEdit.location.formattedAddress,
+        placeId: place?.location.placeId || placeToEdit.location.placeId,
       },
       screenshot: undefined,
-      userId: 1,
-      fiction_id: fiction?.id || 0,
+      userId: 1, // cambiar
+      fictionId: placeToEdit?.fictionId,
       scenes: [],
     };
-    addPlaceToFiction(fiction?.id, pl);
+
+    updatePlaceFromFiction(placeToEdit?.id, pl)
+      .then((updatedPlaceResponse) => {
+        console.log(updatedPlaceResponse);
+        setPlaces((prevState: Place[]) => {
+          const updatedPlaces = [...prevState];
+          const index = updatedPlaces.findIndex(
+            (place) => place.id === updatedPlaceResponse.data.id
+          );
+          if (index !== -1) {
+            updatedPlaces[index] = updatedPlaceResponse.data;
+          }
+          return updatedPlaces;
+        });
+      })
+      .catch(() => {})
+      .finally(() => {
+        resetInputs();
+      });
     setModalOpen(false);
+  };
+
+  const resetInputs = () => {
+    setPlaceName("");
+    setPlaceDescription("");
   };
 
   const handleFictionPlaceCancel = () => {
     setModalOpen(false);
   };
 
-  const validateForm = () => {
-    if (!fiction || !fiction.id) {
-      toast.error("You must select a valid Fiction");
-    } else if (
-      !plc.place.latitude ||
-      !plc.place.longitude ||
-      !plc.place.formatted_address ||
-      !plc.place.place_id
-    ) {
-      toast.error("You must select a valid location");
-    } else if (!placeName || !placeDescription) {
-      toast.error("You must select a valid name and description");
-    }
-  };
-
   return (
     <ModalWrapper
       modalOpen={modalOpen}
       setModalOpen={setModalOpen}
-      title={"Add a Place"}
+      title={"Edit Place"}
     >
       <>
         <h2 className="my-2 text-black text-sm">See or edit this place.</h2>
         <div className="mt-4">
-          <PlaceFictionSelector />
+          <PlaceFictionSelector fiction={fictionName} />
           <label
             htmlFor="fiction-name"
             className="block text-sm font-medium leading-6 text-gray-900 mt-4"
@@ -113,7 +115,7 @@ export const EditPlaceModal: React.FC<LogoutModalProps> = ({
             type="text"
             name="scene-name"
             id="scene-name"
-            placeholder={place?.name}
+            placeholder={placeToEdit?.name}
             value={placeName}
             onChange={handlePlaceNameChange}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -132,7 +134,7 @@ export const EditPlaceModal: React.FC<LogoutModalProps> = ({
             name="scene-description"
             rows={3}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            placeholder={place?.description}
+            placeholder={placeToEdit?.description}
             value={placeDescription}
             onChange={handlePlaceDescriptionChange}
           />
@@ -145,10 +147,7 @@ export const EditPlaceModal: React.FC<LogoutModalProps> = ({
           >
             Location
           </label>
-          <SearchPlace
-            selectedPlace={place}
-            placeholder={place?.location.formattedAddress}
-          />
+          <SearchPlace selectedPlace={placeToEdit} />
           <PlaceDetails />
         </div>
 
@@ -158,7 +157,7 @@ export const EditPlaceModal: React.FC<LogoutModalProps> = ({
             className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white hover:bg-slate-900 focus:outline-none sm:w-auto sm:text-sm"
             onClick={handleFictionPlaceSave}
           >
-            Add Place
+            Update Place
           </button>
 
           <button
