@@ -7,6 +7,9 @@ import { usePlaceController } from "../../contexts/PlaceContext";
 import { useFictionService } from "../../services/useFictionService";
 import { Place } from "../../types/Place";
 import { toast } from "react-toastify";
+import { ImageInput } from "./ImageInput";
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../config/firebase";
 
 interface EditModalProps {
   modalOpen: boolean;
@@ -34,6 +37,43 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
   const { loading, data, error } = getFictionById(placeToEdit.fictionId);
   const [fictionName, setSetFictionName] = useState<string>("");
 
+  const [imageFile, setImageFile] = useState<any>(null);
+  const [loadingImg, setLoadingImg] = useState(false);
+
+  const handleImageChange = (e: { target: { files: any[] } }) => {
+    setImageFile(e.target.files[0]);
+  };
+
+  const uploadImage = async (
+    fictionId: any,
+    placeName: string,
+    imageFile: File
+  ) => {
+    if (!imageFile) return null;
+
+    const uniqueFileName = `${new Date().getTime()}_${imageFile.name}`;
+    const finalFileName = `${uniqueFileName}_${placeName}`;
+    const storageRef = ref(storage, `fictions/${fictionId}/${finalFileName}`);
+
+    try {
+      const snapshot = await uploadBytes(storageRef, imageFile);
+      return snapshot.ref.fullPath;
+    } catch (error) {
+      console.error("Error al guardar la imagen:", error);
+      return null;
+    }
+  };
+
+  async function getSha256(message: string): Promise<string> {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join(""); // Convierte el array a un string hexadecimal
+    return hashHex;
+  }
+
   useEffect(() => {
     if (data) {
       setSetFictionName(data.name);
@@ -47,7 +87,15 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => setPlaceDescription(e.target.value);
 
-  const handleFictionPlaceSave = () => {
+  const handleFictionPlaceSave = async () => {
+    setLoadingImg(true);
+
+    const imagePath = await uploadImage(
+      place?.fictionId,
+      placeName || "",
+      imageFile
+    );
+
     const pl: Place = {
       name: placeName || placeToEdit.name,
       description: placeDescription || placeToEdit.description,
@@ -59,8 +107,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
           placeToEdit.location.formattedAddress,
         placeId: place?.location.placeId || placeToEdit.location.placeId,
       },
-      screenshot: undefined,
-      userId: 1, // cambiar
+      screenshot: imagePath || undefined,
       fictionId: placeToEdit?.fictionId,
       scenes: [],
     };
@@ -119,6 +166,12 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
             value={placeName}
             onChange={handlePlaceNameChange}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+        </div>
+        <div className="mt-4">
+          <ImageInput
+            handleImageChange={handleImageChange}
+            placeholder={place?.screenshot}
           />
         </div>
 

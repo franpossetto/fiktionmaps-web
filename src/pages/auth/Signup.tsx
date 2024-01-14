@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
-import logo from "../../assets/fm_h.png"
+import logo from "../../assets/fm_h.png";
 import { toast } from "react-toastify";
 
 export const SignUp = () => {
@@ -39,21 +39,21 @@ export const SignUp = () => {
 
   const handleSignUp = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-    try{
+    try {
       const { user } = await signUpWithEmailAndPassword(email, password);
-    } catch{
+      toast.done(
+        "You should receive an email to confirm your email in a few minutes..."
+      );
+    } catch {
       toast.error("Email must be specified and passwords must be equals");
     }
   };
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row justify-center xl:space-x-16 lg:space-x-16 md:space-x-0 sm:space-x-0 h-screen items-center">
+      <div className="flex flex-col lg:flex-row justify-center xl:space-x-16 lg:space-x-16 md:space-x-0 sm:space-x-0 h-screen items-center text-white">
         <div>
-          <img
-            src={logo}
-            className="object-cover h-52 lg:h-72 xl:h-72"
-          ></img>
+          <img src={logo} className="object-cover h-52 lg:h-72 xl:h-72"></img>
           <h1 className="flex justify-center text-lg ">
             Connecting people with movies through cities
           </h1>

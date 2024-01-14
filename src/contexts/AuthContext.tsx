@@ -13,8 +13,10 @@ import {
   signInWithEmailAndPassword,
   signOut,
   User,
+  sendSignInLinkToEmail,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
+
 import { UserService } from "../services/UserService";
 import { UserDTO, UserRole } from "../types/dto/UserDTO";
 
@@ -49,22 +51,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         password
       );
 
-      //TODO catch error if user already exists in firebase. If the user exist, return a message saying the email is in use.
+      const user: any = userCredentials.user;
 
-      const user = userCredentials.user;
+      const actionCodeSettings = {
+        url: import.meta.env.VITE_REDIRECT_URL_SIGNUP,
+        handleCodeInApp: true,
+      };
+
+      sendSignInLinkToEmail(auth, email, actionCodeSettings)
+        .then(() => {
+          window.localStorage.setItem("emailForSignIn", email);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
 
       if (user) {
         const userDto: UserDTO = {
           externalUserId: user.uid,
           name: "",
           email: user.email || "",
-          password: "",
           role: UserRole.USER,
         };
 
-        // Create an instance of UserService and call the create method
         const userService = new UserService();
-        const response = await userService.create(userDto);
+        await userService.create(userDto);
+
+        await logout();
       }
 
       return { user };
@@ -113,6 +127,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // updateEmail,
     // updatePassword
   };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);

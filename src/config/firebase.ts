@@ -1,7 +1,11 @@
-import { initializeApp } from 'firebase/app';
-import { browserLocalPersistence, getAuth, GoogleAuthProvider, setPersistence } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
-
+import { initializeApp } from "firebase/app";
+import {
+  browserLocalPersistence,
+  getAuth,
+  GoogleAuthProvider,
+  setPersistence,
+} from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -21,8 +25,10 @@ setPersistence(auth, browserLocalPersistence);
 
 const provider = new GoogleAuthProvider();
 
-
-export const constructFirebaseImageUrl = (filePath: string, token: string): string => {
+export const constructFirebaseImageUrl = (
+  filePath: string,
+  token: string
+): string => {
   const encodedPath = encodeURIComponent(filePath);
   return `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.projectId}.appspot.com/o/${encodedPath}?alt=media&token=${token}`;
 };
