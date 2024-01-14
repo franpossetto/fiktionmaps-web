@@ -10,6 +10,7 @@ import { UserService } from "../../services/UserService";
 import { User } from "../../types/User";
 import { PlaceData } from "./components/PlaceData";
 import { PlaceScenes } from "./components/PlaceScene/PlaceScenes";
+import { PlaceCloseCard } from "./components/PlaceScene/PlaceCloseCard";
 
 interface PlaceViewProps {
   fiction: Fiction;
@@ -17,8 +18,11 @@ interface PlaceViewProps {
 }
 
 const PlaceView: React.FC<PlaceViewProps> = ({ fiction, place }) => {
+  const [open, setOpen] = useState(true);
+
   return (
-    <PlaceViewWrapper>
+    <PlaceViewWrapper open={open} setOpen={setOpen}>
+      <PlaceCloseCard place={place} setOpen={setOpen} />
       <PlaceImage place={place}></PlaceImage>
       <PlaceOverview fiction={fiction} place={place} />
       <PlaceData fiction={fiction} place={place} />
@@ -31,11 +35,15 @@ export default PlaceView;
 
 interface PlaceViewWrapperProps {
   children: ReactNode;
+  open: any;
+  setOpen: any;
 }
 
-const PlaceViewWrapper: React.FC<PlaceViewWrapperProps> = ({ children }) => {
-  const [open, setOpen] = useState(true);
-
+const PlaceViewWrapper: React.FC<PlaceViewWrapperProps> = ({
+  open,
+  setOpen,
+  children,
+}) => {
   const [loggedUser, setLoggedUser] = useState<User>();
 
   const getUserInfo = async () => {
@@ -67,31 +75,7 @@ const PlaceViewWrapper: React.FC<PlaceViewWrapperProps> = ({ children }) => {
                 >
                   <Dialog.Panel className="pointer-events-auto w-screen max-w-md md:min-w-[650px]">
                     <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-                      <div className="pl-5 py-3">
-                        <div className="flex items-start justify-between">
-                          {loggedUser ? (
-                            <PlaceUser user={loggedUser} />
-                          ) : (
-                            <div>Loading user...</div>
-                          )}
-                          <div className="flex h-7 items-center mr-6 mt-2">
-                            <button
-                              type="button"
-                              className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 p-3"
-                              onClick={() => setOpen(false)}
-                            >
-                              <span className="sr-only">Close panel</span>
-                              <XMarkIcon
-                                className="h-6 w-6"
-                                aria-hidden="true"
-                              />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="pb-1 sm:pb-6">{children}</div>
-                      </div>
+                      <div className="pb-1 sm:pb-6">{children}</div>
                     </div>
                   </Dialog.Panel>
                 </Transition.Child>
@@ -103,38 +87,3 @@ const PlaceViewWrapper: React.FC<PlaceViewWrapperProps> = ({ children }) => {
     </>
   );
 };
-
-{
-  /* <div className="px-4 pb-5 pt-5 sm:px-0 sm:pt-0">
-<dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
-  <div>
-    <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">About {fiction.name}</dt>
-
-    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-      <p>
-        {fiction.overview}
-      </p>
-    </dd>
-  </div>
-  <div>
-  <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Address</dt>
-
-  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-      <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.location.formattedAddress)}`} target="_blank" rel="noopener noreferrer">
-        {place.location.formattedAddress}
-      </a>
-    </dd>
-  </div>
-  <div>
-    <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Duration</dt>
-    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{fiction.duration} min</dd>
-  </div>
-  <div>
-    <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">IMDB</dt>
-    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-      <time dateTime="1988-06-23">{fiction.externalId}</time>
-    </dd>
-  </div>
-</dl>
-</div> */
-}
