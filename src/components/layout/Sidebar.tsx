@@ -51,10 +51,10 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       private: true,
     },
     {
-      name: "Admin",
-      href: "/table/place",
+      name: "Colab",
+      href: "/collaboration",
       icon: CircleStackIcon,
-      current: location.pathname === "/admin",
+      current: location.pathname === "/collaboration",
       openModal: false,
       private: true,
     },
