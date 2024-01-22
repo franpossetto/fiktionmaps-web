@@ -1,23 +1,16 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
-import { AuthProvider } from "../contexts/AuthContext";
 import { Login } from "../pages/auth/Login";
 import { SignUp } from "../pages/auth/Signup";
 import { ForgotPassword } from "../pages/auth/ForgotPassword";
-import { Profile } from "../pages/user/Profile";
-import Home from "../pages/admin/Admin";
-import { AddScene } from "../pages/scenes/AddScene";
-import { AddFiction } from "../pages/fictions/AddFiction";
-import FictionTable from "../pages/fictions/FictionTable";
+import { Profile } from "../pages/profile/Profile";
 import { MapView } from "../pages/map/MapView";
-import SceneTable from "../pages/scenes/SceneTable";
 import { PlaceController } from "../contexts/PlaceContext";
-import CityTable from "../pages/cities/CityTable";
-import LocationTable from "../pages/locations/LocationTable";
 import Layout from "../components/layout/Layout";
+import PlaceTable from "../components/places/placeTable/PlaceTable";
 import CollaborationView from "../pages/collaboration/CollaborationView";
-import PlaceTable from "../pages/places/PlaceTable";
+import PlaceTableCollab from "../components/places/placeTable/PlaceTableCollab";
 
 const AppRouter = () => {
   return (
@@ -71,84 +64,18 @@ const AppRouter = () => {
             </Layout>
           }
         />
-        {/* <Route
-          path="/admin"
-          element={
-            <PrivateRoute>
-              <Home />
-            </PrivateRoute>
-          }
-        />
         <Route
-          path="/collaboration"
-          element={
-            <PrivateRoute>
-              <CollaborationView />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/fictions/add"
-          element={
-            <PrivateRoute>
-              <AddFiction />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/fictions/table"
-          element={
-            <PrivateRoute>
-              <FictionTable />
-            </PrivateRoute>
-          }
-        /> */}
-        <Route
-          path="/table/place"
+          path="/collaboration/*"
           element={
             <PrivateRoute>
               <PlaceController>
-                <PlaceTable />
+                <Layout>
+                  <CollaborationView />
+                </Layout>
               </PlaceController>
             </PrivateRoute>
           }
         />
-        {/* <Route
-          path="/scenes/table"
-          element={
-            <PrivateRoute>
-              <PlaceController>
-                <SceneTable />
-              </PlaceController>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/cities/table"
-          element={
-            <PrivateRoute>
-              <CityTable />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/scenes/add"
-          element={
-            <PrivateRoute>
-              <PlaceController>
-                <AddScene />
-              </PlaceController>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/locations/table"
-          element={
-            <PrivateRoute>
-              <LocationTable />
-            </PrivateRoute>
-          }
-        /> */}
       </Routes>
     </BrowserRouter>
   );

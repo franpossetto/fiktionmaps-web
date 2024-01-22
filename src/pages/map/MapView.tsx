@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
+import Map from "./map/Map";
 import { useMapController } from "../../contexts/MapContext";
 import { useFictionService } from "../../services/useFictionService";
-import Search from "./Search";
-import Map from "./Map";
-import { CitySelect } from "./CitySelect";
 import { useCityService } from "../../services/useCityService";
-import { FictionSelect } from "./FictionSelect";
+import { CitySelect } from "./select/CitySelect";
+import { FictionSelect } from "./select/FictionSelect";
 import { FictionDisplayStatus } from "../../types/enum/FictionSelectorStatus";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 

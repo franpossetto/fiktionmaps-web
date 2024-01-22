@@ -39,6 +39,10 @@ export const useFictionService = () => {
     return useAxios({ url: "/places", config: { method: "get" } });
   };
 
+  const getPlacesByUser = () => {
+    return axiosWithToken.get("/places/user");
+  };
+
   const getTotals = (): useAxiosResponse<any> => {
     return useAxios({ url: "/fictions/totals", config: { method: "get" } });
   };
@@ -71,6 +75,7 @@ export const useFictionService = () => {
     deleteFiction,
     getScenes,
     getPlaces,
+    getPlacesByUser,
     getTotals,
     addSceneToFiction,
     addPlaceToFiction,
