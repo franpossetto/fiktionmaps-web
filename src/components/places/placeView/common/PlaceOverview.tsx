@@ -36,7 +36,9 @@ export const PlaceOverview: React.FC<PlaceOverviewProps> = ({
           <p className="text-xs text-gray-500">
             {fiction.name.toUpperCase()}, {fiction.year}
           </p>
-          <h3 className="text-xl font-bold  sm:text-2xl">{place.name}</h3>
+          <h3 className="text-xl font-bold sm:text-2xl text-neutral-900">
+            {place.name}
+          </h3>
           <p className="text-sm font-medium mt-3">{place.description}</p>
         </div>
       </div>

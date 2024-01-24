@@ -49,6 +49,11 @@ export const ApprovePlaceModal: React.FC<ApproveModalProps> = ({
     }
   };
 
+  function handleCancel(event: any): void {
+    setModalOpen(false);
+    setSelectedCity(undefined);
+  }
+
   return (
     <ModalWrapper
       modalOpen={modalOpen}
@@ -79,6 +84,7 @@ export const ApprovePlaceModal: React.FC<ApproveModalProps> = ({
           <button
             type="button"
             className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-sm"
+            onClick={handleCancel}
           >
             Cancel
           </button>

@@ -28,7 +28,7 @@ export const PlaceImage = ({ place }) => {
   }, []);
 
   const imgDivSideStyle = place.screenshot
-    ? "relative h-36 md:h-96"
+    ? "relative h-36 md:h-96 m-5"
     : "relative px-3";
   const imgSideStyle = place.screenshot
     ? "absolute h-full w-full object-cover"
@@ -38,15 +38,17 @@ export const PlaceImage = ({ place }) => {
   return (
     <>
       <div className="relative">
-        {showStreetView ? (
+        {/* {showStreetView ? (
           <StreetView />
         ) : (
           <div className={imgDivSideStyle}>
             <img className={imgSideStyle} src={imageUrl} alt="" />
           </div>
-        )}
-
-        <button
+        )} */}
+        <div className={imgDivSideStyle}>
+          <img className={imgSideStyle} src={imageUrl} alt="" />
+        </div>
+        {/* <button
           className="absolute top-0 right-0 mt-5 mr-7 bg-black rounded-full h-10 w-10 flex items-center justify-center text-xs text-white z-10"
           onClick={() => setShowStreetView(!showStreetView)}
         >
@@ -55,7 +57,7 @@ export const PlaceImage = ({ place }) => {
           ) : (
             <GlobeAmericasIcon className="transform scale-50" />
           )}
-        </button>
+        </button> */}
       </div>
     </>
   );

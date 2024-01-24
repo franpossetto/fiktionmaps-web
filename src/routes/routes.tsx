@@ -10,7 +10,7 @@ import { PlaceController } from "../contexts/PlaceContext";
 import Layout from "../components/layout/Layout";
 import PlaceTable from "../components/places/placeTable/PlaceTable";
 import CollaborationView from "../pages/collaboration/CollaborationView";
-import PlaceTableCollab from "../components/places/placeTable/PlaceTableCollab";
+import PlaceTableCollab from "../pages/collaboration/places/PlaceTableCollab";
 
 const AppRouter = () => {
   return (
@@ -69,9 +69,7 @@ const AppRouter = () => {
           element={
             <PrivateRoute>
               <PlaceController>
-                <Layout>
-                  <CollaborationView />
-                </Layout>
+                <CollaborationView />
               </PlaceController>
             </PrivateRoute>
           }

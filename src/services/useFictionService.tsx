@@ -36,11 +36,19 @@ export const useFictionService = () => {
   };
 
   const getPlaces = (): useAxiosResponse<any> => {
-    return useAxios({ url: "/places", config: { method: "get" } });
+    return useAxios({
+      tokenRequired: true,
+      url: "/places",
+      config: { method: "get" },
+    });
   };
 
-  const getPlacesByUser = () => {
-    return axiosWithToken.get("/places/user");
+  const getPlacesByUser = (): useAxiosResponse<any> => {
+    return useAxios({
+      tokenRequired: true,
+      url: "/places/user",
+      config: { method: "get" },
+    });
   };
 
   const getTotals = (): useAxiosResponse<any> => {

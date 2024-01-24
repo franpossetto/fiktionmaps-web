@@ -1,20 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @font-face {
-    font-family: 'ITCAvantGardePro-Bk';
-    src: url('/src/assets/font/ITCAvantGardePro-Bk.otf') format('opentype');
+  font-family: "ITCAvantGardePro-Bk";
+  src: url("/src/assets/font/ITCAvantGardePro-Bk.otf") format("opentype");
 }
-
 
 body {
-    background-color: #111827;
-    color: "black";
-    line-height: 2;
-    font-family: "Open Sans";
+  background-color: #111827;
+  color: "black";
+  line-height: 2;
+  font-family: "Montserrat";
 }
-
-
- 

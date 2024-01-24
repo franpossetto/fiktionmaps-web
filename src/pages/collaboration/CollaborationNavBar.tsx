@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 const navigation = [
   { name: "Places", href: "places", current: true },
-  { name: "Fictions", href: "fictions", current: false },
-  { name: "Scenes", href: "scenes", current: false },
-  { name: "Cities", href: "cities", current: false },
+  // { name: "Fictions", href: "fictions", current: false },
+  // { name: "Scenes", href: "scenes", current: false },
+  // { name: "Cities", href: "cities", current: false },
 ];
 
 const basePath = "/collaboration";

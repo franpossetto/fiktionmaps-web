@@ -10,5 +10,5 @@ export interface Place {
   location: LocationDTO;
   scenes: Scene[];
   published: boolean;
-  userId: string;
+  userId: number;
 }
