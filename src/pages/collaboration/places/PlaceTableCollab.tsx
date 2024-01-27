@@ -4,7 +4,7 @@ import { Place } from "../../../types/Place";
 import { Fiction } from "../../../types/Fiction";
 import { PlaceImageSmall } from "../../../components/places/placeTable/common/PlaceImageSmall";
 import { ContentTableWrapper } from "../../../components/common/ContentTableWrapper";
-import { ContentTable } from "../../../components/common/ContentTable";
+import { ContentTableView } from "../../../components/common/ContentTableView";
 import { ApprovePlaceModal } from "../../../components/places/placeTable/modals/ApprovePlaceModal";
 import { EditPlaceModal } from "../../../components/places/placeTable/modals/EditPlaceModal";
 import DeletePlaceModal from "../../../components/places/placeTable/modals/DeletePlaceModal";
@@ -171,7 +171,7 @@ export const PlaceTableCollab = () => {
         description={"These are the places you have added to the system."}
         action={{ title: "Add Place", fn: setModalAddFictionOpen }}
       >
-        <ContentTable data={{ dataToShow, config }} />
+        <ContentTableView data={{ dataToShow, config }} />
       </ContentTableWrapper>
       {placeToEdit && (
         <EditPlaceModal
