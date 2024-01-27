@@ -9,6 +9,7 @@ export const useFictionService = () => {
     return useAxios({
       url: `/fictions/cities/${cityId}`,
       config: { method: "get" },
+      tokenRequired: false,
     });
   };
 

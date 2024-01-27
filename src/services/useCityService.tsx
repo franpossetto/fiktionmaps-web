@@ -6,25 +6,25 @@ export const useCityService = () => {
     return useAxios({
       url: `/cities`,
       config: { method: "get" },
+      tokenRequired: false,
     });
-
   };
-  
+
   const getCityById = (cityId: number): useAxiosResponse<any> => {
     return useAxios({
       url: `/cities/${cityId}`,
       config: { method: "get" },
+      tokenRequired: false,
     });
   };
 
   const deleteCity = (cityId: number) => {
     return axiosWithToken.delete(`/cities/${cityId}`);
   };
-  
 
   return {
     getCities,
     getCityById,
-    deleteCity
+    deleteCity,
   };
 };

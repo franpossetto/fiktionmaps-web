@@ -1,19 +1,18 @@
-import axios from 'axios';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import { auth } from './firebase';
+import axios from "axios";
+import firebase from "firebase/app";
+import "firebase/auth";
+import { auth } from "./firebase";
 
 const axiosWithToken = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL + '/api/v1', 
+  baseURL: import.meta.env.VITE_BASE_URL + "/api/v1",
 });
 
-
 const axiosWithoutToken = axios.create({
-  baseURL: import.meta.env.VITE_GMAPS_API_KEY + '/api/v1', 
+  baseURL: import.meta.env.VITE_BASE_URL + "/api/v1",
 });
 
 axiosWithToken.interceptors.request.use(
-    async (config) => {
+  async (config) => {
     const token = await auth.currentUser?.getIdToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -25,4 +24,4 @@ axiosWithToken.interceptors.request.use(
   }
 );
 
-export {axiosWithToken, axiosWithoutToken};
+export { axiosWithToken, axiosWithoutToken };

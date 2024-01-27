@@ -14,6 +14,7 @@ import {
   signOut,
   User,
   sendSignInLinkToEmail,
+  sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -32,11 +33,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const loginWithEmailAndPassword = async (email: string, password: string) => {
     try {
-      const user = await signInWithEmailAndPassword(auth, email, password);
-      return { user };
-    } catch (err) {
-      const message = (err as Error).message;
-      throw new Error(message);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+
+      if (response.user.emailVerified) {
+        return { user };
+      }
+
+      await signOut(auth);
+      throw new Error("EMAIL_NOT_VERIFIED");
+    } catch (err: any) {
+      if (err.message == "EMAIL_NOT_VERIFIED") {
+        throw new Error("EMAIL_NOT_VERIFIED");
+      }
+      throw new Error("PASSWORD_OR_USER_INCORRECT");
     }
   };
 
@@ -58,7 +67,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         handleCodeInApp: true,
       };
 
-      sendSignInLinkToEmail(auth, email, actionCodeSettings)
+      sendEmailVerification(user)
+        // sendSignInLinkToEmail(auth, email, actionCodeSettings)
         .then(() => {
           window.localStorage.setItem("emailForSignIn", email);
         })

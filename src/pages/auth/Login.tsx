@@ -27,9 +27,14 @@ export const Login = () => {
   const handleLogin = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
     try {
-      const { user } = await loginWithEmailAndPassword(email, password);
-    } catch {
-      toast.error("User or password are incorrect");
+      await loginWithEmailAndPassword(email, password);
+    } catch (err: any) {
+      if (err.message == "EMAIL_NOT_VERIFIED") {
+        toast.error("Email is not verified");
+      }
+      if (err.message == "PASSWORD_OR_USER_INCORRECT") {
+        toast.error("User or password are incorrect");
+      }
     }
   };
   return (
