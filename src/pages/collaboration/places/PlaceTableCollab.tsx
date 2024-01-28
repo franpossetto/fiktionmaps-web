@@ -9,6 +9,9 @@ import { ApprovePlaceModal } from "../../../components/places/placeTable/modals/
 import { EditPlaceModal } from "../../../components/places/placeTable/modals/EditPlaceModal";
 import DeletePlaceModal from "../../../components/places/placeTable/modals/DeletePlaceModal";
 import { AddPlaceModal } from "../../../components/places/placeTable/modals/AddPlaceModal";
+import { useAuthContext } from "../../../contexts/AuthContext";
+import { UserService } from "../../../services/UserService";
+import { User } from "../../../types/User";
 
 type FictionHashTable = {
   [key: number]: Fiction;
@@ -58,6 +61,18 @@ export const PlaceTableCollab = () => {
   const { getFictions, getPlaces } = useFictionService();
   const { loading, data: placesData, error, refetch } = getPlaces();
   const { loading: loadingFictions, data: fictions } = getFictions();
+
+  const [loggedUser, setLoggedUser] = useState<User>();
+
+  const getUserInfo = async () => {
+    const userService = new UserService();
+    const response = await userService.getCurrentUser();
+    setLoggedUser(response);
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   const [places, setPlaces] = useState<Place[]>([]);
 
@@ -116,7 +131,7 @@ export const PlaceTableCollab = () => {
         </button>
       ) : (
         <>
-          {place.userId === 1 ? (
+          {place.userId === loggedUser?.id ? (
             <button className="rounded-lg text-gray-800 px-3 py-[3px] bg-amber-100">
               Pending
             </button>

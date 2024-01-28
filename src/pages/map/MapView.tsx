@@ -27,7 +27,7 @@ export const MapView = () => {
   } = useMapController();
 
   const { getFictionsByCity } = useFictionService();
-  const { data: fictionsByCity, refetch } = getFictionsByCity(city?.id || 1);
+  const { data: fictionsByCity, refetch } = getFictionsByCity(city?.id || 0);
 
   const { getCityById } = useCityService();
   const { loading, data: selectedCity } = getCityById(city?.id || 1);

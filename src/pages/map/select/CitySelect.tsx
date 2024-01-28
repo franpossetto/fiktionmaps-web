@@ -1,34 +1,7 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import { Fragment, useEffect, useState } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import {
-  CalendarIcon,
-  CodeBracketIcon,
-  DocumentIcon,
-  ExclamationCircleIcon,
-  LinkIcon,
-  PencilSquareIcon,
-  GlobeAmericasIcon,
-  PhotoIcon,
-  TableCellsIcon,
-  VideoCameraIcon,
-  ViewColumnsIcon,
-  Bars4Icon,
-} from "@heroicons/react/24/outline";
+import { GlobeAmericasIcon } from "@heroicons/react/24/outline";
 import { useCityService } from "../../../services/useCityService";
 import { City } from "../../../types/City";
 import { useMapController } from "../../../contexts/MapContext";
@@ -62,6 +35,7 @@ export const CitySelect = ({ onClose }: { onClose: any }) => {
   const setCityAndClose = (selectedCity: City) => {
     setCity(selectedCity);
     setOpen(false);
+    onClose(false);
   };
 
   return (

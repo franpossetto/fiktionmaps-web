@@ -32,6 +32,7 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
   const setFictionAndClose = (selectedFiction: Fiction) => {
     sendFictionsToMap([selectedFiction]);
     setOpen(false);
+    onClose(false);
   };
 
   return (
