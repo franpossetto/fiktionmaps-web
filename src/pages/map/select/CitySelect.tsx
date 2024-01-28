@@ -10,10 +10,13 @@ import { SelectNoResults } from "../../../components/common/SelectNoResults";
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
+interface CitySelectProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export const CitySelect = ({ onClose }: { onClose: any }) => {
+export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
   const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(true);
 
   const { getCities } = useCityService();
   const { loading, data, error } = getCities();
@@ -35,7 +38,6 @@ export const CitySelect = ({ onClose }: { onClose: any }) => {
   const setCityAndClose = (selectedCity: City) => {
     setCity(selectedCity);
     setOpen(false);
-    onClose(false);
   };
 
   return (
@@ -45,7 +47,7 @@ export const CitySelect = ({ onClose }: { onClose: any }) => {
       afterLeave={() => setQuery("")}
       appear
     >
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog as="div" className="relative z-10" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

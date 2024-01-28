@@ -10,9 +10,16 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const FictionSelect = ({ onClose }: { onClose: any }) => {
+interface FictionSelectProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const FictionSelect: React.FC<FictionSelectProps> = ({
+  open,
+  setOpen,
+}) => {
   const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(true);
 
   const {
     fictions,
@@ -32,7 +39,6 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
   const setFictionAndClose = (selectedFiction: Fiction) => {
     sendFictionsToMap([selectedFiction]);
     setOpen(false);
-    onClose(false);
   };
 
   return (
@@ -42,7 +48,7 @@ export const FictionSelect = ({ onClose }: { onClose: any }) => {
       afterLeave={() => setQuery("")}
       appear
     >
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog as="div" className="relative z-10" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

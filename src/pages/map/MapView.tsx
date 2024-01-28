@@ -10,7 +10,7 @@ import { XCircleIcon } from "@heroicons/react/24/solid";
 
 export const MapView = () => {
   const [isCityOpen, setIsCityOpen] = useState(false);
-  const [isFictionOpen, setFictionIsOpen] = useState(false);
+  const [fictionIsOpen, setFictionIsOpen] = useState(false);
   const [selectedFiction, setSelectedFiction] = useState<string>(
     FictionDisplayStatus.ALL_FICTIONS
   );
@@ -76,12 +76,12 @@ export const MapView = () => {
           <button
             type="button"
             className="rounded-md whitespace-nowrap bg-black/60 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-white/20 mt-6 h-10 ml-3 lg:ml-28"
-            onClick={() => setFictionIsOpen(!isFictionOpen)}
+            onClick={() => setFictionIsOpen(!fictionIsOpen)}
           >
             {selectedFiction}
           </button>
-          {isFictionOpen && (
-            <FictionSelect onClose={() => setFictionIsOpen(false)} />
+          {fictionIsOpen && (
+            <FictionSelect open={fictionIsOpen} setOpen={setFictionIsOpen} />
           )}
           {fictionSelectedOrNot && (
             <button
@@ -100,7 +100,7 @@ export const MapView = () => {
         >
           {city?.name}
         </button>
-        {isCityOpen && <CitySelect onClose={() => setIsCityOpen(false)} />}
+        {isCityOpen && <CitySelect open={isCityOpen} setOpen={setIsCityOpen} />}
       </div>
 
       {city && <Map />}
