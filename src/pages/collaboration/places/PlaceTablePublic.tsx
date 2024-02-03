@@ -15,56 +15,19 @@ import { ContentTableView } from "../../../components/common/ContentTableView";
 import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import { User } from "../../../types/User";
+import {
+  FictionHashTable,
+  PlaceTableProps,
+  config,
+  generateDataSource,
+} from "./PlaceTableUtils";
 
-type FictionHashTable = {
-  [key: number]: Fiction;
-};
-
-const config = [
-  {
-    label: "#",
-    key: "id",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
-  },
-  {
-    label: "Image",
-    key: "image",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
-  },
-  {
-    label: "Place Name",
-    key: "name",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
-  },
-  {
-    label: "Fiction",
-    key: "fiction",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
-  },
-  {
-    label: "Description",
-    key: "description",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
-  },
-  {
-    label: "State",
-    key: "state",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
-  },
-  {
-    label: "",
-    key: "actions",
-    className: "relative py-3.5 pl-3 pr-4 sm:pr-3",
-  },
-];
-
-export const PlaceTableCollab = () => {
+export const PlaceTablePublic = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
+  const { getFictions, getPlaces, getPlacesByUser } = useFictionService();
 
-  const { getFictions, getPlaces } = useFictionService();
-  const { loading, data: placesData, error, refetch } = getPlaces();
+  const { loading, data: placesData, error, refetch } = getPlacesByUser();
   const { loading: loadingFictions, data: fictions } = getFictions();
-
   const [loggedUser, setLoggedUser] = useState<User>();
 
   const getUserInfo = async () => {
@@ -111,56 +74,6 @@ export const PlaceTableCollab = () => {
     }
   }, [fictions]);
 
-  const dataSource = useMemo(() => {
-    return places.map((place, index) => ({
-      id: index + 1,
-      image: <PlaceImageSmall place={place} />,
-      name: place.name,
-      fiction:
-        fictionHashTable && fictionHashTable[place.fictionId] ? (
-          <ContentTableTagButton
-            color="grey"
-            text={fictionHashTable[place.fictionId].name}
-          />
-        ) : (
-          <ContentTableTagButton color="grey" text="No fiction" />
-        ),
-      description:
-        place.description.length > 50
-          ? `${place.description.substring(0, 50)}...`
-          : place.description,
-      state: place.published ? (
-        <ContentTableTagButton color="emerald" text="Approved" />
-      ) : (
-        <>
-          {place.userId !== loggedUser?.id ? (
-            <ContentTableTagButton
-              color="cyan"
-              onClick={() => approvePlace(place)}
-              text="To Review"
-            />
-          ) : (
-            <ContentTableTagButton color="cyan" text="Pending" />
-          )}
-        </>
-      ),
-      actions: (
-        <>
-          <ContentTableTagButton
-            color="gray"
-            onClick={() => editPlace(place)}
-            text="Edit"
-          />
-          <ContentTableTagButton
-            color="red"
-            onClick={() => deletePlace(place)}
-            text="Delete"
-          />
-        </>
-      ),
-    }));
-  }, [places, fictionHashTable]);
-
   const editPlace = (place: Place) => {
     setPlaceToEdit(place);
     setModalEditPlaceOpen(true);
@@ -175,6 +88,17 @@ export const PlaceTableCollab = () => {
     setPlaceToApprove(place);
     setModalApprovePlaceOpen(true);
   };
+
+  const dataSource = useMemo(() => {
+    return generateDataSource(
+      places,
+      fictionHashTable,
+      loggedUser,
+      editPlace,
+      deletePlace,
+      approvePlace
+    );
+  }, [places, fictionHashTable, loggedUser]);
 
   return (
     <>
@@ -214,4 +138,4 @@ export const PlaceTableCollab = () => {
   );
 };
 
-export default PlaceTableCollab;
+export default PlaceTablePublic;

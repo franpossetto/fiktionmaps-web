@@ -3,14 +3,11 @@ import { RocketLaunchIcon } from "@heroicons/react/24/outline";
 import { PlaceEmptyState } from "../places/placeTable/common/PlaceEmptyState";
 
 interface ContentTableProps {
-  dataToShow: any;
+  data: any;
   config: any;
 }
 
-export const ContentTable: React.FC<ContentTableProps> = ({
-  dataToShow,
-  config,
-}) => {
+export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
   return (
     <table className="min-w-full divide-y divide-gray-300">
       <thead>
@@ -22,7 +19,7 @@ export const ContentTable: React.FC<ContentTableProps> = ({
           ))}
       </thead>
       <tbody className="bg-white">
-        {dataToShow.map((row: any) => (
+        {data.map((row: any) => (
           <tr key={row.id} className="even:bg-gray-50">
             {config.map((column: any) => (
               <td

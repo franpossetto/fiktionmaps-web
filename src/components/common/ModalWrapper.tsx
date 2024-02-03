@@ -56,7 +56,7 @@ export const ModalWrapper: React.FC<LogoutModalProps> = ({
                   <div className="mt-3 text-center sm:text-left w-full">
                     <Dialog.Title
                       as="h3"
-                      className="text-2xl font-semibold leading-6 text-gray-900"
+                      className="text-2xl font-semibold leading-6 text-blue-900"
                     >
                       {title}
                     </Dialog.Title>

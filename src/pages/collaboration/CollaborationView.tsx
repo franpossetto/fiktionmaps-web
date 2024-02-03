@@ -6,6 +6,7 @@ import { BrowserRouter, Outlet, Route, Router, Routes } from "react-router-dom";
 import { FictionTableCollab } from "./fictions/FictionTableCollab";
 import { SceneTableCollab } from "./scenes/SceneTableCall";
 import { CityTableCollab } from "./cities/CityTableCollab";
+import { PlaceTableView } from "./places/PlaceTableView";
 
 export default function CollaborationView() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,8 +16,8 @@ export default function CollaborationView() {
       <div className="lg:pl-20 bg-white">
         <CollaborationNavBar />
         <Routes>
-          <Route index element={<PlaceTableCollab />} />
-          <Route path="places" element={<PlaceTableCollab />} />
+          <Route index path="/places/*" element={<PlaceTableView />} />
+          <Route path="/places/*" element={<PlaceTableView />} />
           <Route path="fictions" element={<FictionTableCollab />} />
           <Route path="scenes" element={<SceneTableCollab />} />
           <Route path="cities" element={<CityTableCollab />} />

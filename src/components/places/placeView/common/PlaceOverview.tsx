@@ -17,6 +17,7 @@ export const PlaceOverview: React.FC<PlaceOverviewProps> = ({
 
   useEffect(() => {
     const fetchImage = () => {
+      console.log(fiction.imgUrl);
       const sceneImg = fiction.imgUrl.replace("/img/", "");
       const imageRef: StorageReference = ref(storage, sceneImg);
 
