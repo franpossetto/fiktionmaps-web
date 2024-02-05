@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { Dialog, Switch, Transition } from "@headlessui/react";
-import PlaceTableCollab from "./places/PlaceTableCollab";
+import PlaceTableCollab from "./places/PlaceTableSections/PlaceTableCollab";
 import { CollaborationNavBar } from "./CollaborationNavBar";
 import { BrowserRouter, Outlet, Route, Router, Routes } from "react-router-dom";
 import { FictionTableCollab } from "./fictions/FictionTableCollab";
@@ -16,6 +16,7 @@ export default function CollaborationView() {
       <div className="lg:pl-20 bg-white">
         <CollaborationNavBar />
         <Routes>
+          <Route index path="/" element={<PlaceTableView />} />
           <Route index path="/places/*" element={<PlaceTableView />} />
           <Route path="/places/*" element={<PlaceTableView />} />
           <Route path="fictions" element={<FictionTableCollab />} />

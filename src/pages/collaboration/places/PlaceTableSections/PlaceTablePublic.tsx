@@ -1,32 +1,38 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useAuthContext } from "../../../contexts/AuthContext";
-import { useFictionService } from "../../../services/useFictionService";
-import { UserService } from "../../../services/UserService";
+import { useAuthContext } from "../../../../contexts/AuthContext";
+import { useFictionService } from "../../../../services/useFictionService";
+import { UserService } from "../../../../services/UserService";
 import ContentTableTagButton, {
   TagColor,
-} from "../../../components/common/ContentTableTagButton";
-import { ApprovePlaceModal } from "../../../components/places/placeTable/modals/ApprovePlaceModal";
-import { AddPlaceModal } from "../../../components/places/placeTable/modals/AddPlaceModal";
-import DeletePlaceModal from "../../../components/places/placeTable/modals/DeletePlaceModal";
-import { EditPlaceModal } from "../../../components/places/placeTable/modals/EditPlaceModal";
-import { PlaceImageSmall } from "../../../components/places/placeTable/common/PlaceImageSmall";
-import { ContentTableWrapper } from "../../../components/common/ContentTableWrapper";
-import { ContentTableView } from "../../../components/common/ContentTableView";
-import { Fiction } from "../../../types/Fiction";
-import { Place } from "../../../types/Place";
-import { User } from "../../../types/User";
+} from "../../../../components/common/ContentTableTagButton";
+import { ApprovePlaceModal } from "../../../../components/places/placeTable/modals/ApprovePlaceModal";
+import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
+import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
+import { EditPlaceModal } from "../../../../components/places/placeTable/modals/EditPlaceModal";
+import { PlaceImageSmall } from "../../../../components/places/placeTable/common/PlaceImageSmall";
+import { ContentTableWrapper } from "../../../../components/common/ContentTableWrapper";
+import { ContentTableView } from "../../../../components/common/ContentTableView";
+import { Fiction } from "../../../../types/Fiction";
+import { Place } from "../../../../types/Place";
+import { User } from "../../../../types/User";
 import {
   FictionHashTable,
   PlaceTableProps,
   config,
   generateDataSource,
-} from "./PlaceTableUtils";
+} from "../PlaceTableUtils";
+import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
 
-export const PlaceTablePublic = () => {
+export const PlaceTablePublished = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
-  const { getFictions, getPlaces, getPlacesByUser } = useFictionService();
+  const { getFictions, getPlaces } = useFictionService();
 
-  const { loading, data: placesData, error, refetch } = getPlacesByUser();
+  const {
+    loading: loadingPlaces,
+    data: placesData,
+    error,
+    refetch,
+  } = getPlaces(true);
   const { loading: loadingFictions, data: fictions } = getFictions();
   const [loggedUser, setLoggedUser] = useState<User>();
 
@@ -104,10 +110,16 @@ export const PlaceTablePublic = () => {
     <>
       <ContentTableWrapper
         title={"Places"}
-        description={"These are the places you have added to the system."}
+        description={
+          "These are the approved places that you have added to the system. You can find these places on the map."
+        }
         action={{ title: "Add Place", fn: setModalAddFictionOpen }}
       >
-        <ContentTableView content={{ dataSource, config }} />
+        {loadingPlaces ? (
+          <PlaceSkeleton />
+        ) : (
+          <ContentTableView content={{ dataSource, config }} />
+        )}
       </ContentTableWrapper>
       {placeToEdit && (
         <EditPlaceModal
@@ -138,4 +150,4 @@ export const PlaceTablePublic = () => {
   );
 };
 
-export default PlaceTablePublic;
+export default PlaceTablePublished;

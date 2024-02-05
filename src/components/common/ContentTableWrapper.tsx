@@ -1,3 +1,4 @@
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import EntityTabs, { Tab } from "./EntityTabs";
 
 interface ContentTableTitleProps {
@@ -22,14 +23,15 @@ export const ContentTableWrapper: React.FC<ContentTableTitleProps> = ({
         <div className="sm:flex-auto">
           <p className="text-sm text-gray-700 mt-2">{description}</p>
         </div>
-        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+        <div className="mt-4 sm:ml-16 sm:mt-0 flex flex-row">
           <button
             type="button"
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mr-8"
+            className="flex rounded-md bg-indigo-600 px-3 py-2 text-center text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mr-8 items-center justify-start"
             onClick={() => {
               action?.fn(true);
             }}
           >
+            <PlusCircleIcon className="text-sm mr-2 h-4" />
             {action?.title}
           </button>
         </div>

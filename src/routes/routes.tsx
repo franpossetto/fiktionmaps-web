@@ -10,7 +10,7 @@ import { PlaceController } from "../contexts/PlaceContext";
 import Layout from "../components/layout/Layout";
 import PlaceTable from "../components/places/placeTable/PlaceTable";
 import CollaborationView from "../pages/collaboration/CollaborationView";
-import PlaceTableCollab from "../pages/collaboration/places/PlaceTableCollab";
+import PlaceTableCollab from "../pages/collaboration/places/PlaceTableSections/PlaceTableCollab";
 
 const AppRouter = () => {
   return (

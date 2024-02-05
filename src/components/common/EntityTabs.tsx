@@ -5,6 +5,7 @@ export interface Tab {
   label: string;
   onClick: () => void;
   key: string;
+  icon: any;
 }
 
 interface EntityTabsProps {
@@ -28,23 +29,30 @@ const EntityTabs: React.FC<EntityTabsProps> = ({ tabs }) => {
   const basePath = "/collaboration/places";
 
   return (
-    <div>
+    <div className="flex flex-row">
       {tabs.map((tab, index) => (
         <button
           key={index}
           type="button"
-          className={`rounded-lg text-xs mt-5 px-2 py-1 ${
-            tab.key == currentTab
+          className={`
+          rounded-lg text-xs mt-5 px-2 py-2 items-center justify-start
+          ${
+            tab.key === currentTab
               ? "bg-gray-900 text-white"
               : "bg-gray-100 text-black"
-          } ${index < tabs.length - 1 ? "mr-3" : ""}`}
+          }
+          ${index < tabs.length - 1 ? "mr-3" : ""}
+        `}
         >
-          <Link
-            to={`${basePath}/${tab.key}`}
-            onClick={(e) => handleNavigation(e, tab.key)}
-          >
-            {tab.label}
-          </Link>
+          <span className="flex items-center">
+            {tab.icon}
+            <Link
+              to={`${basePath}/${tab.key}`}
+              onClick={(e) => handleNavigation(e, tab.key)}
+            >
+              {tab.label}
+            </Link>
+          </span>
         </button>
       ))}
     </div>

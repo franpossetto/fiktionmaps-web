@@ -36,10 +36,15 @@ export const useFictionService = () => {
     return useAxios({ url: "/scenes", config: { method: "get" } });
   };
 
-  const getPlaces = (): useAxiosResponse<any> => {
+  const getPlaces = (published?: boolean): useAxiosResponse<any> => {
+    let url = "/places";
+    if (published !== undefined) {
+      url += `?approved=${published}`;
+    }
+
     return useAxios({
-      tokenRequired: true,
-      url: "/places",
+      tokenRequired: false,
+      url: url,
       config: { method: "get" },
     });
   };

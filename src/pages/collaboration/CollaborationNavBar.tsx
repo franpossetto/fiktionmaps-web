@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const navigation = [
@@ -16,8 +16,14 @@ export const CollaborationNavBar = () => {
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     viewName: React.SetStateAction<string>
   ) => {
+    console.log(viewName);
     setCurrentTab(viewName);
   };
+
+  useEffect(() => {
+    setCurrentTab("Places");
+  }, []);
+
   return (
     <nav className="flex overflow-x-auto py-4 border-b-[1px] border-gray-200">
       <ul
