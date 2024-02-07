@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PlaceEmptyState } from "../places/placeTable/common/PlaceEmptyState";
 import { ContentTable } from "./ContentTable";
+import { RocketLaunchIcon } from "@heroicons/react/24/outline";
 
 interface ContentTableProps {
   content: any;
@@ -25,7 +26,13 @@ export const ContentTableView: React.FC<ContentTableProps> = ({ content }) => {
             {data && data.length > 0 ? (
               <ContentTable data={data} config={config} />
             ) : (
-              <PlaceEmptyState />
+              <PlaceEmptyState
+                icon={
+                  <RocketLaunchIcon className="w-10 h-10 mb-4 text-gray-800" />
+                }
+                title="No places created yet"
+                message="Create your first place to get started"
+              />
             )}
           </div>
         </div>

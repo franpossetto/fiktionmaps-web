@@ -1,8 +1,8 @@
 import { StorageReference, getDownloadURL, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { storage } from "../../../../config/firebase";
-import { Fiction } from "../../../types/entities/fiction";
-import { Place } from "../../../types/entities/place";
+import { Fiction } from "../../../../types/Fiction";
+import { Place } from "../../../../types/Place";
 
 interface PlaceOverviewProps {
   fiction: Fiction;

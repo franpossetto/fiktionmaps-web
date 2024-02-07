@@ -8,7 +8,6 @@ import { Profile } from "../pages/profile/Profile";
 import { MapView } from "../pages/map/MapView";
 import { PlaceController } from "../contexts/PlaceContext";
 import Layout from "../components/layout/Layout";
-import PlaceTable from "../components/places/placeTable/PlaceTable";
 import CollaborationView from "../pages/collaboration/CollaborationView";
 import PlaceTableCollab from "../pages/collaboration/places/PlaceTableSections/PlaceTableCollab";
 

@@ -1,7 +1,3 @@
-import { useEffect, useState } from "react";
-import { RocketLaunchIcon } from "@heroicons/react/24/outline";
-import { PlaceEmptyState } from "../places/placeTable/common/PlaceEmptyState";
-
 interface ContentTableProps {
   data: any;
   config: any;

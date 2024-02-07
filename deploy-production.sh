@@ -1,0 +1,5 @@
+#/bin/bash
+#upload files
+aws --profile fpossetto s3 cp ./dist s3://www.fiktionmaps.com --recursive --acl public-read --region us-east-2 --exclude "" --include ".js" --include "..js"
+aws --profile fpossetto s3 cp ./dist s3://www.fiktionmaps.com --recursive --acl public-read --region us-east-2 --exclude ".js" --exclude ".*.js"
+# aws --profile fpossetto cloudfront create-invalidation --distribution-id CLOUDFRONT_ID --path "/*"

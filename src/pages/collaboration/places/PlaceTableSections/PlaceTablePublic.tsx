@@ -17,7 +17,6 @@ import { Place } from "../../../../types/Place";
 import { User } from "../../../../types/User";
 import {
   FictionHashTable,
-  PlaceTableProps,
   config,
   generateDataSource,
 } from "../PlaceTableUtils";

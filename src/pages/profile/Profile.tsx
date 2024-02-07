@@ -3,7 +3,6 @@ import { useAuthContext } from "../../contexts/AuthContext";
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { UserService } from "../../services/UserService";
 import { UserDTO, UserRole } from "../../types/dto/UserDTO";
-import PlaceTable from "../../components/places/placeTable/PlaceTable";
 
 interface UserObject {
   name?: string;

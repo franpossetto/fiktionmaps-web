@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "deploy:prod": "tsc && vite build --mode production && bash deploy-production.sh"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
