@@ -1,4 +1,4 @@
-import React, { Fragment, PropsWithChildren, useState } from "react";
+import React, { Fragment, PropsWithChildren, useState, useEffect, } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -9,6 +9,8 @@ import {
   ArrowRightOnRectangleIcon,
   ChatBubbleLeftIcon,
   CircleStackIcon,
+  MoonIcon,
+  SunIcon,
 } from "@heroicons/react/24/outline";
 import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
@@ -29,6 +31,16 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const [error, setError] = useState("");
   const { logout, user } = useAuthContext();
   const navigate = useNavigate();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isDarkMode) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   async function handleLogout() {
     setError("");
@@ -95,7 +107,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-gray-900/80" />
+              <div className="fixed inset-0 bg-white/80 dark:bg-gray-900/80" />
             </Transition.Child>
 
             <div className="fixed inset-0 flex">
@@ -132,7 +144,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-2 ring-1 ring-white/10">
+                  <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-2 ring-1 ring-white/10 bg-white dark:bg-gray-900">
                     <div className="flex h-16 shrink-0 items-center">
                       <img src={logo} alt="f" className="h-10 mt-8" />
                     </div>
@@ -147,7 +159,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                                 : "text-gray-400 hover:text-white hover:bg-gray-800",
                               "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                             )}
-                            onClick={(e) => {}}
+                            onClick={(e) => { }}
                           >
                             <HomeIcon
                               className="h-6 w-6 shrink-0"
@@ -185,25 +197,26 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       </ul>
                     </nav>
                   </div>
+                  {/* Aqui va el boton para la version Mobile */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
           </Dialog>
         </Transition.Root>
 
-        <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto lg:bg-gray-900 shadow-md shadow-slate-900 lg:pb-4">
+        <div className="h-full lg:flex lg:flex-col hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto shadow-md shadow-slate-900 lg:pb-4 lg:bg-white dark:lg:bg-gray-900">
           <div className="flex h-16 shrink-0 items-center justify-center">
             <img src={logo} alt="f" className="h-10 mt-8" />
           </div>
-          <nav className="mt-8">
+          <nav className="flex-1 mt-8">
             <ul role="list" className="flex flex-col items-center space-y-1">
               <li>
                 <a
                   href="/home"
                   className={classNames(
                     location.pathname === "/home"
-                      ? "bg-gray-800 text-white"
-                      : "text-gray-400 hover:text-white hover:bg-gray-800",
+                      ? "bg-gray-400 text-white dark:bg-gray-800 dark:text-white"
+                      : "text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800",
                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                   )}
                 >
@@ -220,8 +233,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       href={item.href}
                       className={classNames(
                         item.current
-                          ? "bg-gray-800 text-white"
-                          : "text-gray-400 hover:text-white hover:bg-gray-800",
+                          ? "bg-gray-400 text-white dark:bg-gray-800 dark:text-white"
+                          : "text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800",
                         "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
                       )}
                       onClick={(e) => {
@@ -242,10 +255,22 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
               ))}
             </ul>
           </nav>
+          {/* Boton cambio de tema */}
+          <div className="mt-auto px-4 py-2">
+            <button type="button" className="w-full py-2 text-center rounded-md text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
+              onClick={() => setIsDarkMode(!isDarkMode)}
+            >
+              {isDarkMode ? (
+                <SunIcon className="h-6 w-6 mx-auto" />
+              ) : (
+                <MoonIcon className="h-6 w-6 mx-auto" />
+              )}
+            </button>
+          </div>
         </div>
         <LogoutModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
 
-        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-gray-900 px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex items-center gap-x-6 px-4 py-4 shadow-sm sm:px-6 lg:hidden bg-white dark:bg-gray-900">
           <button
             type="button"
             className="-m-2.5 p-2.5 text-gray-400 lg:hidden"

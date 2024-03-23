@@ -7,7 +7,7 @@ import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import { IMapScreen } from "../../../types/IMapScreen";
 import pin from "../../../../src/assets/pin.png";
-import darkMapStyles from "../../../assets/map/dark_styles.json";
+import darkMapStyles from "../../../assets/map/light_style_dev.json";
 
 export default function Map() {
   const mapRef = useRef<HTMLDivElement>(null);
