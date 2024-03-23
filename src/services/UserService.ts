@@ -23,7 +23,6 @@ export class UserService {
         `${this.baseUrl}/users/${data.id}`,
         data
       );
-      console.log(response);
       return response.data;
     } catch (error) {
       throw error;

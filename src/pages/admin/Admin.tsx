@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useFictionService } from "../../services/useFictionService";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { UserService } from "../../services/UserService";
+import { useUserService } from "../../services/useUserService";
 
 const actions = [
   {
@@ -66,16 +66,16 @@ export default function Admin() {
   const navigate = useNavigate();
   const { getTotals } = useFictionService();
   const { user } = useAuthContext();
+  const { getCurrentUser } = useUserService();
 
   const getUserInfo = async () => {
-    const userService = new UserService();
-    const response = await userService.getCurrentUser();
+    const response = await getCurrentUser();
     setLoggedUser(response);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getUserInfo();
-  },[])
+  }, []);
 
   const [items, setItems] = useState([
     {
@@ -153,7 +153,7 @@ export default function Admin() {
     <div className="pl-32 pt-6 lg:w-[1200px] w-[90%]">
       <div className="overflow-hidden bg-white shadow sm:rounded-lg p-10">
         <h1 className="text-black text-3xl font-bold mb-3">
-          Welcome { loggedUser?.name}!
+          Welcome {loggedUser?.name}!
         </h1>
         <h2 className="text-base text-gray-900">
           In this section you can find information about what you can do in

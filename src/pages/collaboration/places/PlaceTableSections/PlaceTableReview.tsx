@@ -10,10 +10,10 @@ import { EditPlaceModal } from "../../../../components/places/placeTable/modals/
 import { Place } from "../../../../types/Place";
 import { FictionHashTable, config } from "../PlaceTableUtils";
 import { Fiction } from "../../../../types/Fiction";
-import { UserService } from "../../../../services/UserService";
 import { User } from "../../../../types/User";
 import { useFictionService } from "../../../../services/useFictionService";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
+import { useUserService } from "../../../../services/useUserService";
 
 export const PlaceTableReview = () => {
   const [loading, setLoading] = useState(true); // State for loading indicator
@@ -26,6 +26,7 @@ export const PlaceTableReview = () => {
     error,
     refetch,
   } = getPlaces(false);
+  const { getCurrentUser } = useUserService();
   const { loading: loadingFictions, data: fictions } = getFictions();
   const [places, setPlaces] = useState<Place[]>([]);
   const [modalEditPlaceOpen, setModalEditPlaceOpen] = useState<boolean>(false);
@@ -75,8 +76,7 @@ export const PlaceTableReview = () => {
   }, [fictions]);
 
   const getUserInfo = async () => {
-    const userService = new UserService();
-    const response = await userService.getCurrentUser();
+    const response = await getCurrentUser();
     setLoggedUser(response);
   };
 

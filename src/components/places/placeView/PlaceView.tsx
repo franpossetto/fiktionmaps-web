@@ -4,11 +4,11 @@ import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import { PlaceImage } from "./common/PlaceImage";
 import { PlaceOverview } from "./common/PlaceOverview";
-import { UserService } from "../../../services/UserService";
 import { User } from "../../../types/User";
 import { PlaceData } from "./common/PlaceData";
 import { PlaceScenes } from "../placeTable/common/PlaceScene/PlaceScenes";
 import { PlaceCloseCard } from "../placeTable/common/PlaceScene/PlaceCloseCard";
+import { useUserService } from "../../../services/useUserService";
 
 interface PlaceViewProps {
   fiction: Fiction;
@@ -43,10 +43,10 @@ const PlaceViewWrapper: React.FC<PlaceViewWrapperProps> = ({
   children,
 }) => {
   const [loggedUser, setLoggedUser] = useState<User>();
+  const { getCurrentUser } = useUserService();
 
   const getUserInfo = async () => {
-    const userService = new UserService();
-    const response = await userService.getCurrentUser();
+    const response = await getCurrentUser();
     setLoggedUser(response);
   };
 

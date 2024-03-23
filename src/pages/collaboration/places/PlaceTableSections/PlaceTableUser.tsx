@@ -9,15 +9,16 @@ import { EditPlaceModal } from "../../../../components/places/placeTable/modals/
 import { Place } from "../../../../types/Place";
 import { FictionHashTable, config } from "../PlaceTableUtils";
 import { Fiction } from "../../../../types/Fiction";
-import { UserService } from "../../../../services/UserService";
 import { useFictionService } from "../../../../services/useFictionService";
 import { User } from "../../../../types/User";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
+import { useUserService } from "../../../../services/useUserService";
 
 export const PlaceTableUser = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
 
   const { getFictions, getPlacesByUser } = useFictionService();
+  const { getCurrentUser } = useUserService();
   const {
     loading: loadingPlaces,
     data: placesData,
@@ -29,8 +30,7 @@ export const PlaceTableUser = () => {
   const [loggedUser, setLoggedUser] = useState<User>();
 
   const getUserInfo = async () => {
-    const userService = new UserService();
-    const response = await userService.getCurrentUser();
+    const response = await getCurrentUser();
     setLoggedUser(response);
   };
 

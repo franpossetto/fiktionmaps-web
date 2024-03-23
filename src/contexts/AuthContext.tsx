@@ -8,18 +8,16 @@ import React, {
 } from "react";
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   User,
-  sendSignInLinkToEmail,
   sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
-import { UserService } from "../services/UserService";
 import { UserDTO, UserRole } from "../types/dto/UserDTO";
+import { useUserService } from "../services/useUserService";
 
 const AuthContext = createContext<any>(null);
 
@@ -30,6 +28,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { createUser } = useUserService();
 
   const loginWithEmailAndPassword = async (email: string, password: string) => {
     try {
@@ -68,7 +67,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       };
 
       sendEmailVerification(user)
-        // sendSignInLinkToEmail(auth, email, actionCodeSettings)
         .then(() => {
           window.localStorage.setItem("emailForSignIn", email);
         })
@@ -85,8 +83,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           role: UserRole.USER,
         };
 
-        const userService = new UserService();
-        await userService.create(userDto);
+        await createUser(userDto);
 
         await logout();
       }

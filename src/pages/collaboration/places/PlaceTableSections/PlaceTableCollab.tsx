@@ -1,10 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useAuthContext } from "../../../../contexts/AuthContext";
 import { useFictionService } from "../../../../services/useFictionService";
-import { UserService } from "../../../../services/UserService";
-import ContentTableTagButton, {
-  TagColor,
-} from "../../../../components/common/ContentTableTagButton";
 import { ApprovePlaceModal } from "../../../../components/places/placeTable/modals/ApprovePlaceModal";
 import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
@@ -15,6 +10,7 @@ import { ContentTableView } from "../../../../components/common/ContentTableView
 import { Fiction } from "../../../../types/Fiction";
 import { Place } from "../../../../types/Place";
 import { User } from "../../../../types/User";
+import { useUserService } from "../../../../services/useUserService";
 
 type FictionHashTable = {
   [key: number]: Fiction;
@@ -66,10 +62,10 @@ export const PlaceTableCollab = () => {
   const { loading: loadingFictions, data: fictions } = getFictions();
 
   const [loggedUser, setLoggedUser] = useState<User>();
+  const { getCurrentUser } = useUserService();
 
   const getUserInfo = async () => {
-    const userService = new UserService();
-    const response = await userService.getCurrentUser();
+    const response = await getCurrentUser();
     setLoggedUser(response);
   };
 

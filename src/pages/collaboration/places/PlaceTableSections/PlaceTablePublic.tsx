@@ -1,15 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useAuthContext } from "../../../../contexts/AuthContext";
 import { useFictionService } from "../../../../services/useFictionService";
-import { UserService } from "../../../../services/UserService";
-import ContentTableTagButton, {
-  TagColor,
-} from "../../../../components/common/ContentTableTagButton";
 import { ApprovePlaceModal } from "../../../../components/places/placeTable/modals/ApprovePlaceModal";
 import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
 import { EditPlaceModal } from "../../../../components/places/placeTable/modals/EditPlaceModal";
-import { PlaceImageSmall } from "../../../../components/places/placeTable/common/PlaceImageSmall";
 import { ContentTableWrapper } from "../../../../components/common/ContentTableWrapper";
 import { ContentTableView } from "../../../../components/common/ContentTableView";
 import { Fiction } from "../../../../types/Fiction";
@@ -21,6 +15,7 @@ import {
   generateDataSource,
 } from "../PlaceTableUtils";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
+import { useUserService } from "../../../../services/useUserService";
 
 export const PlaceTablePublished = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
@@ -35,9 +30,9 @@ export const PlaceTablePublished = () => {
   const { loading: loadingFictions, data: fictions } = getFictions();
   const [loggedUser, setLoggedUser] = useState<User>();
 
+  const { getCurrentUser } = useUserService();
   const getUserInfo = async () => {
-    const userService = new UserService();
-    const response = await userService.getCurrentUser();
+    const response = await getCurrentUser();
     setLoggedUser(response);
   };
 

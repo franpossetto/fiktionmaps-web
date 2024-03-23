@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { MapPinIcon } from "@heroicons/react/24/outline";
-import { UserService } from "../../services/UserService";
 import { UserDTO, UserRole } from "../../types/dto/UserDTO";
+import { useUserService } from "../../services/useUserService";
 
 interface UserObject {
   name?: string;
@@ -17,7 +16,7 @@ export const Profile = () => {
   const { user } = useAuthContext();
   const [loggedUser, setLoggedUser] = useState<any>();
 
-  const userService = new UserService();
+  const { updateUser, getCurrentUser } = useUserService();
 
   const handleEdit = () => {
     setEditing(true);
@@ -35,7 +34,7 @@ export const Profile = () => {
       country: loggedUser.country,
     };
 
-    await userService.update(userDto);
+    await updateUser(userDto);
     setUserObject(undefined);
   };
 
@@ -44,8 +43,7 @@ export const Profile = () => {
   };
 
   const getUserInfo = async () => {
-    const userService = new UserService();
-    const response = await userService.getCurrentUser();
+    const response = await getCurrentUser();
     setLoggedUser(response);
   };
 
@@ -119,13 +117,7 @@ export const Profile = () => {
                       className="border rounded px-3 py-2 w-full h-10"
                     />
                   ) : (
-                    <dd
-                      className={`mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 h-10 flex items-center ${
-                        loggedUser?.email ? "" : "italic text-gray-400"
-                      }`}
-                    >
-                      {loggedUser?.email || "Not Specified"}
-                    </dd>
+                    <span>{loggedUser?.email || "Not Specified"}</span>
                   )}
                 </dd>
               </div>
@@ -140,15 +132,7 @@ export const Profile = () => {
                       className="border rounded px-3 py-2 w-full h-10"
                     />
                   ) : (
-                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 h-10 flex items-center">
-                      <dd
-                        className={`mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 h-10 flex items-center ${
-                          loggedUser?.country ? "" : "italic text-gray-400"
-                        }`}
-                      >
-                        {loggedUser?.country || "Not Specified"}
-                      </dd>
-                    </dd>
+                    <span>{loggedUser?.country || "Not Specified"}</span>
                   )}
                 </dd>
               </div>
