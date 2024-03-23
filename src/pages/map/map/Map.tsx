@@ -36,6 +36,7 @@ export default function Map() {
             lng: city?.longitude || 0,
           },
           zoom: 15,
+          minZoom: 9,
           disableDefaultUI: false,
           mapTypeControl: false,
           zoomControl: false,
@@ -85,7 +86,6 @@ export default function Map() {
           lngTop: bounds?.getNorthEast().lng(),
           lngBottom: bounds?.getSouthWest().lng(),
         };
-        // console.log(screen);
       });
 
       fictionsSelected?.forEach((fiction: Fiction) => {
