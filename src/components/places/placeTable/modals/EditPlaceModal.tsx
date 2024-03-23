@@ -89,11 +89,18 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
   const handleFictionPlaceSave = async () => {
     setLoadingImg(true);
 
-    const imagePath = await uploadImage(
-      place?.fictionId,
-      placeName || "",
-      imageFile
-    );
+    let imagePath: string | undefined = placeToEdit.screenshot;
+
+    if (imageFile) {
+      const uploadedImagePath = await uploadImage(
+        place?.fictionId,
+        placeName || "",
+        imageFile
+      );
+      if (uploadedImagePath !== null) {
+        imagePath = uploadedImagePath;
+      }
+    }
 
     const pl: Place = {
       name: placeName || placeToEdit.name,
@@ -109,11 +116,12 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
       screenshot: imagePath || undefined,
       fictionId: placeToEdit?.fictionId,
       scenes: [],
+      published: false,
+      userId: 0,
     };
 
     updatePlaceFromFiction(placeToEdit?.id, pl)
       .then((updatedPlaceResponse) => {
-        console.log(updatedPlaceResponse);
         setPlaces((prevState: Place[]) => {
           const updatedPlaces = [...prevState];
           const index = updatedPlaces.findIndex(

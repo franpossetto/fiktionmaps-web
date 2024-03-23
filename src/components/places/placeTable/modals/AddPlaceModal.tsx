@@ -39,15 +39,11 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
     setImageFile(e.target.files[0]);
   };
 
-  const uploadImage = async (
-    fictionId: any,
-    placeName: string,
-    imageFile: File
-  ) => {
+  const uploadImage = async (fictionId: any, imageFile: File) => {
     if (!imageFile) return null;
 
     const uniqueFileName = `${new Date().getTime()}_${imageFile.name}`;
-    const finalFileName = `${uniqueFileName}_${placeName}`;
+    const finalFileName = `${uniqueFileName}`; // todo: modify
     const storageRef = ref(storage, `fictions/${fictionId}/${finalFileName}`);
 
     try {
@@ -83,7 +79,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
   const handleFictionPlaceSubmit = async () => {
     setLoading(true);
 
-    const imagePath = await uploadImage(fiction?.id, placeName, imageFile);
+    const imagePath = await uploadImage(fiction?.id, imageFile);
 
     const pl: Place = {
       name: placeName,
@@ -98,9 +94,9 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
       fictionId: fiction?.id || 0,
       scenes: [],
       published: false,
+      userId: 0,
+      userEmail: "", //not necesary
     };
-
-    // setPlace(pl);
 
     addPlaceToFiction(fiction?.id, pl)
       .then((p) => {

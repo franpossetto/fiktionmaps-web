@@ -27,10 +27,30 @@ export const MapView = () => {
   } = useMapController();
 
   const { getFictionsByCity } = useFictionService();
-  const { data: fictionsByCity, refetch } = getFictionsByCity(city?.id || 0);
+  const {
+    loading: loadingFictions,
+    data: fictionsByCity,
+    refetch,
+  } = getFictionsByCity(city?.id || 0);
 
-  const { getCityById } = useCityService();
-  const { loading, data: selectedCity } = getCityById(city?.id || 1);
+  const { getCityById, getCityById2 } = useCityService();
+  const { loading: loadingCity, data: selectedCity } = getCityById(city?.id);
+
+  // const [sCity, setSCity] = useState<any>();
+  // const [loadingSCity, setLoadingSCity] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   if (city?.id) {
+  //     setLoadingSCity(true);
+  //     getCityById2(city.id)
+  //       .then((data) => {
+  //         setSCity(data);
+  //       })
+  //       .finally(() => {
+  //         setLoadingSCity(false);
+  //       });
+  //   }
+  // }, [city]);
 
   const fictionSelectedOrNot =
     fictionsByCity != null &&
@@ -45,15 +65,19 @@ export const MapView = () => {
   }, [fictionsByCity]);
 
   useEffect(() => {
-    setCity(selectedCity);
-  }, [loading]);
+    if (!loadingCity) {
+      setCity(selectedCity);
+    }
+  }, [loadingCity]);
 
   useEffect(() => {
-    refetch();
+    if (city) {
+      refetch();
+    }
   }, [city]);
 
   useEffect(() => {
-    if (fictionsSelected != undefined) {
+    if (fictionsSelected != undefined && !loadingFictions) {
       setSelectedFiction(
         fictionsSelected?.length > 1
           ? FictionDisplayStatus.ALL_FICTIONS
