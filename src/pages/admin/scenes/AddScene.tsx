@@ -117,7 +117,7 @@ export const AddScene = () => {
           >
             Location
           </label>
-          <SearchPlace setPlace={setPlace} place={place} />
+          {/* <SearchPlace setPlace={setPlace} place={place} /> */}
           <div className="flex justify-end gap-x-6 mt-5">
             <button
               type="button"

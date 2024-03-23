@@ -71,11 +71,11 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
       startAt: sceneStartAt,
       endAt: sceneEndAt,
       location: {
-        latitude: plc.place.latitude,
-        longitude: plc.place.longitude,
-        formattedAddress: plc.place.placeformatted_address,
-        placeId: plc.place.place_id,
-        id: plc.place.id,
+        latitude: plc?.location.latitude,
+        longitude: plc?.location.longitude,
+        formattedAddress: plc?.location.formattedAddress,
+        placeId: plc?.location.placeId,
+        id: plc?.location.id,
       },
       userId: 1,
     };
@@ -253,7 +253,7 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
                       >
                         Location
                       </label>
-                      <SearchPlace setPlace={setPlace} place={place} />
+                      {/* <SearchPlace setPlace={setPlace} place={place} /> */}
                     </div>
                   </div>
                 </div>
