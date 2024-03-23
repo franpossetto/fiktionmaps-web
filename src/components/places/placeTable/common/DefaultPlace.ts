@@ -12,6 +12,7 @@ const DefaultPlace: Place = {
   userId: 1,
   fictionId: 0,
   scenes: [],
+  published: false,
 };
 
 export default DefaultPlace;

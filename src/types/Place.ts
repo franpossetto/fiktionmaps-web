@@ -11,4 +11,5 @@ export interface Place {
   scenes: Scene[];
   published: boolean;
   userId: number;
+  userEmail: string;
 }

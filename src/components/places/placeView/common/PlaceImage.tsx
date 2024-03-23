@@ -1,9 +1,13 @@
 import { StorageReference, getDownloadURL, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { storage } from "../../../../config/firebase";
-import StreetView from "./StreetView";
-import { FilmIcon, GlobeAmericasIcon } from "@heroicons/react/24/outline";
-export const PlaceImage = ({ place }) => {
+import { Place } from "../../../../types/Place";
+
+interface PlaceImageProps {
+  place: Place;
+}
+
+export const PlaceImage: React.FC<PlaceImageProps> = ({ place }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>();
 
   useEffect(() => {

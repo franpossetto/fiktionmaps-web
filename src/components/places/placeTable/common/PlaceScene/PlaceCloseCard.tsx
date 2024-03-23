@@ -1,6 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { PlaceUser } from "../../../placeView/common/PlaceUser";
-import { Place } from "../../../../types/entities/place";
+import { Place } from "../../../../../types/Place";
 
 interface PlaceCloseCardProps {
   place: Place;
