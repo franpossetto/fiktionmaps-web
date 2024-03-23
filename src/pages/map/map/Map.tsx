@@ -7,7 +7,7 @@ import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import { IMapScreen } from "../../../types/IMapScreen";
 import pin from "../../../../src/assets/pin.png";
-import darkMapStyles from "../../../assets/map/light_style_dev.json";
+import { useMapStyle } from "../../../contexts/MapStyleContext";
 
 export default function Map() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -27,9 +27,19 @@ export default function Map() {
     libraries: ["places"],
   });
 
+  const { style } = useMapStyle();
+
   useEffect(() => {
-    loader.load().then((google) => {
+    const loadMap = async () => { // Define una función asincrónica dentro de useEffect
+      const google = await loader.load(); // Espera a que el Loader cargue la API de Google Maps
+  
       if (mapRef.current) {
+        // Utiliza import() para cargar dinámicamente el archivo de estilos
+        const mapStyles = style === 'dark' 
+          ? (await import("../../../assets/map/dark_styles.json")).default 
+          : (await import("../../../assets/map/light_style_dev.json")).default;
+  
+        // Configura el mapa con los estilos cargados
         const map = new google.maps.Map(mapRef.current, {
           center: {
             lat: city?.latitude || 0,
@@ -40,15 +50,18 @@ export default function Map() {
           mapTypeControl: false,
           zoomControl: false,
           fullscreenControl: false,
-          styles: darkMapStyles,
+          styles: mapStyles, // Aplica los estilos cargados
           gestureHandling: "greedy",
           streetViewControl: false,
         });
-
+  
         setMapInstance(map);
       }
-    });
-  }, [city]);
+    };
+  
+    loadMap(); // Llama a la función asincrónica
+  }, [city, style]); // Asegúrate de incluir 'style' en las dependencias de useEffect
+  
 
   const markersRef = useRef<google.maps.Marker[]>([]);
 

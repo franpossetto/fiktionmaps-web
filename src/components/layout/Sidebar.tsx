@@ -16,6 +16,7 @@ import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/fm_h2.png";
+import { useMapStyle } from "../../contexts/MapStyleContext"
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -32,6 +33,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const { logout, user } = useAuthContext();
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { toggleStyle } = useMapStyle();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -41,6 +43,11 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       html.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  const handleThemeChange = () => {
+    setIsDarkMode(!isDarkMode); // Cambia el tema local (claro/oscuro)
+    toggleStyle(); // Cambia el estilo del mapa globalmente
+  };
 
   async function handleLogout() {
     setError("");
@@ -155,8 +162,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                             href="/home"
                             className={classNames(
                               location.pathname === "/home"
-                                ? "bg-gray-800 text-white"
-                                : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                ? "bg-gray-400 text-white dark:bg-gray-800 dark:text-white"
+                                : "text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800",
                               "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                             )}
                             onClick={(e) => { }}
@@ -179,8 +186,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                                 href={item.href}
                                 className={classNames(
                                   item.current
-                                    ? "bg-gray-800 text-white"
-                                    : "text-gray-400 hover:text-white hover:bg-gray-800",
+                                    ? "bg-gray-400 text-white dark:bg-gray-800 dark:text-white"
+                                    : "text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800",
                                   "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                                 )}
                                 {...(item.action && { onClick: item.action })}
@@ -196,8 +203,20 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                         ))}
                       </ul>
                     </nav>
+                    {/* Aqui va el boton para la version Mobile */}
+                    <div className="mt-auto ">
+                      <button type="button" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
+                        onClick={handleThemeChange}
+                      >
+                        {isDarkMode ? (
+                          <SunIcon className="h-6 w-6 mx-auto" />
+                        ) : (
+                          <MoonIcon className="h-6 w-6 mx-auto" />
+                        )}
+                        Change Theme
+                      </button>
+                    </div>
                   </div>
-                  {/* Aqui va el boton para la version Mobile */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -258,7 +277,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
           {/* Boton cambio de tema */}
           <div className="mt-auto px-4 py-2">
             <button type="button" className="w-full py-2 text-center rounded-md text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              onClick={handleThemeChange}
             >
               {isDarkMode ? (
                 <SunIcon className="h-6 w-6 mx-auto" />

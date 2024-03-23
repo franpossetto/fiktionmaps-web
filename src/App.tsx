@@ -6,6 +6,7 @@ import { useCityService } from "./services/useCityService";
 import { useEffect } from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { MapStyleProvider } from "../src/contexts/MapStyleContext"
 
 
 function App() {
@@ -13,7 +14,9 @@ function App() {
     <>
       <AuthProvider>
         <MapController>
-          <AppRouter />
+          <MapStyleProvider>
+            <AppRouter />
+          </MapStyleProvider>
         </MapController>
       </AuthProvider>
       <ToastContainer />
