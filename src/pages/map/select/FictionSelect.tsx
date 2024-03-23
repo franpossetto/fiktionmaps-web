@@ -31,8 +31,8 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const filteredItems =
     query === ""
-      ? fictions
-      : fictions?.filter((item) => {
+      ? fictionsSelected
+      : fictionsSelected?.filter((item) => {
           return item.name.toLowerCase().includes(query.toLowerCase());
         });
 

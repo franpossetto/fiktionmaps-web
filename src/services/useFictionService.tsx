@@ -14,7 +14,11 @@ export const useFictionService = () => {
   };
 
   const getFictions = (): useAxiosResponse<any> => {
-    return useAxios({ url: "/fictions", config: { method: "get" } });
+    return useAxios({
+      url: "/fictions",
+      config: { method: "get" },
+      tokenRequired: false,
+    });
   };
 
   const createFiction = (fiction: any) => {
