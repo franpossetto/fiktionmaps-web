@@ -37,7 +37,7 @@ export default function Map() {
         // Utiliza import() para cargar dinámicamente el archivo de estilos
         const mapStyles = style === 'dark' 
           ? (await import("../../../assets/map/dark_styles.json")).default 
-          : (await import("../../../assets/map/light_style_dev.json")).default;
+          : (await import("../../../assets/map/light_style.json")).default;
   
         // Configura el mapa con los estilos cargados
         const map = new google.maps.Map(mapRef.current, {
