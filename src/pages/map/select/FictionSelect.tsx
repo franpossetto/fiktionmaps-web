@@ -121,7 +121,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
                               <p
                                 className={classNames(
                                   "text-sm",
-                                  active ? "text-gray-700" : "text-gray-500 dark:text-white"
+                                  active ? "text-gray-700 dark:text-white" : "text-gray-500 dark:text-gray-400"
                                 )}
                               >
                                 {item.type}

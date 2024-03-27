@@ -128,7 +128,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                               <p
                                 className={classNames(
                                   "text-sm",
-                                  active ? "text-gray-700" : "text-gray-500 dark:text-white"
+                                  active ? "text-gray-700 dark:text-white" : "text-gray-500 dark:text-gray-400"
                                 )}
                               >
                                 itemDescription
