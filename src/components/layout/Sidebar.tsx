@@ -16,7 +16,7 @@ import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/fm_h2.png";
-import { useMapStyle } from "../../contexts/MapStyleContext"
+import { useMapController } from "../../contexts/MapContext";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -33,7 +33,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const { logout, user } = useAuthContext();
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const { toggleStyle } = useMapStyle();
+  const { toggleStyle } = useMapController();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -45,8 +45,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   }, [isDarkMode]);
 
   const handleThemeChange = () => {
-    setIsDarkMode(!isDarkMode); // Cambia el tema local (claro/oscuro)
-    toggleStyle(); // Cambia el estilo del mapa globalmente
+    setIsDarkMode(!isDarkMode);
+    toggleStyle();
   };
 
   async function handleLogout() {
@@ -162,8 +162,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                             href="/home"
                             className={classNames(
                               location.pathname === "/home"
-                                ? "bg-gray-400 text-white dark:bg-gray-800 dark:text-white"
-                                : "text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800",
+                                ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
+                                : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                               "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                             )}
                             onClick={(e) => { }}
@@ -186,8 +186,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                                 href={item.href}
                                 className={classNames(
                                   item.current
-                                    ? "bg-gray-400 text-white dark:bg-gray-800 dark:text-white"
-                                    : "text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800",
+                                    ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
+                                    : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                                   "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                                 )}
                                 {...(item.action && { onClick: item.action })}
@@ -203,7 +203,6 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                         ))}
                       </ul>
                     </nav>
-                    {/* Aqui va el boton para la version Mobile */}
                     <div className="mt-auto ">
                       <button type="button" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
                         onClick={handleThemeChange}
@@ -223,7 +222,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
           </Dialog>
         </Transition.Root>
 
-        <div className="h-full lg:flex lg:flex-col hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto shadow-md shadow-slate-900 lg:pb-4 lg:bg-white dark:lg:bg-gray-900">
+        <div className="h-full lg:flex lg:flex-col hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto shadow-md shadow-slate-400 dark:shadow-slate-900 lg:pb-4 lg:bg-white dark:lg:bg-gray-900">
           <div className="flex h-16 shrink-0 items-center justify-center">
             <img src={logo} alt="f" className="h-10 mt-8" />
           </div>
@@ -234,8 +233,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                   href="/home"
                   className={classNames(
                     location.pathname === "/home"
-                      ? "bg-gray-400 text-white dark:bg-gray-800 dark:text-white"
-                      : "text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800",
+                      ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
+                      : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                   )}
                 >
@@ -252,8 +251,8 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       href={item.href}
                       className={classNames(
                         item.current
-                          ? "bg-gray-400 text-white dark:bg-gray-800 dark:text-white"
-                          : "text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800",
+                          ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
+                          : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                         "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
                       )}
                       onClick={(e) => {
@@ -274,7 +273,6 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
               ))}
             </ul>
           </nav>
-          {/* Boton cambio de tema */}
           <div className="mt-auto px-4 py-2">
             <button type="button" className="w-full py-2 text-center rounded-md text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
               onClick={handleThemeChange}

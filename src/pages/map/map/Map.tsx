@@ -7,7 +7,6 @@ import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import { IMapScreen } from "../../../types/IMapScreen";
 import pin from "../../../../src/assets/pin.png";
-import { useMapStyle } from "../../../contexts/MapStyleContext";
 
 export default function Map() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -27,19 +26,17 @@ export default function Map() {
     libraries: ["places"],
   });
 
-  const { style } = useMapStyle();
+  const { style } = useMapController();
 
   useEffect(() => {
-    const loadMap = async () => { // Define una función asincrónica dentro de useEffect
-      const google = await loader.load(); // Espera a que el Loader cargue la API de Google Maps
+    const loadMap = async () => {
+      const google = await loader.load();
   
       if (mapRef.current) {
-        // Utiliza import() para cargar dinámicamente el archivo de estilos
         const mapStyles = style === 'dark' 
           ? (await import("../../../assets/map/dark_styles.json")).default 
           : (await import("../../../assets/map/light_style.json")).default;
   
-        // Configura el mapa con los estilos cargados
         const map = new google.maps.Map(mapRef.current, {
           center: {
             lat: city?.latitude || 0,
@@ -50,7 +47,7 @@ export default function Map() {
           mapTypeControl: false,
           zoomControl: false,
           fullscreenControl: false,
-          styles: mapStyles, // Aplica los estilos cargados
+          styles: mapStyles,
           gestureHandling: "greedy",
           streetViewControl: false,
         });
@@ -59,8 +56,8 @@ export default function Map() {
       }
     };
   
-    loadMap(); // Llama a la función asincrónica
-  }, [city, style]); // Asegúrate de incluir 'style' en las dependencias de useEffect
+    loadMap();
+  }, [city, style]);
   
 
   const markersRef = useRef<google.maps.Marker[]>([]);
@@ -98,7 +95,6 @@ export default function Map() {
           lngTop: bounds?.getNorthEast().lng(),
           lngBottom: bounds?.getSouthWest().lng(),
         };
-        // console.log(screen);
       });
 
       fictionsSelected?.forEach((fiction: Fiction) => {

@@ -181,11 +181,12 @@
     },
     {
       "featureType": "poi",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
     },
     {
       "featureType": "road",

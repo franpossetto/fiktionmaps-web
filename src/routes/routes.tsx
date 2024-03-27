@@ -12,71 +12,70 @@ import Layout from "../components/layout/Layout";
 import CollaborationView from "../pages/collaboration/CollaborationView";
 import PlaceTableCollab from "../pages/collaboration/places/PlaceTableSections/PlaceTableCollab";
 
-
 const AppRouter = () => {
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Layout>
-                <MapView />
-              </Layout>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/forgotPassword"
-            element={
-              <PublicRoute>
-                <ForgotPassword />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <PublicRoute>
-                <SignUp />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <Layout>
-                <MapView />
-              </Layout>
-            }
-          />
-          <Route
-            path="/collaboration/*"
-            element={
-              <PrivateRoute>
-                <PlaceController>
-                  <CollaborationView />
-                </PlaceController>
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <MapView />
+            </Layout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/forgotPassword"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PublicRoute>
+              <SignUp />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <Layout>
+              <MapView />
+            </Layout>
+          }
+        />
+        <Route
+          path="/collaboration/*"
+          element={
+            <PrivateRoute>
+              <PlaceController>
+                <CollaborationView />
+              </PlaceController>
+            </PrivateRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
