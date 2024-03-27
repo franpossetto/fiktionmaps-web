@@ -70,7 +70,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
+            <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all dark:bg-gray-900 dark:divide-gray-700">
               <Combobox
                 onChange={(selectedCity: any) => setCityAndClose(selectedCity)}
               >
@@ -80,7 +80,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                     aria-hidden="true"
                   />
                   <Combobox.Input
-                    className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
+                    className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm dark:text-white"
                     placeholder="Search..."
                     onChange={(event) => setQuery(event.target.value)}
                     autoComplete="off"
@@ -99,7 +99,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                         className={({ active }) =>
                           classNames(
                             "flex cursor-default select-none rounded-xl p-3",
-                            active && "bg-gray-100"
+                            active && "bg-gray-100 dark:bg-gray-800"
                           )
                         }
                       >
@@ -120,7 +120,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                               <p
                                 className={classNames(
                                   "text-sm font-medium",
-                                  active ? "text-gray-900" : "text-gray-700"
+                                  active ? "text-gray-900 dark:text-white" : "text-gray-700 dark:text-gray-400"
                                 )}
                               >
                                 {item.name}
@@ -128,7 +128,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                               <p
                                 className={classNames(
                                   "text-sm",
-                                  active ? "text-gray-700" : "text-gray-500"
+                                  active ? "text-gray-700" : "text-gray-500 dark:text-white"
                                 )}
                               >
                                 itemDescription
