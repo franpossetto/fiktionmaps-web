@@ -32,20 +32,18 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const [error, setError] = useState("");
   const { logout, user } = useAuthContext();
   const navigate = useNavigate();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const { toggleStyle } = useMapController();
+  const { style, toggleStyle } = useMapController();
 
   useEffect(() => {
     const html = document.documentElement;
-    if (isDarkMode) {
+    if (style === 'dark') {
       html.classList.add('dark');
     } else {
       html.classList.remove('dark');
     }
-  }, [isDarkMode]);
+  }, [style]);
 
   const handleThemeChange = () => {
-    setIsDarkMode(!isDarkMode);
     toggleStyle();
   };
 
@@ -207,7 +205,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       <button type="button" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
                         onClick={handleThemeChange}
                       >
-                        {isDarkMode ? (
+                        {style === 'dark' ? (
                           <SunIcon className="h-6 w-6 mx-auto" />
                         ) : (
                           <MoonIcon className="h-6 w-6 mx-auto" />
@@ -277,7 +275,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
             <button type="button" className="w-full py-2 text-center rounded-md text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
               onClick={handleThemeChange}
             >
-              {isDarkMode ? (
+              {style === 'dark' ? (
                 <SunIcon className="h-6 w-6 mx-auto" />
               ) : (
                 <MoonIcon className="h-6 w-6 mx-auto" />

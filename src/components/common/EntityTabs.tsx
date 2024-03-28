@@ -38,8 +38,8 @@ const EntityTabs: React.FC<EntityTabsProps> = ({ tabs }) => {
           rounded-lg text-xs mt-5 px-2 py-2 items-center justify-start
           ${
             tab.key === currentTab
-              ? "bg-gray-900 text-white"
-              : "bg-gray-100 text-black"
+              ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-black"
+              : "bg-gray-100 text-black dark:bg-gray-800 dark:text-white"
           }
           ${index < tabs.length - 1 ? "mr-3" : ""}
         `}

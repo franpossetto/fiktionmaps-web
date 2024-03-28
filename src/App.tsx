@@ -13,7 +13,7 @@ function App() {
     <>
       <AuthProvider>
         <MapController>
-            <AppRouter />
+          <AppRouter />
         </MapController>
       </AuthProvider>
       <ToastContainer />

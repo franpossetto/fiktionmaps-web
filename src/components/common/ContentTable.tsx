@@ -9,7 +9,7 @@ interface ContentTableProps {
 
 export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
   return (
-    <table className="min-w-full divide-y divide-gray-300">
+    <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
       <thead>
         {config &&
           config.map((column: any) => (
@@ -18,13 +18,13 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
             </th>
           ))}
       </thead>
-      <tbody className="bg-white">
+      <tbody className="bg-white dark:bg-gray-900">
         {data.map((row: any) => (
           <tr key={row.id} className="even:bg-gray-50">
             {config.map((column: any) => (
               <td
                 key={column.key}
-                className="whitespace-nowrap py-1 font-normal text-gray-900 sm:pl-3"
+                className="whitespace-nowrap py-1 font-normal text-gray-900 sm:pl-3 dark:text-gray-300"
               >
                 {row[column.key]}
               </td>

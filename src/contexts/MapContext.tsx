@@ -35,11 +35,15 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
   const [fictionsSelected, setFictionsSelected] = useState<Fiction[]>();
   const [city, setCity] = useState<City>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [style, setStyle] = useState<string>('light');
+  const [style, setStyle] = useState<string>(() => localStorage.getItem('themeStyle') || 'light');
 
   const toggleStyle = () => {
-    setStyle(prevStyle => prevStyle === 'light' ? 'dark' : 'light');
-  }
+    setStyle(prevStyle => {
+      const newStyle = prevStyle === 'light' ? 'dark' : 'light';
+      localStorage.setItem('themeStyle', newStyle);
+      return newStyle;
+    });
+  };
 
   return (
     <MapControllerContext.Provider

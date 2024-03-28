@@ -16,8 +16,8 @@ interface CitySelectProps {
 }
 
 export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
-  const [query, setQuery] = useState("");
 
+  const [query, setQuery] = useState("");
   const { getCities } = useCityService();
   const { loading, data, error } = getCities();
   const [cities, setCities] = useState<City[]>([]);

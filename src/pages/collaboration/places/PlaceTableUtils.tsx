@@ -25,32 +25,32 @@ export const config = [
   {
     label: "#",
     key: "id",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Image",
     key: "image",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Place Name",
     key: "name",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Fiction",
     key: "fiction",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Description",
     key: "description",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "State",
     key: "state",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "",

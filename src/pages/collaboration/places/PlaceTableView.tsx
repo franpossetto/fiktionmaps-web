@@ -6,8 +6,8 @@ import { PlaceTableReview } from "./PlaceTableSections/PlaceTableReview";
 import {
   ClipboardDocumentCheckIcon,
   UserCircleIcon,
+  BuildingOffice2Icon,
 } from "@heroicons/react/24/solid";
-import { BuildingOffice2Icon } from "@heroicons/react/24/solid";
 
 export const PlaceTableView = () => {
   const tabsData: Tab[] = [
