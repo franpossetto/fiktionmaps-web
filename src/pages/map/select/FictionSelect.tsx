@@ -31,7 +31,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const filteredItems =
     query === ""
-      ? fictionsSelected
+      ? fictions
       : fictionsSelected?.filter((item) => {
           return item.name.toLowerCase().includes(query.toLowerCase());
         });
@@ -89,7 +89,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
                   />
                 </div>
 
-                {filteredItems?.length && filteredItems?.length > 0 && (
+                {filteredItems.length > 0 && (
                   <Combobox.Options
                     static
                     className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3"
