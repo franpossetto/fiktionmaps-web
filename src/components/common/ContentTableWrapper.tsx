@@ -18,10 +18,10 @@ export const ContentTableWrapper: React.FC<ContentTableTitleProps> = ({
   children,
 }) => {
   return (
-    <div className="overflow-hidden bg-white min-h-screen h-full pl-10">
+    <div className="overflow-hidden bg-white min-h-screen h-full pl-10 dark:bg-gray-900">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <p className="text-sm text-gray-700 mt-2">{description}</p>
+          <p className="text-sm text-gray-700 mt-2 dark:text-white">{description}</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 flex flex-row">
           <button

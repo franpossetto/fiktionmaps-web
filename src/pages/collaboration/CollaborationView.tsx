@@ -13,7 +13,7 @@ export default function CollaborationView() {
 
   return (
     <>
-      <div className="lg:pl-20 bg-white">
+      <div className="lg:pl-20 bg-white dark:bg-gray-900">
         <CollaborationNavBar />
         <Routes>
           <Route index path="/" element={<PlaceTableView />} />

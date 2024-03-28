@@ -75,26 +75,26 @@ export const Profile = () => {
   return (
     <>
       <div className="pl-32 pr-12 pt-6 lg:w-[100%] w-[90%]">
-        <div className="overflow-hidden bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden bg-white shadow sm:rounded-lg dark:bg-gray-900">
           <div className="px-4 py-3 sm:px-6">
-            <h3 className="text-base font-semibold leading-7 text-gray-900">
+            <h3 className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
               Profile
             </h3>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-300">
               Personal information.
             </p>
           </div>
-          <div className="border-t border-gray-100">
-            <dl className="divide-y divide-gray-100">
+          <div className="border-t border-gray-100 dark:border-gray-700">
+            <dl className="divide-y divide-gray-100 dark:divide-gray-700">
               <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-900">Full name</dt>
-                <div className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                <dt className="text-sm font-medium text-gray-900 dark:text-white">Full name</dt>
+                <div className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 dark:text-gray-300">
                   {editing ? (
                     <input
                       type="text"
                       value={loggedUser?.name}
                       onChange={handleNameChange}
-                      className="border rounded px-3 py-2 w-full h-8"
+                      className="border rounded px-3 py-2 w-full h-8 dark:bg-gray-900"
                     />
                   ) : (
                     <dd
@@ -108,16 +108,16 @@ export const Profile = () => {
                 </div>
               </div>
               <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-900">
+                <dt className="text-sm font-medium text-gray-900 dark:text-white">
                   Email address
                 </dt>
-                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 dark:text-gray-300">
                   {editing ? (
                     <input
                       type="text"
                       value={loggedUser?.email}
                       onChange={handleEmailChange}
-                      className="border rounded px-3 py-2 w-full h-10"
+                      className="border rounded px-3 py-2 w-full h-10 dark:bg-gray-900"
                     />
                   ) : (
                     <dd
@@ -131,19 +131,19 @@ export const Profile = () => {
                 </dd>
               </div>
               <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-900">Country</dt>
-                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                <dt className="text-sm font-medium text-gray-900 dark:text-white">Country</dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 dark:text-gray-300">
                   {editing ? (
                     <input
                       type="text"
                       value={loggedUser?.country}
                       onChange={handleCountryChange}
-                      className="border rounded px-3 py-2 w-full h-10"
+                      className="border rounded px-3 py-2 w-full h-10 dark:bg-gray-900"
                     />
                   ) : (
-                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 h-10 flex items-center">
+                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 h-10 flex items-center dark:text-gray-300">
                       <dd
-                        className={`mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 h-10 flex items-center ${
+                        className={`mt-1 text-sm leading-6 sm:col-span-2 sm:mt-0 h-10 flex items-center${
                           loggedUser?.country ? "" : "italic text-gray-400"
                         }`}
                       >
@@ -155,7 +155,7 @@ export const Profile = () => {
               </div>
             </dl>
           </div>
-          <div className="flex justify-end px-4 py-6 sm:gap-4 sm:px-6 bg-slate-100 ">
+          <div className="flex justify-end px-4 py-6 sm:gap-4 sm:px-6 bg-slate-100 dark:bg-gray-700">
             <div className="text-sm font-medium leading-6 text-gray-900">
               {editing ? (
                 <>
@@ -166,7 +166,7 @@ export const Profile = () => {
                     Save
                   </button>
                   <button
-                    className="rounded-md bg-white ml-3 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    className="rounded-md bg-white ml-3 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-black dark:text-gray-100 dark:hover:bg-gray-950 dark:ring-gray-800"
                     onClick={handleCancel}
                   >
                     Cancel
@@ -174,7 +174,7 @@ export const Profile = () => {
                 </>
               ) : (
                 <button
-                  className="rounded-md bg-white ml-3 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  className="rounded-md bg-white ml-3 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-black dark:text-gray-100 dark:hover:bg-gray-950 dark:ring-gray-800"
                   onClick={handleEdit}
                 >
                   Edit

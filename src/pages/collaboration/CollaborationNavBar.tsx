@@ -25,7 +25,7 @@ export const CollaborationNavBar = () => {
   }, []);
 
   return (
-    <nav className="flex overflow-x-auto py-4 border-b-[1px] border-gray-200">
+    <nav className="flex overflow-x-auto py-4 border-b-[1px] border-gray-200 dark:border-gray-700">
       <ul
         role="list"
         className="flex min-w-full flex-none gap-x-6 px-4 text-sm font-semibold leading-6 text-gray-400 sm:px-6 lg:px-8"
@@ -37,7 +37,7 @@ export const CollaborationNavBar = () => {
               onClick={(e) => handleNavigation(e, item.name)}
               className={
                 item.name === currentTab
-                  ? "text-indigo-600 font-bold"
+                  ? "text-indigo-600 font-bold dark:text-white"
                   : "text-gray-800"
               }
             >

@@ -75,7 +75,7 @@ export const MapView = () => {
         <div className="w-[480px] bg-transparent font-semibold">
           <button
             type="button"
-            className="rounded-md whitespace-nowrap bg-black/60 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-white/20 mt-6 h-10 ml-3 lg:ml-28"
+            className="rounded-md whitespace-nowrap py-2 px-3 text-sm font-semibold shadow-sm mt-6 h-10 ml-3 lg:ml-28 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
             onClick={() => setFictionIsOpen(!fictionIsOpen)}
           >
             {selectedFiction}
@@ -95,7 +95,7 @@ export const MapView = () => {
 
         <button
           type="button"
-          className="rounded-md bg-black/60 whitespace-nowrap px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/20 mt-6 h-10 mr-6"
+          className="rounded-md whitespace-nowrap px-3 py-2 text-sm font-semibold shadow-sm mt-6 h-10 mr-6 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
           onClick={() => setIsCityOpen(!isCityOpen)}
         >
           {city?.name}
