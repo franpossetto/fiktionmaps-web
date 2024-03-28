@@ -18,9 +18,9 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
             </th>
           ))}
       </thead>
-      <tbody className="bg-white dark:bg-gray-900">
+      <tbody className="bg-white">
         {data.map((row: any) => (
-          <tr key={row.id} className="even:bg-gray-50">
+          <tr key={row.id} className="even:bg-gray-50 dark:bg-gray-900">
             {config.map((column: any) => (
               <td
                 key={column.key}
