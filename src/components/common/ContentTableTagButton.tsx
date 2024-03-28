@@ -15,7 +15,7 @@ interface ContentTableTagButtonProps {
   text: string;
 }
 
-const ContentTableTagButton: React.FC<ContentTableTagButtonProps> = ({
+export const ContentTableTagButton: React.FC<ContentTableTagButtonProps> = ({
   color,
   onClick,
   text,
@@ -51,5 +51,3 @@ const ContentTableTagButton: React.FC<ContentTableTagButtonProps> = ({
     </button>
   );
 };
-
-export default ContentTableTagButton;

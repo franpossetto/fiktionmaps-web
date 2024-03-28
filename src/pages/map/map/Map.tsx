@@ -7,7 +7,6 @@ import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import { IMapScreen } from "../../../types/IMapScreen";
 import pin from "../../../../src/assets/pin.png";
-import darkMapStyles from "../../../assets/map/dark_styles.json";
 
 export default function Map() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -27,9 +26,17 @@ export default function Map() {
     libraries: ["places"],
   });
 
+  const { style } = useMapController();
+
   useEffect(() => {
-    loader.load().then((google) => {
+    const loadMap = async () => {
+      const google = await loader.load();
+  
       if (mapRef.current) {
+        const mapStyles = style === 'dark' 
+          ? (await import("../../../assets/map/dark_styles.json")).default 
+          : (await import("../../../assets/map/light_style.json")).default;
+  
         const map = new google.maps.Map(mapRef.current, {
           center: {
             lat: city?.latitude || 0,
@@ -41,15 +48,18 @@ export default function Map() {
           mapTypeControl: false,
           zoomControl: false,
           fullscreenControl: false,
-          styles: darkMapStyles,
+          styles: mapStyles,
           gestureHandling: "greedy",
           streetViewControl: false,
         });
-
+  
         setMapInstance(map);
       }
-    });
-  }, [city]);
+    };
+  
+    loadMap();
+  }, [city, style]);
+  
 
   const markersRef = useRef<google.maps.Marker[]>([]);
 

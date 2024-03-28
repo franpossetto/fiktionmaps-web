@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import ContentTableTagButton from "../../../../components/common/ContentTableTagButton";
 import { ContentTableView } from "../../../../components/common/ContentTableView";
 import { ContentTableWrapper } from "../../../../components/common/ContentTableWrapper";
 import { PlaceImageSmall } from "../../../../components/places/placeTable/common/PlaceImageSmall";
@@ -14,6 +13,7 @@ import { User } from "../../../../types/User";
 import { useFictionService } from "../../../../services/useFictionService";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
 import { useUserService } from "../../../../services/useUserService";
+import { ContentTableTagButton } from "../../../../components/common/ContentTableTagButton";
 
 export const PlaceTableReview = () => {
   const [loading, setLoading] = useState(true); // State for loading indicator

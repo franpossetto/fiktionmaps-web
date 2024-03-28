@@ -11,6 +11,7 @@ import { Fiction } from "../../../../types/Fiction";
 import { Place } from "../../../../types/Place";
 import { User } from "../../../../types/User";
 import { useUserService } from "../../../../services/useUserService";
+import { ContentTableTagButton } from "../../../../components/common/ContentTableTagButton";
 
 type FictionHashTable = {
   [key: number]: Fiction;

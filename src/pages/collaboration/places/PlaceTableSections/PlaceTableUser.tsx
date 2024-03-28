@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import ContentTableTagButton from "../../../../components/common/ContentTableTagButton";
 import { ContentTableView } from "../../../../components/common/ContentTableView";
 import { ContentTableWrapper } from "../../../../components/common/ContentTableWrapper";
 import { PlaceImageSmall } from "../../../../components/places/placeTable/common/PlaceImageSmall";
@@ -13,6 +12,7 @@ import { useFictionService } from "../../../../services/useFictionService";
 import { User } from "../../../../types/User";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
 import { useUserService } from "../../../../services/useUserService";
+import { ContentTableTagButton } from "../../../../components/common/ContentTableTagButton";
 
 export const PlaceTableUser = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
