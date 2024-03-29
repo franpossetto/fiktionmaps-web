@@ -147,7 +147,7 @@ export const PlaceTableCollab = () => {
       actions: (
         <>
           <ContentTableTagButton
-            color="gray"
+            color="emerald"
             onClick={() => editPlace(place)}
             text="Edit"
           />

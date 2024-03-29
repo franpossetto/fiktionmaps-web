@@ -34,13 +34,13 @@ export const PlaceOverview: React.FC<PlaceOverviewProps> = ({
     <div className="m-5 sm:flex sm:items-end">
       <div className="sm:flex-1">
         <div className="flex flex-col">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-300">
             {fiction.name.toUpperCase()}, {fiction.year}
           </p>
-          <h3 className="text-xl font-bold sm:text-2xl text-neutral-900">
+          <h3 className="text-xl font-bold sm:text-2xl text-neutral-900 dark:text-white">
             {place.name}
           </h3>
-          <p className="text-sm font-medium mt-3">{place.description}</p>
+          <p className="text-sm font-medium mt-3 dark:text-gray-300">{place.description}</p>
         </div>
       </div>
     </div>

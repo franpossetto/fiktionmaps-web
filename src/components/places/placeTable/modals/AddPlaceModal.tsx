@@ -142,7 +142,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
       title={"Add a Place"}
     >
       <>
-        <h2 className="my-2 text-black text-sm">
+        <h2 className="my-2 text-black text-sm dark:text-gray-300">
           To add a new Place, select the Fiction and add information about the
           it. The location is mandatory!
         </h2>
@@ -150,7 +150,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
           <PlaceFictionSelector />
           <label
             htmlFor="fiction-name"
-            className="block text-sm font-medium leading-6 text-gray-900 mt-4"
+            className="block text-sm font-medium leading-6 text-gray-900 mt-4 dark:text-gray-300"
           >
             Place Name
           </label>
@@ -161,14 +161,14 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
             placeholder={placeholder.name}
             value={placeName}
             onChange={handlePlaceNameChange}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-700 dark:text-white"
           />
         </div>
 
         <div className="mt-4">
           <label
             htmlFor="scene-description"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300"
           >
             Place Description
           </label>
@@ -176,7 +176,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
             id="scene-description"
             name="scene-description"
             rows={3}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-700 dark:text-white"
             placeholder={placeholder.description}
             value={placeDescription}
             onChange={handlePlaceDescriptionChange}
@@ -185,7 +185,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
         <div className="mt-4">
           <label
             htmlFor="location"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300"
           >
             Place Screenshoot
           </label>
@@ -195,7 +195,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
         <div className="mt-4">
           <label
             htmlFor="location"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300"
           >
             Location
           </label>
@@ -209,8 +209,8 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
               type="button"
               className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:w-auto sm:text-sm ${
                 isFormValid
-                  ? "bg-gray-800 hover:bg-slate-900"
-                  : "bg-gray-400 cursor-not-allowed"
+                  ? "bg-indigo-600 hover:bg-indigo-500"
+                  : "bg-indigo-600 cursor-not-allowed"
               }`}
               onClick={handleFictionPlaceSubmit}
               disabled={!isFormValid}
@@ -241,7 +241,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
 
           <button
             type="button"
-            className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-sm"
+            className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-smdark:bg-black dark:bg-black dark:hover:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
             onClick={handleFictionPlaceCancel}
           >
             Cancel

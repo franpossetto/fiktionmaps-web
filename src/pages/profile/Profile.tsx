@@ -174,7 +174,7 @@ export const Profile = () => {
                 </>
               ) : (
                 <button
-                  className="rounded-md bg-white ml-3 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-black dark:text-gray-100 dark:hover:bg-gray-950 dark:ring-gray-800"
+                  className="rounded-md bg-white ml-3 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-black dark:text-gray-100 dark:hover:bg-gray-950 dark:ring-gray-700"
                   onClick={handleEdit}
                 >
                   Edit

@@ -30,13 +30,12 @@ export default function Map() {
 
   useEffect(() => {
     const loadMap = async () => {
-      const google = await loader.load();
-  
-      if (mapRef.current) {
+      const google = await loader.load();      
+      if (mapRef.current && !mapInstance) {
         const mapStyles = style === 'dark' 
           ? (await import("../../../assets/map/dark_styles.json")).default 
           : (await import("../../../assets/map/light_style.json")).default;
-  
+        
         const map = new google.maps.Map(mapRef.current, {
           center: {
             lat: city?.latitude || 0,
@@ -50,14 +49,27 @@ export default function Map() {
           styles: mapStyles,
           gestureHandling: "greedy",
           streetViewControl: false,
-        });
-  
+        });        
         setMapInstance(map);
+      } else if (mapInstance) {
+        mapInstance.setCenter({lat: city?.latitude || 0, lng: city?.longitude || 0});
       }
-    };
-  
+    };  
     loadMap();
-  }, [city, style]);
+  }, [city]);
+
+  useEffect(() => {
+    const updateMapStyle = async () => {
+      if (mapInstance) { 
+        const mapStyles = style === 'dark' 
+          ? (await import("../../../assets/map/dark_styles.json")).default 
+          : (await import("../../../assets/map/light_style.json")).default;
+        
+        mapInstance.setOptions({styles: mapStyles});
+      }
+    };  
+    updateMapStyle();
+  }, [style]);
   
 
   const markersRef = useRef<google.maps.Marker[]>([]);

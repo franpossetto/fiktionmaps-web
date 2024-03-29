@@ -99,7 +99,7 @@ export const PlaceTableUser = () => {
         <>
           {place.userId !== loggedUser?.id ? (
             <ContentTableTagButton
-              color="cyan"
+              color="amber"
               onClick={() => approvePlace(place)}
               text="To Review"
             />

@@ -45,10 +45,10 @@ export const PlaceData: React.FC<PlaceDataProps> = ({ fiction, place }) => {
           return (
             <div
               key={field.key}
-              className="flex flex-row border-y border-gray-200 py-3 items-center"
+              className="flex flex-row border-y border-gray-200 py-3 items-center dark:border-gray-700"
             >
-              <h3 className="text-sm  font-semibold ml-5">{field.title}</h3>
-              <p className="text-sm ml-3">
+              <h3 className="text-sm font-semibold ml-5 dark:text-white">{field.title}</h3>
+              <p className="text-sm ml-3 dark:text-gray-300">
                 {actionUrl ? (
                   <a href={actionUrl} target="_blank" rel="noopener noreferrer">
                     {value}
