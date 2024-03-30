@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePlaceController } from "../../../../contexts/PlaceContext";
 import { Loader } from "@googlemaps/js-api-loader";
 import DefaultPlace from "./DefaultPlace";
+import { useMapController } from "../../../../contexts/MapContext";
 
 const PlaceDetails = () => {
   const { place, setPlace: setPlc } = usePlaceController();
@@ -15,6 +16,8 @@ const PlaceDetails = () => {
     version: "weekly",
     libraries: ["places"],
   });
+
+  const { style } = useMapController();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -58,6 +61,16 @@ const PlaceDetails = () => {
   }, [place, initialCenter]);
 
   useEffect(() => {
+    const updateMapStyle = async () => {
+      if (map) { 
+        const mapStyles = style === 'dark' 
+          ? (await import("../../../../assets/map/dark_styles.json")).default 
+          : (await import("../../../../assets/map/light_style.json")).default;
+        
+          map.setOptions({styles: mapStyles});
+      }
+    };  
+    updateMapStyle();
     if (place && map) {
       const newCenter = {
         lat: place?.location.latitude,

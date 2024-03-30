@@ -11,7 +11,7 @@ interface PlaceScenesProps {
 export const PlaceScenes: React.FC<PlaceScenesProps> = ({ scenes }) => {
   return (
     <>
-      <h1 className=" text-xl font-bold text-gray-900 ml-5 mt-5">
+      <h1 className=" text-xl font-bold text-gray-900 ml-5 mt-5 dark:text-white">
         {" "}
         Scenes ({scenes.length}){" "}
       </h1>
@@ -21,7 +21,7 @@ export const PlaceScenes: React.FC<PlaceScenesProps> = ({ scenes }) => {
             <PlaceSceneImage imgUrl={scene.screenshot} />
             <div className="flex flex-col ml-3">
               <h1 className=" text-lg font-bold">{scene.name}</h1>
-              <p className=" text-sm "> {scene.description}</p>
+              <p className=" text-sm"> {scene.description}</p>
             </div>
           </div>
         );

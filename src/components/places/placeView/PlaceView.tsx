@@ -72,7 +72,7 @@ const PlaceViewWrapper: React.FC<PlaceViewWrapperProps> = ({
                   leaveTo="translate-x-full"
                 >
                   <Dialog.Panel className="pointer-events-auto w-screen max-w-md md:min-w-[650px]">
-                    <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                    <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl dark:bg-gray-900">
                       <div className="pb-1 sm:pb-6">{children}</div>
                     </div>
                   </Dialog.Panel>

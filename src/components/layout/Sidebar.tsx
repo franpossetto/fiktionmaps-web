@@ -1,4 +1,4 @@
-import React, { Fragment, PropsWithChildren, useState, useEffect, } from "react";
+import React, { Fragment, PropsWithChildren, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -15,7 +15,7 @@ import {
 import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/fm_h2.png";
+import logo from "../../assets/image/fktn-with-shadow.png";
 import { useMapController } from "../../contexts/MapContext";
 
 function classNames(...classes: any) {
@@ -36,10 +36,10 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
 
   useEffect(() => {
     const html = document.documentElement;
-    if (style === 'dark') {
-      html.classList.add('dark');
+    if (style === "dark") {
+      html.classList.add("dark");
     } else {
-      html.classList.remove('dark');
+      html.classList.remove("dark");
     }
   }, [style]);
 
@@ -164,7 +164,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                                 : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                               "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                             )}
-                            onClick={(e) => { }}
+                            onClick={(e) => {}}
                           >
                             <HomeIcon
                               className="h-6 w-6 shrink-0"
@@ -202,10 +202,12 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       </ul>
                     </nav>
                     <div className="mt-auto ">
-                      <button type="button" className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
+                      <button
+                        type="button"
+                        className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
                         onClick={handleThemeChange}
                       >
-                        {style === 'dark' ? (
+                        {style === "dark" ? (
                           <SunIcon className="h-6 w-6 mx-auto" />
                         ) : (
                           <MoonIcon className="h-6 w-6 mx-auto" />
@@ -220,7 +222,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
           </Dialog>
         </Transition.Root>
 
-        <div className="h-full lg:flex lg:flex-col hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto shadow-md shadow-slate-400 dark:shadow-slate-900 lg:pb-4 lg:bg-white dark:lg:bg-gray-900">
+        <div className="h-full lg:flex lg:flex-col hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto shadow-md shadow-slate-400 dark:shadow-slate-800 lg:pb-4 lg:bg-white dark:lg:bg-gray-900">
           <div className="flex h-16 shrink-0 items-center justify-center">
             <img src={logo} alt="f" className="h-10 mt-8" />
           </div>
@@ -233,7 +235,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                     location.pathname === "/home"
                       ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
                       : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
-                    "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                    "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
                   )}
                 >
                   <HomeIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
@@ -272,10 +274,12 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
             </ul>
           </nav>
           <div className="mt-auto px-4 py-2">
-            <button type="button" className="w-full py-2 text-center rounded-md text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
+            <button
+              type="button"
+              className="w-full py-2 text-center rounded-md text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
               onClick={handleThemeChange}
             >
-              {style === 'dark' ? (
+              {style === "dark" ? (
                 <SunIcon className="h-6 w-6 mx-auto" />
               ) : (
                 <MoonIcon className="h-6 w-6 mx-auto" />
