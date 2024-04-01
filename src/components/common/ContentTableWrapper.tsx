@@ -21,12 +21,14 @@ export const ContentTableWrapper: React.FC<ContentTableTitleProps> = ({
     <div className="overflow-hidden bg-white min-h-screen h-full pl-10 dark:bg-gray-900">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <p className="text-sm text-gray-700 mt-2 dark:text-white">{description}</p>
+          <p className="text-sm text-gray-700 mt-2 dark:text-white">
+            {description}
+          </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 flex flex-row">
           <button
             type="button"
-            className="flex rounded-md bg-indigo-600 px-3 py-2 text-center text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mr-8 items-center justify-start"
+            className="flex rounded-md bg-indigo-600 px-3 py-2 text-center text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mr-10 items-center justify-start"
             onClick={() => {
               action?.fn(true);
             }}

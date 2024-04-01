@@ -205,7 +205,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
         <div className="py-3 flex justify-start mt-5">
           <button
             type="button"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 dark:bg-gray-200 text-base font-medium text-white dark:text-black hover:bg-slate-900 dark:hover:bg-slate-100 focus:outline-none sm:w-auto sm:text-sm"
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white  hover:bg-slate-900  focus:outline-none sm:w-auto sm:text-sm"
             onClick={handleFictionPlaceSave}
           >
             Update Place
@@ -213,7 +213,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
 
           <button
             type="button"
-            className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-700 shadow-sm px-4 py-2 bg-white dark:bg-black text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-sm"
+            className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-sm"
             onClick={handleFictionPlaceCancel}
           >
             Cancel
