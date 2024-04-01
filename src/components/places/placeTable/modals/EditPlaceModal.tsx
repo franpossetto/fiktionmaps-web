@@ -145,7 +145,9 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
       title={"Edit Place"}
     >
       <>
-        <h2 className="my-2 text-black text-sm">See or edit this place.</h2>
+        <h2 className="my-2 text-black text-sm dark:text-white">
+          See or edit this place.
+        </h2>
         <div className="mt-4">
           <PlaceFictionSelector fiction={fictionName} />
           <label
