@@ -31,7 +31,6 @@ export const CitySelectorApprove: React.FC<CitySelectorApproveProps> = ({
 
   const handleCityChange = (city: City) => {
     setSelectedCity(city);
-    console.log(city);
   };
 
   const filteredCity: City[] =

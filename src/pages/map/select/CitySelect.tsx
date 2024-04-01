@@ -16,12 +16,12 @@ interface CitySelectProps {
 }
 
 export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
-
   const [query, setQuery] = useState("");
   const { getCities } = useCityService();
   const { loading, data, error } = getCities();
   const [cities, setCities] = useState<City[]>([]);
   const { setCity } = useMapController();
+
   useEffect(() => {
     if (data) {
       setCities(data);
@@ -120,7 +120,9 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                               <p
                                 className={classNames(
                                   "text-sm font-medium",
-                                  active ? "text-gray-900 dark:text-white" : "text-gray-700 dark:text-gray-400"
+                                  active
+                                    ? "text-gray-900 dark:text-white"
+                                    : "text-gray-700 dark:text-gray-400"
                                 )}
                               >
                                 {item.name}
@@ -128,10 +130,14 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                               <p
                                 className={classNames(
                                   "text-sm",
-                                  active ? "text-gray-700 dark:text-white" : "text-gray-500 dark:text-gray-400"
+                                  active
+                                    ? "text-gray-700 dark:text-white"
+                                    : "text-gray-500 dark:text-gray-400"
                                 )}
                               >
-                                itemDescription
+                                {item.amountOfPlaces
+                                  ? item.amountOfPlaces
+                                  : "Could not count amount of places"}
                               </p>
                             </div>
                           </>
