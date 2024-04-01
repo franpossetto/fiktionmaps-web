@@ -28,7 +28,7 @@ export const ContentTableView: React.FC<ContentTableProps> = ({ content }) => {
             ) : (
               <PlaceEmptyState
                 icon={
-                  <RocketLaunchIcon className="w-10 h-10 mb-4 text-gray-800" />
+                  <RocketLaunchIcon className="w-10 h-10 mb-4 text-gray-800 dark:text-gray-200" />
                 }
                 title="No places created yet"
                 message="Create your first place to get started"
