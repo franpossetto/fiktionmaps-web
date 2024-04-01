@@ -33,24 +33,8 @@ export const MapView = () => {
     refetch,
   } = getFictionsByCity(city?.id || 0);
 
-  const { getCityById, getCityById2 } = useCityService();
+  const { getCityById } = useCityService();
   const { loading: loadingCity, data: selectedCity } = getCityById(city?.id);
-
-  // const [sCity, setSCity] = useState<any>();
-  // const [loadingSCity, setLoadingSCity] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   if (city?.id) {
-  //     setLoadingSCity(true);
-  //     getCityById2(city.id)
-  //       .then((data) => {
-  //         setSCity(data);
-  //       })
-  //       .finally(() => {
-  //         setLoadingSCity(false);
-  //       });
-  //   }
-  // }, [city]);
 
   const fictionSelectedOrNot =
     fictionsByCity != null &&

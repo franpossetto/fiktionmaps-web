@@ -29,6 +29,8 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
     setFictionsSelected: sendFictionsToMap,
   } = useMapController();
 
+  const MOVIE_COVERS_PATH = "movie_covers/";
+
   const filteredItems =
     query === ""
       ? fictions
@@ -106,7 +108,9 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
                       >
                         {({ active }) => (
                           <>
-                            <FictionImage imgUrl={item.imgUrl} />
+                            <FictionImage
+                              imgUrl={MOVIE_COVERS_PATH + item.imgUrl}
+                            />
 
                             <div className="ml-4 flex-auto">
                               <p
