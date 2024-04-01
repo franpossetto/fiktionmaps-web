@@ -10,6 +10,6 @@ export interface Place {
   location: LocationDTO;
   scenes: Scene[];
   published: boolean;
-  userId: number;
+  userId?: number;
   userEmail?: string;
 }

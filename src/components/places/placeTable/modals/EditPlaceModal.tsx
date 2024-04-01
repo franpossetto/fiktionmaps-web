@@ -63,16 +63,6 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
     }
   };
 
-  async function getSha256(message: string): Promise<string> {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join(""); // Convierte el array a un string hexadecimal
-    return hashHex;
-  }
-
   useEffect(() => {
     if (data) {
       setSetFictionName(data.name);
@@ -117,7 +107,6 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
       fictionId: placeToEdit?.fictionId,
       scenes: [],
       published: false,
-      userId: 0,
     };
 
     updatePlaceFromFiction(placeToEdit?.id, pl)
@@ -161,7 +150,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
           <PlaceFictionSelector fiction={fictionName} />
           <label
             htmlFor="fiction-name"
-            className="block text-sm font-medium leading-6 text-gray-900 mt-4"
+            className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100 mt-4"
           >
             Place Name
           </label>
@@ -172,7 +161,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
             placeholder={placeToEdit?.name}
             value={placeName}
             onChange={handlePlaceNameChange}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
         <div className="mt-4">
@@ -185,7 +174,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
         <div className="mt-4">
           <label
             htmlFor="scene-description"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
           >
             Place Description
           </label>
@@ -193,7 +182,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
             id="scene-description"
             name="scene-description"
             rows={3}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             placeholder={placeToEdit?.description}
             value={placeDescription}
             onChange={handlePlaceDescriptionChange}
@@ -203,7 +192,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
         <div className="mt-4">
           <label
             htmlFor="location"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
           >
             Location
           </label>
@@ -214,7 +203,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
         <div className="py-3 flex justify-start mt-5">
           <button
             type="button"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white hover:bg-slate-900 focus:outline-none sm:w-auto sm:text-sm"
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 dark:bg-gray-200 text-base font-medium text-white dark:text-black hover:bg-slate-900 dark:hover:bg-slate-100 focus:outline-none sm:w-auto sm:text-sm"
             onClick={handleFictionPlaceSave}
           >
             Update Place
@@ -222,7 +211,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
 
           <button
             type="button"
-            className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-sm"
+            className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-700 shadow-sm px-4 py-2 bg-white dark:bg-black text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-sm"
             onClick={handleFictionPlaceCancel}
           >
             Cancel
