@@ -163,7 +163,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
             placeholder={placeToEdit?.name}
             value={placeName}
             onChange={handlePlaceNameChange}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-950 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
         <div className="mt-4">
@@ -176,7 +176,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
         <div className="mt-4">
           <label
             htmlFor="scene-description"
-            className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+            className="block text-sm font-medium leading-6 text-gray-950 dark:text-gray-100"
           >
             Place Description
           </label>
@@ -184,7 +184,7 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
             id="scene-description"
             name="scene-description"
             rows={3}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-100 dark:bg-gray-950 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             placeholder={placeToEdit?.description}
             value={placeDescription}
             onChange={handlePlaceDescriptionChange}
