@@ -135,9 +135,11 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                                     : "text-gray-500 dark:text-gray-400"
                                 )}
                               >
-                                {item.amountOfPlaces
-                                  ? item.amountOfPlaces
-                                  : "Could not count amount of places"}
+                                {item.amountOfPlaces === 1
+                                  ? "1 Place"
+                                  : item.amountOfPlaces ?? 0 > 1
+                                  ? `${item.amountOfPlaces} Places`
+                                  : "No Places"}
                               </p>
                             </div>
                           </>
