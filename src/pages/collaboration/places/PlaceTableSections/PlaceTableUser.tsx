@@ -6,7 +6,11 @@ import { AddPlaceModal } from "../../../../components/places/placeTable/modals/A
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
 import { EditPlaceModal } from "../../../../components/places/placeTable/modals/EditPlaceModal";
 import { Place } from "../../../../types/Place";
-import { FictionHashTable, config } from "../PlaceTableUtils";
+import {
+  FictionHashTable,
+  config,
+  generateDataSource,
+} from "../PlaceTableUtils";
 import { Fiction } from "../../../../types/Fiction";
 import { useFictionService } from "../../../../services/useFictionService";
 import { User } from "../../../../types/User";
@@ -75,68 +79,6 @@ export const PlaceTableUser = () => {
     }
   }, [fictions]);
 
-  const dataSource = useMemo(() => {
-    return places.map((place, index: number) => ({
-      id: index + 1,
-      image: <PlaceImageSmall place={place} />,
-      name: (
-        <div>
-          <span className="mr-2 sm:hidden">
-            {place.name.length > 15
-              ? `${place.name.slice(0, 10)}...`
-              : place.name}
-          </span>
-          <span className="hidden sm:inline">{place.name}</span>
-        </div>
-      ),
-      fiction:
-        fictionHashTable && fictionHashTable[place.fictionId] ? (
-          <ContentTableTagButton
-            color="grey"
-            text={fictionHashTable[place.fictionId].name}
-          />
-        ) : (
-          <ContentTableTagButton color="grey" text="No fiction" />
-        ),
-      description:
-        place.description.length > 50
-          ? `${place.description.substring(0, 50)}...`
-          : place.description,
-      state: place.published ? (
-        <ContentTableTagButton color="emerald" text="Approved" icon="A" />
-      ) : (
-        <>
-          {place.userId !== loggedUser?.id ? (
-            <ContentTableTagButton
-              color="amber"
-              onClick={() => approvePlace(place)}
-              text="To Review"
-              icon="R"
-            />
-          ) : (
-            <ContentTableTagButton color="cyan" text="Pending" />
-          )}
-        </>
-      ),
-      actions: (
-        <>
-          <ContentTableTagButton
-            color="gray"
-            onClick={() => editPlace(place)}
-            text="Edit"
-            icon="E"
-          />
-          <ContentTableTagButton
-            color="red"
-            onClick={() => deletePlace(place)}
-            text="Delete"
-            icon="D"
-          />
-        </>
-      ),
-    }));
-  }, [places, fictionHashTable]);
-
   const editPlace = (place: Place) => {
     setPlaceToEdit(place);
     setModalEditPlaceOpen(true);
@@ -151,6 +93,17 @@ export const PlaceTableUser = () => {
     setPlaceToApprove(place);
     setModalApprovePlaceOpen(true);
   };
+
+  const dataSource = useMemo(() => {
+    return generateDataSource(
+      places,
+      fictionHashTable,
+      loggedUser,
+      editPlace,
+      deletePlace,
+      approvePlace
+    );
+  }, [places, fictionHashTable, loggedUser]);
 
   return (
     <>
