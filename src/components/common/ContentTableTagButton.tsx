@@ -1,5 +1,5 @@
 import React from "react";
-
+import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 export enum TagColor {
   Emerald = "emerald",
   Amber = "amber",
@@ -12,15 +12,13 @@ export enum TagColor {
 interface ContentTableTagButtonProps {
   color: TagColor | string;
   onClick?: () => void;
+  icon?: any;
   text: string;
 }
 
-export const ContentTableTagButton: React.FC<ContentTableTagButtonProps> = ({
-  color,
-  onClick,
-  text,
-}) => {
-  // Obtener la clase CSS correspondiente al color
+export const ContentTableTagButton: React.FC<ContentTableTagButtonProps> = (
+  props
+) => {
   const getColorClass = (color: TagColor | string) => {
     switch (color) {
       case TagColor.Emerald:
@@ -40,14 +38,14 @@ export const ContentTableTagButton: React.FC<ContentTableTagButtonProps> = ({
     }
   };
 
-  const colorClass = getColorClass(color);
-
+  const colorClass = getColorClass(props.color);
   return (
     <button
       className={`rounded-lg px-3 mr-2 py-[3px]  ${colorClass}`}
-      onClick={onClick}
+      onClick={props.onClick}
     >
-      {text}
+      <span className="sm:hidden">{props.icon}</span>
+      <span className="hidden sm:inline">{props.text}</span>
     </button>
   );
 };

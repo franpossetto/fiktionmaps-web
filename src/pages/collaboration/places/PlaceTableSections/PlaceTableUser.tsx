@@ -79,7 +79,16 @@ export const PlaceTableUser = () => {
     return places.map((place, index: number) => ({
       id: index + 1,
       image: <PlaceImageSmall place={place} />,
-      name: place.name,
+      name: (
+        <div>
+          <span className="mr-2 sm:hidden">
+            {place.name.length > 15
+              ? `${place.name.slice(0, 10)}...`
+              : place.name}
+          </span>
+          <span className="hidden sm:inline">{place.name}</span>
+        </div>
+      ),
       fiction:
         fictionHashTable && fictionHashTable[place.fictionId] ? (
           <ContentTableTagButton
@@ -94,7 +103,7 @@ export const PlaceTableUser = () => {
           ? `${place.description.substring(0, 50)}...`
           : place.description,
       state: place.published ? (
-        <ContentTableTagButton color="emerald" text="Approved" />
+        <ContentTableTagButton color="emerald" text="Approved" icon="A" />
       ) : (
         <>
           {place.userId !== loggedUser?.id ? (
@@ -102,6 +111,7 @@ export const PlaceTableUser = () => {
               color="amber"
               onClick={() => approvePlace(place)}
               text="To Review"
+              icon="R"
             />
           ) : (
             <ContentTableTagButton color="cyan" text="Pending" />
@@ -114,11 +124,13 @@ export const PlaceTableUser = () => {
             color="gray"
             onClick={() => editPlace(place)}
             text="Edit"
+            icon="E"
           />
           <ContentTableTagButton
             color="red"
             onClick={() => deletePlace(place)}
             text="Delete"
+            icon="D"
           />
         </>
       ),

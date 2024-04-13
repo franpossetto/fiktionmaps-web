@@ -3,6 +3,11 @@ import { PlaceImageSmall } from "../../../components/places/placeTable/common/Pl
 import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import { User } from "../../../types/User";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 export type FictionHashTable = {
   [key: number]: Fiction;
@@ -32,31 +37,31 @@ export const config = [
     label: "Image",
     key: "image",
     className:
-      "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Place Name",
     key: "name",
     className:
-      "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Fiction",
     key: "fiction",
     className:
-      "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Description",
     key: "description",
     className:
-      "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "State",
     key: "state",
     className:
-      "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "",
@@ -64,6 +69,10 @@ export const config = [
     className: "relative py-3.5 pl-3 pr-4 sm:pr-3",
   },
 ];
+
+function truncateText(text: string, maxLength: number) {
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}
 
 export const generateDataSource = (
   places: Place[],
@@ -76,7 +85,12 @@ export const generateDataSource = (
   return places.map((place, index) => ({
     id: index + 1,
     image: <PlaceImageSmall place={place} />,
-    name: place.name,
+    name: (
+      <div>
+        <span className="sm:hidden mr-2">{truncateText(place.name, 15)}</span>
+        <span className="hidden sm:inline">{place.name}</span>
+      </div>
+    ),
     fiction:
       fictionHashTable && fictionHashTable[place.fictionId] ? (
         <ContentTableTagButton
@@ -91,7 +105,13 @@ export const generateDataSource = (
         ? `${place.description.substring(0, 50)}...`
         : place.description,
     state: place.published ? (
-      <ContentTableTagButton color="emerald" text="Approved" />
+      <ContentTableTagButton
+        color="emerald"
+        text="Approved"
+        icon={
+          <CheckCircleIcon className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+        }
+      />
     ) : (
       <>
         {place.userId !== loggedUser?.id ? (
@@ -99,9 +119,18 @@ export const generateDataSource = (
             color="cyan"
             onClick={() => approvePlace(place)}
             text="To Review"
+            icon={
+              <QuestionMarkCircleIcon className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+            }
           />
         ) : (
-          <ContentTableTagButton color="cyan" text="Pending" />
+          <ContentTableTagButton
+            color="cyan"
+            text="Pending"
+            icon={
+              <ExclamationCircleIcon className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+            }
+          />
         )}
       </>
     ),
@@ -111,11 +140,17 @@ export const generateDataSource = (
           color="gray"
           onClick={() => editPlace(place)}
           text="Edit"
+          icon={
+            <PencilSquareIcon className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+          }
         />
         <ContentTableTagButton
           color="red"
           onClick={() => deletePlace(place)}
           text="Delete"
+          icon={
+            <TrashIcon className="w-5 h-5 text-gray-800 dark:text-gray-200" />
+          }
         />
       </>
     ),

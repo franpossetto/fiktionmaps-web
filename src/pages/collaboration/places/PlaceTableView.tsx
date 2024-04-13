@@ -24,7 +24,7 @@ export const PlaceTableView = () => {
       icon: <BuildingOffice2Icon className="text-sm mr-1 h-4" />,
     },
     {
-      label: "Places in review",
+      label: "In review",
       onClick: () => {},
       key: "review",
       icon: <ClipboardDocumentCheckIcon className="text-sm mr-1 h-4" />,

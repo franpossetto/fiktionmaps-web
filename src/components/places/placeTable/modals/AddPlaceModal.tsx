@@ -43,8 +43,10 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
     if (!imageFile) return null;
 
     const uniqueFileName = `${new Date().getTime()}_${imageFile.name}`;
-    const finalFileName = `${uniqueFileName}`; // todo: modify
-    const storageRef = ref(storage, `fictions/${fictionId}/${finalFileName}`);
+    const storageRef = ref(
+      storage,
+      `fiction_places/${fictionId}/${uniqueFileName}`
+    );
 
     try {
       const snapshot = await uploadBytes(storageRef, imageFile);
@@ -54,16 +56,6 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
       return null;
     }
   };
-
-  async function getSha256(message: string): Promise<string> {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join(""); // Convierte el array a un string hexadecimal
-    return hashHex;
-  }
 
   useEffect(() => {
     setFiction(fct);
@@ -199,7 +191,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
           <PlaceDetails />
         </div>
 
-        <div className="py-3 flex justify-start mt-5">
+        <div className="py-3 flex justify-start">
           {!loading ? (
             <button
               type="button"

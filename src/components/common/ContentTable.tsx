@@ -9,7 +9,17 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
       <thead>
         {config &&
           config.map((column: any) => (
-            <th key={column.key} className={column.className} scope="col">
+            <th
+              key={column.key}
+              className={`${column.className} ${
+                column.key === "fiction" ||
+                column.key === "description" ||
+                column.key === "id"
+                  ? "sm:table-cell hidden"
+                  : ""
+              }`}
+              scope="col"
+            >
               {column.label}
             </th>
           ))}
@@ -20,7 +30,13 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
             {config.map((column: any) => (
               <td
                 key={column.key}
-                className="whitespace-nowrap py-1 font-normal text-gray-900 sm:pl-3 dark:text-gray-300"
+                className={`${"whitespace-nowrap py-1 font-normal text-gray-900 sm:pl-3 dark:text-gray-300"} ${
+                  column.key === "fiction" ||
+                  column.key === "description" ||
+                  column.key === "id"
+                    ? "sm:table-cell hidden"
+                    : ""
+                }`}
               >
                 {row[column.key]}
               </td>

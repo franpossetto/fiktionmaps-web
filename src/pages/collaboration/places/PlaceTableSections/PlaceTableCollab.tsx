@@ -21,17 +21,17 @@ const config = [
   {
     label: "#",
     key: "id",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pl-2 pr-2 text-left font-semibold text-gray-900",
   },
   {
     label: "Image",
     key: "image",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pr-2 text-left font-semibold text-gray-900",
   },
   {
     label: "Place Name",
     key: "name",
-    className: "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3",
+    className: "py-3.5 pl-2 pr-2 text-left font-semibold text-gray-900",
   },
   {
     label: "Fiction",

@@ -114,7 +114,7 @@ export const PlaceTableReview = () => {
           ? `${place.description.substring(0, 50)}...`
           : place.description,
       state: place.published ? (
-        <ContentTableTagButton color="emerald" text="Approved" />
+        <ContentTableTagButton color="emerald" text="Approved" icon="A" />
       ) : (
         <>
           {place.userId !== loggedUser?.id ? (
@@ -124,7 +124,7 @@ export const PlaceTableReview = () => {
               text="To Review"
             />
           ) : (
-            <ContentTableTagButton color="cyan" text="Pending" />
+            <ContentTableTagButton color="cyan" text="Pending" icon="P" />
           )}
         </>
       ),
@@ -134,11 +134,13 @@ export const PlaceTableReview = () => {
             color="gray"
             onClick={() => editPlace(place)}
             text="Edit"
+            icon="E"
           />
           <ContentTableTagButton
             color="red"
             onClick={() => deletePlace(place)}
             text="Delete"
+            icon="D"
           />
         </>
       ),

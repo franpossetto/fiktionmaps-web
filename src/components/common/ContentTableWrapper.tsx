@@ -1,5 +1,4 @@
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
-import EntityTabs, { Tab } from "./EntityTabs";
 
 interface ContentTableTitleProps {
   title: string;
@@ -18,7 +17,7 @@ export const ContentTableWrapper: React.FC<ContentTableTitleProps> = ({
   children,
 }) => {
   return (
-    <div className="overflow-hidden bg-white min-h-screen h-full pl-10 dark:bg-gray-900">
+    <div className="overflow-hidden bg-white min-h-screen h-full pl-10 pr-10 dark:bg-gray-900">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <p className="text-sm text-gray-700 mt-2 dark:text-white">
