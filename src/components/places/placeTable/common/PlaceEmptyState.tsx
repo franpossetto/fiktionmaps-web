@@ -10,7 +10,7 @@ export const PlaceEmptyState: React.FC<PlaceEmptyStateProps> = ({
   message,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full p-12 border-2 border-dashed border-gray-300 rounded-lg mr-10">
+    <div className="flex flex-col items-center justify-center h-full p-12 border-2 border-dashed border-gray-300 rounded-lg">
       {icon}
       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
         {title}

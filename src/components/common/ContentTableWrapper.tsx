@@ -27,7 +27,7 @@ export const ContentTableWrapper: React.FC<ContentTableTitleProps> = ({
         <div className="mt-4 sm:ml-16 sm:mt-0 flex flex-row">
           <button
             type="button"
-            className="flex rounded-md bg-indigo-600 px-3 py-2 text-center text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mr-10 items-center justify-start"
+            className="flex rounded-md bg-indigo-600 px-3 py-2 text-center text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:mr-8 mt-1 items-center justify-start"
             onClick={() => {
               action?.fn(true);
             }}
