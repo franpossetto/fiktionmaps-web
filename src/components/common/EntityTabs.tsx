@@ -29,7 +29,7 @@ const EntityTabs: React.FC<EntityTabsProps> = ({ tabs }) => {
   const basePath = "/collaboration/places";
 
   return (
-    <div className="flex flex-row mr-8">
+    <div className="flex flex-row">
       {tabs.map((tab, index) => (
         <button
           key={index}

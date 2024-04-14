@@ -44,8 +44,8 @@ export const ContentTableTagButton: React.FC<ContentTableTagButtonProps> = (
       className={`rounded-lg px-3 mr-2 py-[3px]  ${colorClass}`}
       onClick={props.onClick}
     >
-      <span className="sm:hidden">{props.icon}</span>
-      <span className="hidden sm:inline">{props.text}</span>
+      <span className="md:hidden">{props.icon}</span>
+      <span className="hidden md:inline">{props.text}</span>
     </button>
   );
 };

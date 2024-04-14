@@ -15,7 +15,7 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
                 column.key === "fiction" ||
                 column.key === "description" ||
                 column.key === "id"
-                  ? "sm:table-cell hidden"
+                  ? "md:table-cell hidden"
                   : ""
               }`}
               scope="col"
@@ -34,7 +34,7 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
                   column.key === "fiction" ||
                   column.key === "description" ||
                   column.key === "id"
-                    ? "sm:table-cell hidden"
+                    ? "md:table-cell hidden"
                     : ""
                 }`}
               >

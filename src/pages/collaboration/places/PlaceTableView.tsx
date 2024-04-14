@@ -33,7 +33,7 @@ export const PlaceTableView = () => {
 
   return (
     <>
-      <div className="ml-10">
+      <div className="ml-4 sm:ml-8">
         <EntityTabs tabs={tabsData} />
       </div>
       <Routes>
