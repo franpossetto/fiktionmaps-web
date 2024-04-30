@@ -20,6 +20,7 @@
     "@tailwindcss/forms": "^0.5.4",
     "@types/firebase": "^3.2.1",
     "@types/react-router-dom": "^5.3.3",
+    "antd": "^5.16.4",
     "axios": "^1.2.3",
     "firebase": "^9.23.0",
     "react": "^18.2.0",
