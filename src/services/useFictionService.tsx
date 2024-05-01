@@ -40,11 +40,17 @@ export const useFictionService = () => {
     return useAxios({ url: "/scenes", config: { method: "get" } });
   };
 
-  const getPlaces = (published?: boolean): useAxiosResponse<any> => {
+  const getPlaces = (
+    published?: boolean,
+    page?: number,
+    size?: number
+  ): useAxiosResponse<any> => {
     let url = "/places";
     if (published !== undefined) {
       url += `?approved=${published}`;
     }
+
+    url += `&page=${page}&size=${size}`;
 
     return useAxios({
       tokenRequired: false,
@@ -53,10 +59,13 @@ export const useFictionService = () => {
     });
   };
 
-  const getPlacesByUser = (): useAxiosResponse<any> => {
+  const getPlacesByUser = (
+    page?: number,
+    size?: number
+  ): useAxiosResponse<any> => {
     return useAxios({
       tokenRequired: true,
-      url: "/places/user",
+      url: `places/user?page=${page}&size=${size}`,
       config: { method: "get" },
     });
   };

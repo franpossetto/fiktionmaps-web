@@ -17,19 +17,25 @@ import { User } from "../../../../types/User";
 import { useFictionService } from "../../../../services/useFictionService";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
 import { useUserService } from "../../../../services/useUserService";
-import { ContentTableTagButton } from "../../../../components/common/ContentTableTagButton";
+import { Pagination } from "../../../../components/common/Pagination";
 
 export const PlaceTableReview = () => {
   const [loading, setLoading] = useState(true); // State for loading indicator
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
   const [loggedUser, setLoggedUser] = useState<User>();
   const { getFictions, getPlaces } = useFictionService();
+  const [currentPage, setCurrentPage] = useState(1);
+
   const {
     loading: loadingPlaces,
-    data: placesData,
+    data: placesPaginated,
     error,
     refetch,
-  } = getPlaces(false);
+  } = getPlaces(false, currentPage, 10);
+
+  const placesData =
+    placesPaginated && placesPaginated.content ? placesPaginated.content : [];
+
   const { getCurrentUser } = useUserService();
   const { loading: loadingFictions, data: fictions } = getFictions();
   const [places, setPlaces] = useState<Place[]>([]);
@@ -104,16 +110,21 @@ export const PlaceTableReview = () => {
       places,
       fictionHashTable,
       loggedUser,
+      currentPage,
+      true,
       editPlace,
       deletePlace,
       approvePlace
     );
-  }, [places, fictionHashTable, loggedUser]);
+  }, [places, fictionHashTable, loggedUser, currentPage]);
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage]);
 
   return (
     <>
       <ContentTableWrapper
-        title={"Places"}
         description={
           "These places has been created by other users for Review. Take a look on them an collaborate in creating the database."
         }
@@ -122,7 +133,20 @@ export const PlaceTableReview = () => {
         {loadingPlaces && loadingFictions ? (
           <PlaceSkeleton />
         ) : (
-          <ContentTableView content={{ dataSource, config }} />
+          <>
+            <ContentTableView content={{ dataSource, config }} />
+            <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
+              <div className="flex justify-center items-center">
+                <Pagination
+                  totalPages={placesPaginated?.totalPages || 0}
+                  currentPage={placesPaginated?.currentPage || 0}
+                  totalElements={placesPaginated?.totalElements || 0}
+                  pageSize={10}
+                  setCurrentPage={setCurrentPage}
+                />
+              </div>
+            </div>
+          </>
         )}
       </ContentTableWrapper>
       {placeToEdit && (

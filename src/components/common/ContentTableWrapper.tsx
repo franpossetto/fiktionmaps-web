@@ -1,7 +1,6 @@
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 interface ContentTableTitleProps {
-  title: string;
   description: string;
   action?: {
     title: string;
@@ -11,13 +10,12 @@ interface ContentTableTitleProps {
 }
 
 export const ContentTableWrapper: React.FC<ContentTableTitleProps> = ({
-  title,
   description,
   action,
   children,
 }) => {
   return (
-    <div className="overflow-hidden bg-white min-h-screen h-full sm:pl-0 sm:pr-0 pl-4 pr-4 dark:bg-gray-900">
+    <div className="min-h-screen overflow-hidden sm:pl-0 sm:pr-0 pl-4 pr-4 dark:bg-gray-900">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <p className="text-sm text-gray-700 mt-2 sm:ml-8 dark:text-white">

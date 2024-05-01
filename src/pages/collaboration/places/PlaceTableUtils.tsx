@@ -31,25 +31,25 @@ export const config = [
     label: "#",
     key: "id",
     className:
-      "py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "w-12 py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Image",
     key: "image",
     className:
-      "py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "w-12 py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Place Name",
     key: "name",
     className:
-      "py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "w-72 py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Fiction",
     key: "fiction",
     className:
-      "py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
+      "w-72 py-3.5 pl-0 pr-2 text-left font-semibold text-gray-900 sm:pl-3 dark:text-white",
   },
   {
     label: "Description",
@@ -78,12 +78,18 @@ export const generateDataSource = (
   places: Place[],
   fictionHashTable: FictionHashTable,
   loggedUser: any,
+  currentPage: number = 0,
+  isPaginated: boolean,
   editPlace: (place: Place) => void,
   deletePlace: (place: Place) => void,
   approvePlace: (place: Place) => void
 ) => {
+  const setIndex = (index: number) => {
+    return isPaginated ? (currentPage - 1) * 10 + index + 1 : index + 1;
+  };
+
   return places.map((place, index) => ({
-    id: index + 1,
+    id: setIndex(index),
     image: <PlaceImageSmall place={place} />,
     name: (
       <div>
