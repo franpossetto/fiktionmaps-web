@@ -27,6 +27,7 @@ export const Pagination = (props: PaginationProps) => {
             size="small"
             responsive
             onChange={onChangePagination}
+            showSizeChanger={false}
           />
         ) : (
           <P defaultCurrent={1} total={3} size="small" disabled responsive />

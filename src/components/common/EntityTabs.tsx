@@ -16,7 +16,7 @@ const EntityTabs: React.FC<EntityTabsProps> = ({ tabs }) => {
   const location = useLocation();
   const basePath = "/collaboration/places";
 
-  const isSelectedTab = (tabKey: string) => {
+  const isSelectedTab = (tabKey: string, index: number) => {
     const currentPath =
       location.pathname === "/collaboration"
         ? "/collaboration/mine"
@@ -29,6 +29,7 @@ const EntityTabs: React.FC<EntityTabsProps> = ({ tabs }) => {
           ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-black"
           : "bg-gray-100 text-black dark:bg-gray-800 dark:text-white"
       }
+      ${index < tabs.length - 1 ? "mr-3" : ""}
     `;
     return className;
   };
@@ -36,7 +37,11 @@ const EntityTabs: React.FC<EntityTabsProps> = ({ tabs }) => {
   return (
     <div className="flex flex-row">
       {tabs.map((tab, index) => (
-        <button key={index} type="button" className={isSelectedTab(tab.key)}>
+        <button
+          key={index}
+          type="button"
+          className={isSelectedTab(tab.key, index)}
+        >
           <span className="flex items-center">
             {tab.icon}
             <Link to={`${basePath}/${tab.key}`}>{tab.label}</Link>
