@@ -7,7 +7,9 @@ import {
   AxiosResponse,
   RawAxiosRequestConfig,
 } from "axios";
+
 export const useCityService = () => {
+  
   const getCities = (): useAxiosResponse<any> => {
     return useAxios({
       url: `/cities`,

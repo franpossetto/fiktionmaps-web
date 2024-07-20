@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
+    "@googlemaps/markerclusterer": "^2.5.3",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@popperjs/core": "^2.11.6",
@@ -32,6 +33,7 @@
     "use-places-autocomplete": "^4.0.0"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.55.11",
     "@types/node": "^18.11.18",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",

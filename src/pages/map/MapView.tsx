@@ -8,6 +8,7 @@ import { FictionSelect } from "./select/FictionSelect";
 import { FictionDisplayStatus } from "../../types/enum/FictionSelectorStatus";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 
+
 export const MapView = () => {
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [fictionIsOpen, setFictionIsOpen] = useState(false);
@@ -32,6 +33,7 @@ export const MapView = () => {
     data: fictionsByCity,
     refetch,
   } = getFictionsByCity(city?.id || 0);
+
 
   const { getCityById } = useCityService();
   const { loading: loadingCity, data: selectedCity } = getCityById(city?.id);

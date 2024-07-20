@@ -15,3 +15,79 @@ body {
   line-height: 2;
   font-family: "Montserrat";
 }
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+.custom-marker {
+  background-color: #f7f7f7;
+  border: 1px solid #f7f7f7;
+  font-size: large;
+  border-radius: 40%;
+  padding: 10px;
+  box-shadow: 1px 0.5px 5px 0.5px #000000;
+  width: 2em;
+  height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+  overflow: hidden; 
+}
+
+.custom-marker:hover {
+  width: 6em;
+  height: 4em;
+  border-radius: 40%;
+}
+
+.marker-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker-text {
+  font-family:   monospace;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.custom-marker:hover .marker-text {
+  opacity: 1;
+}
+
+.custom-marker::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, 0);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #f7f7f7;
+}
+
+
+.custom-cluster {
+  background-color: #18ca71;
+  width: 3em;
+  height: 2em;
+  border-radius: 40%;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+  text-align: center;
+  line-height: 2em; 
+}
+.custom-cluster:hover {
+  width: 4.5em; 
+  height: 3.5em; 
+  border-radius: 40%; 
+  background-color: #2f32e7; 
+} 
+
