@@ -80,6 +80,7 @@ export const generateDataSource = (
   loggedUser: any,
   currentPage: number = 0,
   isPaginated: boolean,
+  isAdmin: boolean,  // Asegúrate de que isAdmin sea un parámetro
   editPlace: (place: Place) => void,
   deletePlace: (place: Place) => void,
   approvePlace: (place: Place) => void
@@ -140,7 +141,7 @@ export const generateDataSource = (
         )}
       </>
     ),
-    actions: (
+    actions: isAdmin ? (
       <>
         <ContentTableTagButton
           color="gray"
@@ -159,6 +160,6 @@ export const generateDataSource = (
           }
         />
       </>
-    ),
+    ) : null,  // Renderizar nada si no es admin
   }));
 };

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useMemo } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { GlobeAmericasIcon } from "@heroicons/react/24/outline";
@@ -28,12 +28,21 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
     }
   }, [data]);
 
-  const filteredItems =
-    query === ""
-      ? cities
-      : cities?.filter((item) => {
-          return item.name.toLowerCase().includes(query.toLowerCase());
-        });
+    // Utilizar useMemo para memorizar las ciudades filtradas
+    const filteredItems = useMemo(() => {
+      if (query === "") {
+        return cities;
+      }
+      return cities.filter((item) =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+      );
+    }, [query, cities]);
+  // const filteredItems =
+  //   query === ""
+  //     ? cities
+  //     : cities?.filter((item) => {
+  //         return item.name.toLowerCase().includes(query.toLowerCase());
+  //       });
 
   const setCityAndClose = (selectedCity: City) => {
     setCity(selectedCity);

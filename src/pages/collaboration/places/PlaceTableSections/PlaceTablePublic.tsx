@@ -27,6 +27,7 @@ export const PlaceTablePublished = () => {
     useState<boolean>(false);
   const { getFictions, getPlaces } = useFictionService();
   const [currentPage, setCurrentPage] = useState(1);
+  const [loadingUser, setLoadingUser] = useState(true); // Estado para manejar la carga del usuario
 
   const {
     loading: loadingPlaces,
@@ -36,7 +37,8 @@ export const PlaceTablePublished = () => {
   } = getPlaces(true, currentPage, 10);
 
   const { loading: loadingFictions, data: fictions } = getFictions();
-  const [loggedUser, setLoggedUser] = useState<User>();
+
+  const [loggedUser, setLoggedUser] = useState<User | null>(null); // Inicializar como null
 
   const { getCurrentUser } = useUserService();
   const placesData =
@@ -51,15 +53,26 @@ export const PlaceTablePublished = () => {
   const [fictionHashTable, setFictionHashTable] = useState<FictionHashTable>(
     {}
   );
+  //ACA
+  const [isAdmin, setIsAdmin] = useState(false); // Nuevo estado para mantener si el usuario es admin
 
   const getUserInfo = async () => {
-    const response = await getCurrentUser();
-    setLoggedUser(response);
+    try {
+      const response = await getCurrentUser();
+      setLoggedUser(response);
+      setIsAdmin(response.role === "ADMIN"); // Establecer isAdmin basado en el rol del usuario
+      setLoadingUser(false);  // Indicar que la carga del usuario ha finalizado
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      setLoadingUser(false); // Asegúrate de desactivar la carga incluso en caso de error
+    }
   };
+
 
   useEffect(() => {
     getUserInfo();
   }, []);
+
 
   useEffect(() => {
     if (placesData && placesData.length) {
@@ -96,14 +109,17 @@ export const PlaceTablePublished = () => {
   };
 
   const dataSource = useMemo(() => {
+    if (!loggedUser || !loggedUser.role) return [];
+  
     return generateDataSource(
       places,
       fictionHashTable,
       loggedUser,
       currentPage,
       true,
-      editPlace,
-      deletePlace,
+      isAdmin,
+      isAdmin ? editPlace : () => {},  // Funciones condicionales basadas en el rol
+      isAdmin ? deletePlace : () => {},
       approvePlace
     );
   }, [places, fictionHashTable, loggedUser, currentPage]);
@@ -112,60 +128,62 @@ export const PlaceTablePublished = () => {
     refetch();
   }, [currentPage]);
 
-  return (
-    <>
+// Verificar que el usuario esté cargado y que el rol esté definido
+if (loadingUser || !loggedUser || typeof loggedUser.role === 'undefined') {
+  return <div>Loading user data...</div>;
+}
+return (
+  <>
       <ContentTableWrapper
-        description={
-          "These are the approved places that you have added to the system. You can find these places on the map."
-        }
-        action={{ title: "Add Place", fn: setModalAddPlaceOpen }}
+          description={"These are the approved places you have added to the system."}
+          action={{ title: "Add Place", fn: setModalAddPlaceOpen }}
       >
-        {loadingPlaces ? (
-          <PlaceSkeleton />
-        ) : (
-          <>
-            <ContentTableView content={{ dataSource, config }} />
-            <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
-              <div className="flex justify-center items-center">
-                <Pagination
-                  totalPages={placesPaginated?.totalPages || 0}
-                  currentPage={placesPaginated?.currentPage || 0}
-                  totalElements={placesPaginated?.totalElements || 0}
-                  pageSize={10}
-                  setCurrentPage={setCurrentPage}
-                />
-              </div>
-            </div>
-          </>
-        )}
+          {loadingPlaces ? (
+              <PlaceSkeleton />
+          ) : (
+              <>
+                  <ContentTableView 
+                      content={{ dataSource, config }}
+                      isAdmin={isAdmin} // Asegúrate de pasar isAdmin aquí
+                  />
+                  <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
+                      <div className="flex justify-center items-center">
+                          <Pagination
+                              totalPages={placesPaginated?.totalPages || 0}
+                              currentPage={placesPaginated?.currentPage || 0}
+                              totalElements={placesPaginated?.totalElements || 0}
+                              pageSize={10}
+                              setCurrentPage={setCurrentPage}
+                          />
+                      </div>
+                  </div>
+              </>
+          )}
       </ContentTableWrapper>
-      {placeToEdit && (
-        <EditPlaceModal
-          modalOpen={modalEditPlaceOpen}
-          setModalOpen={setModalEditPlaceOpen}
-          placeToEdit={placeToEdit}
-          setPlaces={setPlaces}
-        />
+      {isAdmin && placeToEdit && (
+          <EditPlaceModal
+              modalOpen={modalEditPlaceOpen}
+              setModalOpen={setModalEditPlaceOpen}
+              placeToEdit={placeToEdit}
+              setPlaces={setPlaces}
+          />
       )}
-      <DeletePlaceModal
-        modalOpen={modalDeletePlaceOpen}
-        setModalOpen={setModalDeletePlaceOpen}
-        placeToDelete={placeToDelete}
-        setPlaces={setPlaces}
-      />
-      <ApprovePlaceModal
-        modalOpen={modalApprovePlaceOpen}
-        setModalOpen={setModalApprovePlaceOpen}
-        placeToApprove={placeToApprove}
-        setPlaces={setPlaces}
-      />
+      {isAdmin && (
+          <DeletePlaceModal
+              modalOpen={modalDeletePlaceOpen}
+              setModalOpen={setModalDeletePlaceOpen}
+              placeToDelete={placeToDelete}
+              setPlaces={setPlaces}
+          />
+      )}
       <AddPlaceModal
-        modalOpen={modalAddPlaceOpen}
-        setModalOpen={setModalAddPlaceOpen}
-        setPlaces={setPlaces}
+          modalOpen={modalAddPlaceOpen}
+          setModalOpen={setModalAddPlaceOpen}
+          setPlaces={setPlaces}
       />
-    </>
-  );
+  </>
+);
+
 };
 
 export default PlaceTablePublished;

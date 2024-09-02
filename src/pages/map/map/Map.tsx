@@ -10,7 +10,12 @@ import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import CustomMarker from "./CustomMarker";
 
-export default function Map() {
+// Define una interfaz para las propiedades que el componente Map aceptará
+interface MapProps {
+  onLoad?: () => void; // Prop onLoad opcional
+}
+
+export default function Map({ onLoad }: MapProps) { // Agregar MapProps como tipo de las props
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const openInfoWindowRef = useRef<google.maps.InfoWindow | null>(null);
@@ -31,56 +36,86 @@ export default function Map() {
     libraries: ["places", "marker"],
   });
 
-  useEffect(() => {
-    const loadMap = async () => {
-      const google = await loader.load();
+  const createMap = async (mapId: string, center: google.maps.LatLngLiteral, zoom: number) => {
+    const google = await loader.load();
+    if (mapRef.current) {
+      const map = new google.maps.Map(mapRef.current as HTMLElement, {
+        center: center,
+        zoom: zoom,
+        minZoom: 10,
+        mapId: mapId,
+        disableDefaultUI: false,
+        mapTypeControl: false,
+        zoomControl: false,
+        fullscreenControl: false,
+        gestureHandling: "greedy",
+        streetViewControl: false,
+      });
+      setMapInstance(map);
+      
+      // Llamar a onLoad cuando el mapa esté listo
+      map.addListener("tilesloaded", () => {
+        console.log("Map tiles loaded"); // Log para confirmar cuándo se cargan los tiles
+        if (onLoad) {
+          onLoad(); // Llamar onLoad después de que se carguen los tiles del mapa
+        }
+      });
 
-      if (mapRef.current && !mapInstance) {
-        const map = new google.maps.Map(mapRef.current, {
-          center: {
-            lat: city?.latitude || 0,
-            lng: city?.longitude || 0,
-          },
-          zoom: 15,
-          minZoom: 9,
-          mapId: '4504f8b37365c3d0',
-          disableDefaultUI: false,
-          mapTypeControl: false,
-          zoomControl: false,
-          fullscreenControl: false,
-          gestureHandling: "greedy",
-          streetViewControl: false,
-        });
-        setMapInstance(map);
-      } else if (mapInstance) {
-        mapInstance.setCenter({
-          lat: city?.latitude || 0,
-          lng: city?.longitude || 0,
-        });
-      }
-    };
-  
-    loadMap();
-  }, [city]);
-  
+      return map;
+    }
+    return null;
+  };
+
+  const initializeMap = async () => {
+    const darkMapId = 'c27c253257b98758'; 
+    const lightMapId = 'a1d2d30389460d42'; 
+    const mapId = style === "dark" ? darkMapId : lightMapId;
+
+    let center = { lat: city?.latitude || 0, lng: city?.longitude || 0 };
+    let zoom = 15;
+
+    console.log("Map ID:", mapId);
+
+    if (mapInstance) {
+      center = mapInstance.getCenter()?.toJSON() || center;
+      zoom = mapInstance.getZoom() || zoom;
+
+      google.maps.event.clearInstanceListeners(mapInstance);
+      markersRef.current.forEach(marker => marker.setMap(null));
+      markersRef.current = [];
+      mapInstance.unbindAll();
+    }
+
+    createMap(mapId, center, zoom);
+  };
+
+  const updateMapCenter = () => {
+    if (mapInstance && city) {
+      const newCenter = { lat: city.latitude, lng: city.longitude };
+      mapInstance.setCenter(newCenter);
+    }
+  };
+
   useEffect(() => {
-    const updateMapStyle = async () => {
-      if (mapInstance) {
-        const mapStyles =
-          style === "dark"
-            ? (await import("../../../assets/map/dark_styles.json")).default
-            : (await import("../../../assets/map/light_style.json")).default;
-        mapInstance.setOptions({ styles: mapStyles });
-      }
-    };
-  
-    updateMapStyle();
-  }, [style, mapInstance]);
+    initializeMap();
+  }, [style]);
+
+  useEffect(() => {
+    updateMapCenter();
+  }, [city]);
+
   useEffect(() => {
     if (mapInstance && fictionsSelected) {
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
-      const markers = [];
+      
+      type MarkerAdapter = {
+        getPosition: () => google.maps.LatLng;
+        marker: google.maps.marker.AdvancedMarkerElement;
+      };
+
+      const markers: MarkerAdapter[] = [];
+
       fictionsSelected?.forEach((fiction: Fiction) => {
         if (fiction?.places?.length && fiction.places.length > 0) {
           fiction.places.forEach((place: Place) => {
@@ -130,18 +165,14 @@ export default function Map() {
           });
         }
       });
-     
 
       new MarkerClusterer({ 
         map: mapInstance, 
         markers: markers.map(m => m.marker),
         renderer: new CustomClusterRenderer(),
-      });
-    
-    }
-    
+      });    
+    }    
   }, [mapInstance, fictionsSelected]);
 
   return <div ref={mapRef} className="absolute w-full h-full z-1" />;
-
 }
