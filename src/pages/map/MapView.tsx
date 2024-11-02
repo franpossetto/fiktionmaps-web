@@ -7,6 +7,7 @@ import { CitySelect } from "./select/CitySelect";
 import { FictionSelect } from "./select/FictionSelect";
 import { FictionDisplayStatus } from "../../types/enum/FictionSelectorStatus";
 import { XCircleIcon } from "@heroicons/react/24/solid";
+import usePlaceService from "../../services/usePlaceService";
 
 export const MapView = () => {
   const [isCityOpen, setIsCityOpen] = useState(false);
@@ -15,11 +16,13 @@ export const MapView = () => {
     FictionDisplayStatus.ALL_FICTIONS
   );
 
-  // Estado para controlar si el mapa está cargado
-  const [isMapLoaded, setIsMapLoaded] = useState(false); // Inicializar como false
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+
+  const { getPlacesByCoordinates } = usePlaceService();
 
   const {
     fictions,
+    mapBounds,
     setFictions,
     loading: ldg,
     setLoading,
@@ -28,6 +31,43 @@ export const MapView = () => {
     city,
     setCity,
   } = useMapController();
+
+  const p: any = {
+    upperLat: mapBounds.topRight.lat,
+    lowerLat: mapBounds.bottomLeft.lat,
+    rightLng: mapBounds.topRight.lng,
+    leftLng: mapBounds.bottomLeft.lng,
+    fictionId:
+      selectedFiction !== FictionDisplayStatus.ALL_FICTIONS
+        ? selectedFiction
+        : "",
+  };
+  const [params, setParams] = useState<any>(p);
+
+  const {
+    loading: loading,
+    data: places,
+    refetch: r,
+  } = getPlacesByCoordinates(params);
+
+  useEffect(() => {
+    if (city && selectedFiction) {
+      let ficId = "";
+      if (fictionsSelected && fictionsSelected.length == 1) {
+        ficId = fictionsSelected[0].id.toString();
+      }
+
+      const p = {
+        upperLat: mapBounds.topRight.lat,
+        lowerLat: mapBounds.bottomLeft.lat,
+        rightLng: mapBounds.topRight.lng,
+        leftLng: mapBounds.bottomLeft.lng,
+        fictionId: ficId,
+      };
+      setParams(p);
+      r();
+    }
+  }, [mapBounds, selectedFiction, city]);
 
   const { getFictionsByCity } = useFictionService();
   const {
@@ -82,7 +122,7 @@ export const MapView = () => {
 
   return (
     <div className="h-[100%] w-[100%] flex">
-      {isMapLoaded && ( // Renderizado condicional basado en isMapLoaded
+      {isMapLoaded && (
         <div className="flex w-[100%] justify-between z-10">
           <div className="w-[480px] bg-transparent font-semibold">
             <button
@@ -93,10 +133,7 @@ export const MapView = () => {
               {selectedFiction}
             </button>
             {fictionIsOpen && (
-              <FictionSelect
-                open={fictionIsOpen}
-                setOpen={setFictionIsOpen}
-              />
+              <FictionSelect open={fictionIsOpen} setOpen={setFictionIsOpen} />
             )}
             {fictionSelectedOrNot && (
               <button
@@ -122,7 +159,7 @@ export const MapView = () => {
       )}
 
       {/* Asegúrate de pasar onLoad al mapa */}
-      {city && <Map onLoad={() => setIsMapLoaded(true)} />} 
+      {city && <Map onLoad={() => setIsMapLoaded(true)} />}
     </div>
   );
 };

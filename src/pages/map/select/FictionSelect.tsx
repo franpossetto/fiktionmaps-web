@@ -1,10 +1,11 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState, useMemo, useEffect } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { useMapController } from "../../../contexts/MapContext";
+import { useMapController } from "../../../contexts/MapContext"; // Estado global del mapa
 import { Fiction } from "../../../types/Fiction";
 import { FictionImage } from "../../admin/fictions/FictionImage";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
+import { debounce } from "lodash"; // Importamos debounce de lodash
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -22,26 +23,48 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   const [query, setQuery] = useState("");
 
   const {
-    fictions,
-    loading: ldg,
-    setLoading,
-    fictionsSelected,
-    setFictionsSelected: sendFictionsToMap,
+    fictions, // Todas las ficciones
+    fictionsSelected, // Las ficciones seleccionadas que se mostrarán en el mapa
+    setFictionsSelected: sendFictionsToMap, // Función para actualizar ficciones seleccionadas
   } = useMapController();
 
   const MOVIE_COVERS_PATH = "movie_covers/";
 
-  const filteredItems =
-    query === ""
-      ? fictions
-      : fictionsSelected?.filter((item) => {
-          return item.name.toLowerCase().includes(query.toLowerCase());
-        });
+  // Usamos useMemo para aplicar un debounce al filtrado de ficciones
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
+
+  // Aplicamos debounce a la query para que espere 300ms antes de actualizarse
+  useEffect(() => {
+    const handler = debounce(() => {
+      setDebouncedQuery(query);
+    }, 300);
+
+    handler(); // Ejecutamos el debounce
+
+    return () => {
+      handler.cancel(); // Cancelamos el debounce al desmontar
+    };
+  }, [query]);
+
+  // Filtrado de ficciones basado en la query con debounce
+  const filteredItems = useMemo(() => {
+    return debouncedQuery === ""
+      ? fictions // Si no hay búsqueda, mostramos todas las ficciones
+      : fictions.filter((item) =>
+          item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
+        ); // Si hay búsqueda, filtramos ficciones
+  }, [debouncedQuery, fictions]);
 
   const setFictionAndClose = (selectedFiction: Fiction) => {
-    sendFictionsToMap([selectedFiction]);
-    setOpen(false);
+    // Actualizamos las ficciones seleccionadas y reflejamos los cambios en el mapa
+    sendFictionsToMap([selectedFiction]); // Actualizamos el estado global con la ficción seleccionada
+    setOpen(false); // Cerramos el selector
   };
+
+  // Cuando se cambia el filtro (query), actualizamos fictionsSelected para reflejarlo en el mapa
+  useEffect(() => {
+    sendFictionsToMap(filteredItems); // Enviamos las ficciones filtradas al mapa
+  }, [filteredItems, sendFictionsToMap]);
 
   return (
     <Transition.Root
@@ -141,7 +164,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
                   </Combobox.Options>
                 )}
 
-                {query !== "" && filteredItems?.length === 0 && (
+                {debouncedQuery !== "" && filteredItems?.length === 0 && (
                   <SelectNoResults />
                 )}
               </Combobox>

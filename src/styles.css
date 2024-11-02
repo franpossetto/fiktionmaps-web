@@ -78,12 +78,16 @@ body {
   border-radius: 12px; /* Forma de pastilla */
   padding: 5px 10px; /* Tamaño inicial */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra */
-  transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease, border-radius 0.3s ease; /* Transiciones suaves */
+  transition:
+    transform 0.3s ease,
+    width 0.3s ease,
+    height 0.3s ease,
+    border-radius 0.3s ease; /* Transiciones suaves */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; 
+  overflow: hidden;
   width: 1.5em;
   height: 0.75em;
 }
@@ -118,16 +122,18 @@ body {
   font-size: 16px;
   color: white;
   font-weight: bold;
-  transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease,
+    border-radius 0.3s ease;
   text-align: center;
-  line-height: 1.2em; 
+  line-height: 1.2em;
   width: 1.875em;
   height: 0.9375em;
 }
 .custom-cluster:hover {
-  width: 2.25em; 
-  height: 1.125em; 
-  border-radius: 12px; 
+  width: 2.25em;
+  height: 1.125em;
+  border-radius: 12px;
   background-color: #000000;
-} 
-
+}
