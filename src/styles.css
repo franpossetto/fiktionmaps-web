@@ -72,11 +72,11 @@ body {
 } */
 .custom-marker {
   position: relative;
-  background-color: #ffffff;
-  border: 1px solid #b7b7b7;
+  background-color: #fc3b68;
+  border: 1px solid #fc3b68;
   font-size: large;
   border-radius: 12px; /* Forma de pastilla */
-  padding: 5px 10px; /* Tamaño inicial */
+  padding: 5px 5px; /* Tamaño inicial */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra */
   transition:
     transform 0.3s ease,
@@ -88,7 +88,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  width: 1.5em;
+  width: 0.75em;
   height: 0.75em;
 }
 
@@ -117,9 +117,9 @@ body {
 }
 
 .custom-cluster {
-  background-color: #000000;
-  border-radius: 12px;
-  font-size: 16px;
+  background-color: #fa1f52;
+  border-radius: 15px;
+  font-size: 12px;
   color: white;
   font-weight: bold;
   transition:
@@ -128,8 +128,8 @@ body {
     border-radius 0.3s ease;
   text-align: center;
   line-height: 1.2em;
-  width: 1.875em;
-  height: 0.9375em;
+  width: 2em;
+  height: 2em;
 }
 .custom-cluster:hover {
   width: 2.25em;

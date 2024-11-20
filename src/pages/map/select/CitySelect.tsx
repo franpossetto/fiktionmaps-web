@@ -28,7 +28,6 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
     }
   }, [data]);
 
-    // Utilizar useMemo para memorizar las ciudades filtradas
     const filteredItems = useMemo(() => {
       if (query === "") {
         return cities;
@@ -37,12 +36,6 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
         item.name.toLowerCase().includes(query.toLowerCase())
       );
     }, [query, cities]);
-  // const filteredItems =
-  //   query === ""
-  //     ? cities
-  //     : cities?.filter((item) => {
-  //         return item.name.toLowerCase().includes(query.toLowerCase());
-  //       });
 
   const setCityAndClose = (selectedCity: City) => {
     setCity(selectedCity);
@@ -81,7 +74,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
           >
             <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all dark:bg-gray-900 dark:divide-gray-700">
               <Combobox
-                onChange={(selectedCity: any) => setCityAndClose(selectedCity)}
+                onChange={(selectedCity: City) => setCityAndClose(selectedCity)}
               >
                 <div className="relative">
                   <MagnifyingGlassIcon

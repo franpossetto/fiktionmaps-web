@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom/client";
+import { motion } from "framer-motion";
 import { createRoot } from "react-dom/client";
 import { Loader } from "@googlemaps/js-api-loader";
 import { MarkerClusterer } from "https://cdn.skypack.dev/@googlemaps/markerclusterer@2.3.1";
@@ -10,20 +11,18 @@ import { Fiction } from "../../../types/Fiction";
 import { Place } from "../../../types/Place";
 import CustomMarker from "./CustomMarker";
 
-// Define una interfaz para las propiedades que el componente Map aceptará
 interface MapProps {
-  onLoad?: () => void; // Prop onLoad opcional
+  onLoad?: () => void;
 }
 
 export default function Map({ onLoad }: MapProps) {
-  // Agregar MapProps como tipo de las props
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const openInfoWindowRef = useRef<google.maps.InfoWindow | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
   const { style } = useMapController();
   const clusterRef = useRef<MarkerClusterer | null>(null); // Referencia al clúster
-  const { setMapBounds } = useMapController();
+  const { mapBounds, setMapBounds } = useMapController();
 
   const {
     fictions,
@@ -31,7 +30,13 @@ export default function Map({ onLoad }: MapProps) {
     fictionsSelected,
     city,
     setCity,
+    places,
   } = useMapController();
+
+  useEffect(()=>{
+    updateMapBounds()
+    console.log(places)
+  },[])
 
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
@@ -60,14 +65,12 @@ export default function Map({ onLoad }: MapProps) {
       });
       setMapInstance(map);
 
-      // Llamar a onLoad cuando el mapa esté listo
       map.addListener("tilesloaded", () => {
-        console.log("Map tiles loaded"); // Log para confirmar cuándo se cargan los tiles
+        console.log("Map tiles loaded");
         if (onLoad) {
-          onLoad(); // Llamar onLoad después de que se carguen los tiles del mapa
+          onLoad();
         }
       });
-
       return map;
     }
     return null;
@@ -86,7 +89,6 @@ export default function Map({ onLoad }: MapProps) {
     if (mapInstance) {
       center = mapInstance.getCenter()?.toJSON() || center;
       zoom = mapInstance.getZoom() || zoom;
-
       google.maps.event.clearInstanceListeners(mapInstance);
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
@@ -94,7 +96,7 @@ export default function Map({ onLoad }: MapProps) {
         clusterRef.current.clearMarkers();
       }
     }
-
+    
     createMap(mapId, center, zoom);
   };
 
@@ -111,19 +113,25 @@ export default function Map({ onLoad }: MapProps) {
       if (bounds) {
         const northEast = bounds.getNorthEast();
         const southWest = bounds.getSouthWest();
-
-        // Actualizar las coordenadas en el contexto
-        setMapBounds({
+  
+        const newBounds = {
           topRight: { lat: northEast.lat(), lng: northEast.lng() },
           bottomLeft: { lat: southWest.lat(), lng: southWest.lng() },
-        });
+        };
+  
+        console.log("Updated mapBounds:", newBounds); // Log para verificar límites actualizados
+        setMapBounds(newBounds);
       }
     }
   };
 
+  const markerVariants = {
+    hidden: { opacity: 0, scale: 0.5 },
+    visible: { opacity: 1, scale: 1 },
+  };
+
   useEffect(() => {
     if (mapInstance) {
-      // Escuchar el evento "idle" para actualizar las coordenadas cuando el usuario se mueve o hace zoom
       google.maps.event.addListener(mapInstance, "idle", updateMapBounds);
 
       return () => {
@@ -142,6 +150,7 @@ export default function Map({ onLoad }: MapProps) {
 
   useEffect(() => {
     if (mapInstance && fictionsSelected) {
+
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
 
@@ -149,53 +158,101 @@ export default function Map({ onLoad }: MapProps) {
         clusterRef.current.clearMarkers();
       }
 
-      const markers =
-        fictionsSelected?.flatMap((fiction: Fiction) => {
-          return fiction.places?.map((place: Place) => {
-            const markerContent = document.createElement("div");
-            const root = createRoot(markerContent);
-            root.render(<CustomMarker text={place.name} />);
+      const markers = places?.map((place,index) => {
+        console.log(place)
+        const markerContent = document.createElement("div");
+        const root = createRoot(markerContent);
+        root.render(
+          <motion.div
+            variants={markerVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: index * 0.05 }} // Agrega un pequeño delay para cada marcador
+          >
+            <CustomMarker text={`Place ID: ${place.placeId}`} />
+          </motion.div>
+        );
+      
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map: mapInstance,
+          position: {
+            lat: place.latitude,
+            lng: place.longitude,
+          },
+          content: markerContent,
+          title: `Place ID: ${place.placeId}`, // Ajusta el título si tienes descripciones
+        });
+      
+        markersRef.current.push(marker);
+        marker.addListener("click", () => {
+          if (openInfoWindowRef.current) {
+            openInfoWindowRef.current.close();
+            openInfoWindowRef.current = null;
+          }
+      
+          const div = document.createElement("div");
+          const infoWindow = new google.maps.InfoWindow();
+          const placeViewRoot = createRoot(div);
+          placeViewRoot.render(<PlaceView place={place} />); // Usa PlaceView para mostrar detalles del lugar
+      
+          infoWindow.setContent(div);
+          openInfoWindowRef.current = infoWindow;
+          mapInstance.panTo(marker.getPosition());
+        });
+      
+        return marker;
+      }) || [];
+      
+      // const markers =
+      //   fictionsSelected?.flatMap((fiction: Fiction) => {
+      //     return fiction.places?.map((place: Place) => {
+      //       const markerContent = document.createElement("div");
+      //       const root = createRoot(markerContent);
+      //       root.render(<CustomMarker text={place.name} />);
 
-            const marker = new google.maps.marker.AdvancedMarkerElement({
-              map: mapInstance,
-              position: {
-                lat: place.location.latitude,
-                lng: place.location.longitude,
-              },
-              content: markerContent,
-              title: place.description,
-            });
+      //       const marker = new google.maps.marker.AdvancedMarkerElement({
+      //         map: mapInstance,
+      //         position: {
+      //           lat: place.location.latitude,
+      //           lng: place.location.longitude,
+      //         },
+      //         content: markerContent,
+      //         title: place.description,
+      //       });
 
-            markersRef.current.push(marker);
-            marker.addListener("click", () => {
-              if (openInfoWindowRef.current) {
-                openInfoWindowRef.current.close();
-                openInfoWindowRef.current = null;
-              }
+      //       markersRef.current.push(marker);
+      //       marker.addListener("click", () => {
+      //         if (openInfoWindowRef.current) {
+      //           openInfoWindowRef.current.close();
+      //           openInfoWindowRef.current = null;
+      //         }
 
-              const div = document.createElement("div");
-              const infoWindow = new google.maps.InfoWindow();
-              const placeViewRoot = createRoot(div);
-              placeViewRoot.render(
-                <PlaceView fiction={fiction} place={place} />
-              );
+      //         const div = document.createElement("div");
+      //         const infoWindow = new google.maps.InfoWindow();
+      //         const placeViewRoot = createRoot(div);
+      //         placeViewRoot.render(
+      //           <PlaceView fiction={fiction} place={place} />
+      //         );
 
-              infoWindow.setContent(div);
-              openInfoWindowRef.current = infoWindow;
-              mapInstance.panTo(markerAdapter.getPosition());
-            });
+      //         infoWindow.setContent(div);
+      //         openInfoWindowRef.current = infoWindow;
+      //         mapInstance.panTo(markerAdapter.getPosition());
+      //       });
 
-            return marker;
-          });
-        }) || [];
+      //       return marker;
+      //     });
+      //   }) || [];
 
+  
       clusterRef.current = new MarkerClusterer({
         map: mapInstance,
         markers: markers,
         renderer: new CustomClusterRenderer(),
       });
+
+      
     }
-  }, [mapInstance, fictionsSelected]);
+  }, [mapInstance, fictionsSelected, places, mapBounds]);
 
   return <div ref={mapRef} className="absolute w-full h-full z-1" />;
 }

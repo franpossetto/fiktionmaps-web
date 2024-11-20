@@ -12,16 +12,18 @@ type MapContext = {
   city?: City;
   loading: boolean;
   style: string;
-  mapBounds: {
+  mapBounds?: {
     topRight: LatLng;
     bottomLeft: LatLng;
   };
+  places?:any[];
   toggleStyle: () => void;
-  setFictions: (f: any) => void;
-  setFictionsSelected: (f: any) => void;
-  setCity: (ldg: any) => void;
+  setFictions: (f: Fiction[]) => void;
+  setFictionsSelected: (f: Fiction[]) => void;
+  setCity: (city: City) => void;
   setLoading: (ldg: boolean) => void;
   setMapBounds: (bounds: { topRight: LatLng; bottomLeft: LatLng }) => void;
+  setPlaces: (places: any) => void;
 };
 
 const MapControllerContext = React.createContext<MapContext>({
@@ -30,16 +32,15 @@ const MapControllerContext = React.createContext<MapContext>({
   city: undefined,
   loading: true,
   style: "light",
-  mapBounds: {
-    topRight: { lat: 0, lng: 0 },
-    bottomLeft: { lat: 0, lng: 0 },
-  },
+  mapBounds: undefined,
+  places: undefined,
   toggleStyle: noop,
   setFictions: noop,
   setFictionsSelected: noop,
   setCity: noop,
   setLoading: noop,
   setMapBounds: noop,
+  setPlaces: noop,
 });
 
 export const MapController = ({ children }: { children: React.ReactNode }) => {
@@ -51,11 +52,12 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
     () => localStorage.getItem("themeStyle") || "light"
   );
 
-  // Estado para las coordenadas
   const [mapBounds, setMapBounds] = useState({
     topRight: { lat: 0, lng: 0 },
     bottomLeft: { lat: 0, lng: 0 },
   });
+  const [places, setPlaces] = useState<any[]>();
+
 
   const toggleStyle = () => {
     setStyle((prevStyle) => {
@@ -74,12 +76,14 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
         loading,
         style,
         mapBounds, // Pasar las coordenadas
+        places,
         toggleStyle,
         setFictions,
         setFictionsSelected,
         setCity,
         setLoading,
         setMapBounds, // Función para actualizar las coordenadas
+        setPlaces,
       }}
     >
       {children}

@@ -30,13 +30,14 @@ export const MapView = () => {
     setFictionsSelected,
     city,
     setCity,
+    setPlaces,
   } = useMapController();
 
   const p: any = {
-    upperLat: mapBounds.topRight.lat,
-    lowerLat: mapBounds.bottomLeft.lat,
-    rightLng: mapBounds.topRight.lng,
-    leftLng: mapBounds.bottomLeft.lng,
+    upperLat: mapBounds?.topRight.lat,
+    lowerLat: mapBounds?.bottomLeft.lat,
+    rightLng: mapBounds?.topRight.lng,
+    leftLng: mapBounds?.bottomLeft.lng,
     fictionId:
       selectedFiction !== FictionDisplayStatus.ALL_FICTIONS
         ? selectedFiction
@@ -50,24 +51,32 @@ export const MapView = () => {
     refetch: r,
   } = getPlacesByCoordinates(params);
 
+  const {places: pp, setPlaces:setPp} = useMapController();
+  setPp(places);
+
   useEffect(() => {
     if (city && selectedFiction) {
       let ficId = "";
-      if (fictionsSelected && fictionsSelected.length == 1) {
+      if (fictionsSelected && fictionsSelected.length === 1) {
         ficId = fictionsSelected[0].id.toString();
       }
-
-      const p = {
-        upperLat: mapBounds.topRight.lat,
-        lowerLat: mapBounds.bottomLeft.lat,
-        rightLng: mapBounds.topRight.lng,
-        leftLng: mapBounds.bottomLeft.lng,
+  
+      const newParams = {
+        upperLat: mapBounds?.topRight.lat,
+        lowerLat: mapBounds?.bottomLeft.lat,
+        rightLng: mapBounds?.topRight.lng,
+        leftLng: mapBounds?.bottomLeft.lng,
         fictionId: ficId,
       };
-      setParams(p);
-      r();
+  
+      setParams(newParams);
     }
   }, [mapBounds, selectedFiction, city]);
+  
+  useEffect(() => {
+      r();
+      setPlaces(places)
+  }, [params]);
 
   const { getFictionsByCity } = useFictionService();
   const {
@@ -116,8 +125,8 @@ export const MapView = () => {
   }, [fictionsSelected]);
 
   const resetFictions = () => {
-    refetch();
     setSelectedFiction(FictionDisplayStatus.ALL_FICTIONS);
+    // refetch();
   };
 
   return (
@@ -144,7 +153,6 @@ export const MapView = () => {
               </button>
             )}
           </div>
-
           <button
             type="button"
             className="rounded-md whitespace-nowrap px-3 py-2 text-sm font-semibold shadow-sm mt-6 h-10 mr-6 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
@@ -157,8 +165,6 @@ export const MapView = () => {
           )}
         </div>
       )}
-
-      {/* Asegúrate de pasar onLoad al mapa */}
       {city && <Map onLoad={() => setIsMapLoaded(true)} />}
     </div>
   );
