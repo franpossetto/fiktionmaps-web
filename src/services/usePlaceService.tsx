@@ -15,8 +15,22 @@ const usePlaceService = () => {
       tokenRequired: false,
     });
   };
+
+  // const getPlaceById = () => (
+  //   params: PlaceId
+  // ): useAxiosResponse<PlacByIdResponse> => {
+  //   const url = `/places/${params.place_id}`;
+
+  //   // return useAxios({
+  //   //   url: url,
+  //   //   config: { method: "get" },
+  //   //   tokenRequired: false,
+  //   // });
+    
+  // };
   return {
-    getPlacesByCoordinates,
+    getPlacesByCoordinates
+    // getPlaceById,
   };
 };
 
