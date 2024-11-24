@@ -7,8 +7,6 @@ import { CustomClusterRenderer } from "./CustomClusterRenderer";
 import { useEffect, useRef, useState } from "react";
 import { useMapController } from "../../../contexts/MapContext";
 import PlaceView from "../../../components/places/placeView/PlaceView";
-import { Fiction } from "../../../types/Fiction";
-import { Place } from "../../../types/Place";
 import CustomMarker from "./CustomMarker";
 
 interface MapProps {
@@ -193,7 +191,8 @@ export default function Map({ onLoad }: MapProps) {
           const div = document.createElement("div");
           const infoWindow = new google.maps.InfoWindow();
           const placeViewRoot = createRoot(div);
-          placeViewRoot.render(<PlaceView place={place} />); // Usa PlaceView para mostrar detalles del lugar
+          
+          placeViewRoot.render(<PlaceView id={place.placeId} />); // Usa PlaceView para mostrar detalles del lugar
       
           infoWindow.setContent(div);
           openInfoWindowRef.current = infoWindow;

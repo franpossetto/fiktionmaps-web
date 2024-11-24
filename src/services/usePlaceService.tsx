@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAxios, useAxiosResponse } from "../config/useAxios";
 import { PlaceCoordinatesRequestDTO } from "../types/dto/PlaceCoordinatesRequestDTO";
 import { PlaceCoordinatesResponseDTO } from "../types/dto/PlaceCoordinatesResponseDTO";
+import { Place } from "../types/Place";
 
 const usePlaceService = () => {
   const getPlacesByCoordinates = (
@@ -16,21 +17,21 @@ const usePlaceService = () => {
     });
   };
 
-  // const getPlaceById = () => (
-  //   params: PlaceId
-  // ): useAxiosResponse<PlacByIdResponse> => {
-  //   const url = `/places/${params.place_id}`;
+  const getPlaceById = (
+    place_id: string
+  ): useAxiosResponse<Place> => {
+    const url = `/places/${place_id}`;
+  
+    return useAxios({
+      url,
+      config: { method: "get" },
+      tokenRequired: false,
+    });
+  };
 
-  //   // return useAxios({
-  //   //   url: url,
-  //   //   config: { method: "get" },
-  //   //   tokenRequired: false,
-  //   // });
-    
-  // };
   return {
-    getPlacesByCoordinates
-    // getPlaceById,
+    getPlacesByCoordinates,
+    getPlaceById,
   };
 };
 

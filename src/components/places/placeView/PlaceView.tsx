@@ -1,31 +1,35 @@
-import { Fragment, ReactNode, useEffect, useState } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import { Fiction } from "../../../types/Fiction";
-import { Place } from "../../../types/Place";
+import { FC, Fragment, ReactNode, useEffect, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import usePlaceService from "../../../services/usePlaceService";
 import { PlaceImage } from "./common/PlaceImage";
 import { PlaceOverview } from "./common/PlaceOverview";
-import { User } from "../../../types/User";
 import { PlaceData } from "./common/PlaceData";
 import { PlaceScenes } from "../placeTable/common/PlaceScene/PlaceScenes";
 import { PlaceCloseCard } from "../placeTable/common/PlaceScene/PlaceCloseCard";
-import { useUserService } from "../../../services/useUserService";
 
 interface PlaceViewProps {
-  fiction: Fiction;
-  place: Place;
+  id: string;
 }
 
-const PlaceView: React.FC<PlaceViewProps> = ({ fiction, place }) => {
+const PlaceView: FC<PlaceViewProps> = ({ id }) => {
+  const { getPlaceById } = usePlaceService();
+  const [fiction, setFiction] = useState<any>(null);
   const [open, setOpen] = useState(true);
 
+  const {
+    loading: loadingPlace,
+    data: place,
+    refetch: rr,
+  } = getPlaceById(id);
+
   return (
-    <PlaceViewWrapper open={open} setOpen={setOpen}>
-      <PlaceCloseCard place={place} setOpen={setOpen} />
-      <PlaceImage place={place}></PlaceImage>
-      <PlaceOverview fiction={fiction} place={place} />
-      <PlaceData fiction={fiction} place={place} />
-      <PlaceScenes scenes={place.scenes} />
-    </PlaceViewWrapper>
+    place && <PlaceViewWrapper open={open} setOpen={setOpen}>
+    <PlaceCloseCard place={place} setOpen={setOpen} />
+    <PlaceImage place={place} />
+    <PlaceOverview fiction={fiction} place={place} />
+    <PlaceData fiction={fiction} place={place} />
+    <PlaceScenes scenes={place.scenes} />
+  </PlaceViewWrapper>
   );
 };
 
@@ -42,18 +46,6 @@ const PlaceViewWrapper: React.FC<PlaceViewWrapperProps> = ({
   setOpen,
   children,
 }) => {
-  const [loggedUser, setLoggedUser] = useState<User>();
-  const { getCurrentUser } = useUserService();
-
-  const getUserInfo = async () => {
-    const response = await getCurrentUser();
-    setLoggedUser(response);
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-
   return (
     <>
       <Transition.Root show={open} as={Fragment}>
