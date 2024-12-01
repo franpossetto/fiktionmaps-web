@@ -52,7 +52,7 @@ export default function Map({ onLoad }: MapProps) {
       const map = new google.maps.Map(mapRef.current as HTMLElement, {
         center: center,
         zoom: zoom,
-        minZoom: 10,
+        minZoom: 2,
         mapId: mapId,
         disableDefaultUI: false,
         mapTypeControl: false,
@@ -80,7 +80,7 @@ export default function Map({ onLoad }: MapProps) {
     const mapId = style === "dark" ? darkMapId : lightMapId;
 
     let center = { lat: city?.latitude || 0, lng: city?.longitude || 0 };
-    let zoom = 15;
+    let zoom = 12;
 
     console.log("Map ID:", mapId);
 

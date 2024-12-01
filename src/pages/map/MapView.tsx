@@ -15,6 +15,7 @@ export const MapView = () => {
   const [selectedFiction, setSelectedFiction] = useState<string>(
     FictionDisplayStatus.ALL_FICTIONS
   );
+  const [searchButtonIsVsible, setsearchButtonIsVsible] = useState(false);
 
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
@@ -54,6 +55,12 @@ export const MapView = () => {
   const {places: pp, setPlaces:setPp} = useMapController();
   setPp(places);
 
+  const searchInThisArea =()=> {
+      r();
+      setPlaces(places);
+      setsearchButtonIsVsible(false);
+  }
+
   useEffect(() => {
     if (city && selectedFiction) {
       let ficId = "";
@@ -73,10 +80,12 @@ export const MapView = () => {
     }
   }, [mapBounds, selectedFiction, city]);
   
-  useEffect(() => {
-      r();
-      setPlaces(places)
-  }, [params]);
+    useEffect(() => {
+      
+        r();
+        setPlaces(places);
+      
+    },[]);
 
   const { getFictionsByCity } = useFictionService();
   const {
@@ -124,6 +133,11 @@ export const MapView = () => {
     }
   }, [fictionsSelected]);
 
+  useEffect(() => {
+    setsearchButtonIsVsible(true);
+  }, [params]);
+
+
   const resetFictions = () => {
     setSelectedFiction(FictionDisplayStatus.ALL_FICTIONS);
     // refetch();
@@ -153,6 +167,14 @@ export const MapView = () => {
               </button>
             )}
           </div>
+          {searchButtonIsVsible && (
+            <button
+            type="button"
+            className="rounded-md whitespace-nowrap px-3 py-2 text-sm font-semibold shadow-sm mt-6 h-10 mr-6 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
+            onClick={() => searchInThisArea()}
+            >
+            Search in this area
+          </button>)}
           <button
             type="button"
             className="rounded-md whitespace-nowrap px-3 py-2 text-sm font-semibold shadow-sm mt-6 h-10 mr-6 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
