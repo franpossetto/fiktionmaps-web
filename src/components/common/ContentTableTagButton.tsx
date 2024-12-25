@@ -1,6 +1,6 @@
 import React from "react";
-import { CheckBadgeIcon } from "@heroicons/react/24/outline";
-export enum TagColor {
+
+enum TagColor {
   Emerald = "emerald",
   Amber = "amber",
   Cyan = "cyan",

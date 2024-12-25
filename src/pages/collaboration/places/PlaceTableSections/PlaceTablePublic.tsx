@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useFictionService } from "../../../../services/useFictionService";
-import { ApprovePlaceModal } from "../../../../components/places/placeTable/modals/ApprovePlaceModal";
 import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
 import { EditPlaceModal } from "../../../../components/places/placeTable/modals/EditPlaceModal";
@@ -185,5 +184,3 @@ return (
 );
 
 };
-
-export default PlaceTablePublished;

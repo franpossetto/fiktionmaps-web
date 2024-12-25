@@ -13,7 +13,7 @@ export type FictionHashTable = {
   [key: number]: Fiction;
 };
 
-export interface DataObject {
+interface DataObject {
   loading: boolean;
   data: any;
   error: any;

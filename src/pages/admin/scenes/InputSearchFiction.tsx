@@ -16,11 +16,9 @@ export const InputSearchFiction = () => {
     fictions,
     setFictions,
     loading: ldg,
-    setLoading,
     fictionsSelected,
     setFictionsSelected, // replace with component state
-    city,
-    setCity,
+
   } = useMapController();
 
   const [inputSearchValue, setInputSearchValue] = useState<any>();

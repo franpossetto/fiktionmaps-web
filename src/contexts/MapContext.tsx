@@ -6,16 +6,18 @@ const noop = () => Promise.resolve();
 
 type LatLng = { lat: number; lng: number };
 
+export interface MapBounds {
+  topRight: LatLng;
+  bottomLeft: LatLng;
+}
+
 type MapContext = {
   fictions?: Fiction[];
   fictionsSelected?: Fiction[];
   city?: City;
   loading: boolean;
   style: string;
-  mapBounds?: {
-    topRight: LatLng;
-    bottomLeft: LatLng;
-  };
+  mapBounds?: MapBounds;
   places?:any[];
   toggleStyle: () => void;
   setFictions: (f: Fiction[]) => void;
@@ -75,14 +77,14 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
         city,
         loading,
         style,
-        mapBounds, // Pasar las coordenadas
+        mapBounds,
         places,
         toggleStyle,
         setFictions,
         setFictionsSelected,
         setCity,
         setLoading,
-        setMapBounds, // Función para actualizar las coordenadas
+        setMapBounds,
         setPlaces,
       }}
     >
