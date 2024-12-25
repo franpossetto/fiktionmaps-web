@@ -5,18 +5,19 @@ import { Cluster } from "@googlemaps/markerclusterer";
 export class CustomClusterRenderer {
   
   render({ count, position }: Cluster) {
-    // Crear el div con los estilos originales
     const div = document.createElement("div");
     div.className = "custom-cluster";
     div.style.display = "flex";
     div.style.alignItems = "center";
     div.style.justifyContent = "center";
-    div.innerText = count.toString(); // Asegura que el número se muestre correctamente
+    div.style.width = "12px";
+    div.style.height = "12px";
 
-    const animatedDiv = document.createElement("div"); // Div adicional para aplicar la animación
+    // div.innerText = count.toString(); // Asegura que el número se muestre correctamente
+
+    const animatedDiv = document.createElement("div");
     const root = createRoot(animatedDiv);
 
-    // Renderizar `motion.div` que envuelve el div con los estilos originales
     root.render(
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
@@ -24,13 +25,13 @@ export class CustomClusterRenderer {
         transition={{ duration: 0.3 }}
         style={{ display: "inline-flex" }}
       >
-        <div ref={(node) => node && node.appendChild(div)} /> {/* Añade el div original */}
+        <div ref={(node) => node && node.appendChild(div)} />
       </motion.div>
     );
 
     return new google.maps.marker.AdvancedMarkerElement({
       position,
-      content: animatedDiv, // El div animado es el contenedor principal
+      content: animatedDiv,
     });
   }
 }
