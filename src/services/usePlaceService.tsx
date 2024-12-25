@@ -8,8 +8,14 @@ const usePlaceService = () => {
   const getPlacesByCoordinates = (
     params: PlaceCoordinatesRequestDTO
   ): useAxiosResponse<PlaceCoordinatesResponseDTO[]> => {
-    const url = `/places/map?upperLat=${params.upperLat}&lowerLat=${params.lowerLat}&rightLng=${params.rightLng}&leftLng=${params.leftLng}&fictionId=${params.fictionId}`;
 
+  const expansionLat = 50 / 111;
+  const x1= params.upperLat + expansionLat;
+  const x2= params.lowerLat - expansionLat;
+  const x3= params.rightLng + expansionLat;
+  const x4= params.leftLng - expansionLat;
+
+  const url = `/places/map?upperLat=${x1}&lowerLat=${x2}&rightLng=${x3}&leftLng=${x4}&fictionId=${params.fictionId}`;
     return useAxios({
       url: url,
       config: { method: "get" },
