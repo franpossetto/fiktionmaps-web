@@ -24,7 +24,6 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const {
     fictions,
-    fictionsSelected,
     setFictionsSelected: sendFictionsToMap,
   } = useMapController();
 
@@ -47,7 +46,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   const filteredItems = useMemo(() => {
     return debouncedQuery === ""
       ? fictions
-      : fictions.filter((item) =>
+      : fictions?.filter((item) =>
           item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
         );
   }, [debouncedQuery, fictions]);
