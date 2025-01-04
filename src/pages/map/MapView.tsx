@@ -1,52 +1,24 @@
 import { useEffect, useState } from "react";
 import Map from "./map/Map";
-import { MapBounds, useMapController } from "../../contexts/MapContext";
-import { useFictionService } from "../../services/useFictionService";
-import { useCityService } from "../../services/useCityService";
+import { useMapController } from "../../contexts/MapContext";
 import { CitySelect } from "./select/CitySelect";
-import { FictionSelect } from "./select/FictionSelect";
 import { FictionDisplayStatus } from "../../types/enum/FictionSelectorStatus";
-import { XCircleIcon } from "@heroicons/react/24/solid";
-import usePlaceService from "../../services/usePlaceService";
-import { Fiction } from "../../types/Fiction";
-import { PlaceCoordinatesRequestDTO } from "../../types/dto/PlaceCoordinatesRequestDTO";
-
-function preparePlaceCoordinatesRequestDTO(
-  mapBounds: MapBounds,
-  fictionsSelected: Fiction[]
-): PlaceCoordinatesRequestDTO | null {
-  if (mapBounds && fictionsSelected.length > 0) {
-    return {
-      upperLat: mapBounds.topRight.lat,
-      lowerLat: mapBounds.bottomLeft.lat,
-      rightLng: mapBounds.topRight.lng,
-      leftLng: mapBounds.bottomLeft.lng,
-      fictionId: fictionsSelected[0].id
-    };
-  }
-  return null;
-}
+import { useFetchPlacesByCoordinates } from "../../hooks/places/useFetchPlaces";
+import { useFetchCityById } from "../../hooks/cities/useFetchCityById";
+import { FictionSelector } from "./select/FictionSelector";
 
 export const MapView = () => {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-
-  // States to manage open/close pop-ups and Search button visibility.
   const [isCityOpen, setIsCityOpen] = useState(false);
-  const [fictionIsOpen, setFictionIsOpen] = useState(false);
   const [isSearchButtonVisible, setIsSearchButtonVisible] = useState(false);
-  // The title that is shown in the Select Fiction button.
-  const [selectedFiction, setSelectedFiction] = useState<string>(FictionDisplayStatus.ALL_FICTIONS);
+  const [selectedFictionName, setSelectedFictionName] = useState<string>(FictionDisplayStatus.ALL_FICTIONS);
 
-  // Use Map Context
+
   const {
     city,
     fictionsSelected,
     mapBounds,
-    loading,
-    setFictions,
     setCity,
-    setFictionsSelected,
-    setPlaces,
   } = useMapController();
 
   const initialPlaceSearchParameters: any = {
@@ -55,44 +27,33 @@ export const MapView = () => {
     rightLng: mapBounds?.topRight.lng,
     leftLng: mapBounds?.bottomLeft.lng,
     fictionId:
-      selectedFiction !== FictionDisplayStatus.ALL_FICTIONS
-        ? selectedFiction
+      selectedFictionName !== FictionDisplayStatus.ALL_FICTIONS
+        ? selectedFictionName
         : "",
   };
   const [placeSearchParameters, setPlaceSearchParameters] = useState<any>(initialPlaceSearchParameters);
 
-  const { getPlacesByCoordinates } = usePlaceService();
-  const { getFictionsByCity } = useFictionService();
-  const { getCityById } = useCityService();
-
-  const {
-    loading: loadingPlaces,
-    data: places,
-    refetch: refetchPlaces,  
-  } = getPlacesByCoordinates(placeSearchParameters);
-
-  const {
-    loading: loadingFictions,
-    data: fictionsByCity,
-    refetch: refetchFictionsByCity,
-  } = getFictionsByCity(city?.id || 0);
-
-  const { 
-    loading: loadingCity, 
-    data: selectedCity 
-  } = getCityById(city?.id);
-
-  setPlaces(places);
+  const { refetch: refetchPlaces } = useFetchPlacesByCoordinates(placeSearchParameters);
+  const { data: cityById, isLoading: loadingCity } = useFetchCityById(city?.id);
 
 
-  
-  
-  // Initial loading of places once the map is loaded.
   useEffect(() => {
-      searchInThisArea()
-  }, [isMapLoaded]);
+    setIsSearchButtonVisible(true);
+  }, [placeSearchParameters]);
 
-  // Update Map bounds or selected Fiction.
+  const searchInThisArea = () => {
+    refetchPlaces();
+    setIsSearchButtonVisible(false);
+  }
+
+  // Carga inicial de la ciudad, si lo comentamos, no se carga el mapa. 
+  useEffect(() => {
+    if (!loadingCity && cityById) {
+      setCity(cityById);
+    }
+  }, [cityById, loadingCity, setCity]);
+
+
   useEffect(() => {
     let ficId = "";
     if (fictionsSelected && fictionsSelected.length === 1) {
@@ -108,118 +69,24 @@ export const MapView = () => {
     };
 
     setPlaceSearchParameters(placeCoordinatesRequestDTO);
-  }, [mapBounds, fictionsSelected]);
-  
-  // Set variable selectedFiction
-  useEffect(() => {
-    if (fictionsSelected != undefined && !loadingFictions) {
-      setSelectedFiction(
-        fictionsSelected?.length > 1
-        ? FictionDisplayStatus.ALL_FICTIONS
-        : fictionsSelected?.length === 1
-        ? fictionsSelected[0].name
-        : FictionDisplayStatus.NO_FICTIONS
-      );
-    }
-  }, [fictionsSelected]);
-  
-  // Filter places by fiction.
-  useEffect(()=>{
-    if(fictionsSelected?.length === 1 && mapBounds){
-      const placeCoordinatesRequestDTO: any = preparePlaceCoordinatesRequestDTO(mapBounds, fictionsSelected);
-      setPlaceSearchParameters(placeCoordinatesRequestDTO);
-      refetchPlaces();
-      setPlaces(places);
-    }
-
-  }, [selectedFiction])
-
-
-  // Show/Hide search button.
-  useEffect(() => {
-    setIsSearchButtonVisible(true);
-  }, [placeSearchParameters]);
-  
-  
-  const searchInThisArea =()=> {
-    refetchPlaces();
-    // setPlaces(places);
-    setIsSearchButtonVisible(false);
-  }
-
-  const resetFictions = () => {
-    setSelectedFiction(FictionDisplayStatus.ALL_FICTIONS);
-    setIsSearchButtonVisible(true);
-
-    const placeCoordinatesRequestDTO = {
-      upperLat: mapBounds?.topRight.lat,
-      lowerLat: mapBounds?.bottomLeft.lat,
-      rightLng: mapBounds?.topRight.lng,
-      leftLng: mapBounds?.bottomLeft.lng,
-      fictionId: '',
-    };
-
-    setPlaceSearchParameters(placeCoordinatesRequestDTO);
-  };
-
-  useEffect(() => {
-    if (fictionsByCity) {
-      setFictions(fictionsByCity);
-      setFictionsSelected(fictionsByCity);
-    }
-  }, [fictionsByCity]);
-
-  const fictionSelectedOrNot =
-  fictionsByCity != null &&
-  fictionsByCity?.length > 1 &&
-  selectedFiction != FictionDisplayStatus.ALL_FICTIONS;
-
-  // Carga inicial de la ciudad, si lo comentamos, no se carga el mapa. 
-  useEffect(() => {
-    if (!loadingCity) {
-      setCity(selectedCity);
-    }
-  }, [selectedCity]);
-
-  // hace refresh de ficciones by city
-  useEffect(() => {
-    if (city) {
-      refetchFictionsByCity();
-    }
-  }, [city]);
+  }, [mapBounds]);
 
   return (
     <div className="h-[100%] w-[100%] flex">
       {isMapLoaded && (
         <div className="flex w-[100%] justify-between z-10">
           <div className="bg-transparent font-semibold">
-            <button
-              type="button"
-              className="rounded-md whitespace-nowrap py-2 px-3 text-sm font-semibold shadow-sm mt-6 h-10 ml-3 lg:ml-28 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
-              onClick={() => setFictionIsOpen(!fictionIsOpen)}
-            >
-              {selectedFiction}
-            </button>
-            {fictionIsOpen && (
-              <FictionSelect open={fictionIsOpen} setOpen={setFictionIsOpen} />
-            )}
-            {fictionSelectedOrNot && (
-              <button
-                className="absolute rounded-md whitespace-nowrap bg-transparent py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-white/20 mt-6 h-10 ml-1"
-                onClick={() => resetFictions()}
-              >
-                <XCircleIcon className="h-auto w-6 text-white" />
-              </button>
-            )}
+            <FictionSelector/>
           </div>
           {isSearchButtonVisible && (
             <button
-            type="button"
-            className="rounded-md whitespace-nowrap px-3 py-2 text-sm font-semibold shadow-sm mt-6 h-10 mr-6 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
-            onClick={() => searchInThisArea()}
+              type="button"
+              className="rounded-md whitespace-nowrap px-3 py-2 text-sm font-semibold shadow-sm mt-6 h-10 mr-6 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
+              onClick={() => searchInThisArea()}
             >
-            Search in this area
-          </button>)}
+              Search in this area
+            </button>
+          )}
           <button
             type="button"
             className="rounded-md whitespace-nowrap px-3 py-2 text-sm font-semibold shadow-sm mt-6 h-10 mr-6 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
@@ -228,11 +95,13 @@ export const MapView = () => {
             {city?.name}
           </button>
           {isCityOpen && (
-            <CitySelect open={isCityOpen} setOpen={setIsCityOpen} />
+            <CitySelect open={isCityOpen} setOpen={setIsCityOpen} updateFiction={setSelectedFictionName} />
           )}
         </div>
       )}
-      {city && <Map onLoad={() => setIsMapLoaded(true)} />}
+      {city && <Map onLoad={() => setIsMapLoaded(true)}/>}
     </div>
   );
 };
+
+

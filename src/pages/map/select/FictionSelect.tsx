@@ -6,10 +6,8 @@ import { Fiction } from "../../../types/Fiction";
 import { FictionImage } from "../../admin/fictions/FictionImage";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
 import { debounce } from "lodash";
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
+import { useFictionsByCity } from "../../../hooks/fictions/useFetchFictions";
+import classNames from "../../../helpers/classNames";
 
 interface FictionSelectProps {
   open: boolean;
@@ -20,24 +18,28 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   open,
   setOpen,
 }) => {
-  const [query, setQuery] = useState("");
 
-  const {
-    fictions,
-    setFictionsSelected: sendFictionsToMap,
-  } = useMapController();
 
   const MOVIE_COVERS_PATH = "movie_covers/";
 
+  const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
+  const { city, setFictionsSelected: sendFictionsToMap } = useMapController();
+  const { data: fictionsByCity, isLoading, error, refetch } = useFictionsByCity(city?.id);
+
+  useEffect(() => {
+    if (city?.id) {
+      refetch()
+    }
+  }, [city?.id]);
 
   useEffect(() => {
     const handler = debounce((value: string) => {
       setDebouncedQuery(value);
     }, 300);
-  
+
     handler(query);
-  
+
     return () => {
       handler.cancel();
     };
@@ -45,20 +47,21 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const filteredItems = useMemo(() => {
     return debouncedQuery === ""
-      ? fictions
-      : fictions?.filter((item) =>
-          item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
-        );
-  }, [debouncedQuery, fictions]);
+      ? fictionsByCity
+      : fictionsByCity?.filter((item: Fiction) =>
+        item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
+      );
+  }, [debouncedQuery, fictionsByCity]);
 
   const setFictionAndClose = (selectedFiction: Fiction) => {
-    sendFictionsToMap([selectedFiction]); 
+    sendFictionsToMap([selectedFiction]);
     setOpen(false);
   };
 
   useEffect(() => {
     sendFictionsToMap(filteredItems);
   }, [filteredItems, sendFictionsToMap]);
+  
 
   return (
     <Transition.Root

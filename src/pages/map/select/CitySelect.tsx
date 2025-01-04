@@ -1,11 +1,12 @@
-import { Fragment, useEffect, useState, useMemo } from "react";
+import { Fragment, useState, useMemo } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { GlobeAmericasIcon } from "@heroicons/react/24/outline";
-import { useCityService } from "../../../services/useCityService";
 import { City } from "../../../types/City";
 import { useMapController } from "../../../contexts/MapContext";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
+import { useFetchCities } from "../../../hooks/cities/useFetchCities";
+import { FictionDisplayStatus } from "../../../types/enum/FictionSelectorStatus";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -13,32 +14,26 @@ function classNames(...classes: any) {
 interface CitySelectProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  updateFiction: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
+export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen, updateFiction }) => {
   const [query, setQuery] = useState("");
-  const { getCities } = useCityService();
-  const { loading, data, error } = getCities();
-  const [cities, setCities] = useState<City[]>([]);
+  const { data: cities } = useFetchCities();
   const { setCity } = useMapController();
 
-  useEffect(() => {
-    if (data) {
-      setCities(data);
-    }
-  }, [data]);
-
-    const filteredItems = useMemo(() => {
-      if (query === "") {
-        return cities;
-      }
-      return cities.filter((item) =>
-        item.name.toLowerCase().includes(query.toLowerCase())
-      );
-    }, [query, cities]);
+  const filteredItems = useMemo(() => {
+    return query === "" 
+      ? cities ?? []  
+      : cities?.filter((item: City) =>
+          item.name.toLowerCase().includes(query.toLowerCase())
+        ) ?? []; 
+  }, [query, cities]);
 
   const setCityAndClose = (selectedCity: City) => {
     setCity(selectedCity);
+    updateFiction(FictionDisplayStatus.ALL_FICTIONS)
+
     setOpen(false);
   };
 
@@ -94,7 +89,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                     static
                     className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3"
                   >
-                    {filteredItems.map((item) => (
+                    {filteredItems.map((item: City) => (
                       <Combobox.Option
                         key={item.id}
                         value={item}
