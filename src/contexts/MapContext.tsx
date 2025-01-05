@@ -12,44 +12,33 @@ export interface MapBounds {
 }
 
 type MapContext = {
-  fictions?: Fiction[];
-  fictionsSelected?: Fiction[];
+  selectedFiction: Fiction | undefined;
   city?: City;
-  loading: boolean;
   style: string;
   mapBounds?: MapBounds;
-  places?:any[];
   toggleStyle: () => void;
-  setFictions: (f: Fiction[]) => void;
-  setFictionsSelected: (f: Fiction[]) => void;
+  setSelectedFiction: (f: Fiction | undefined) => void;
   setCity: (city: City) => void;
-  setLoading: (ldg: boolean) => void;
   setMapBounds: (bounds: { topRight: LatLng; bottomLeft: LatLng }) => void;
   setPlaces: (places: any) => void;
 };
 
 const MapControllerContext = React.createContext<MapContext>({
-  fictions: undefined,
-  fictionsSelected: undefined,
+  selectedFiction: undefined,
   city: undefined,
-  loading: true,
   style: "light",
   mapBounds: undefined,
-  places: undefined,
   toggleStyle: noop,
-  setFictions: noop,
-  setFictionsSelected: noop,
+  setSelectedFiction: noop,
   setCity: noop,
-  setLoading: noop,
   setMapBounds: noop,
   setPlaces: noop,
 });
 
 export const MapController = ({ children }: { children: React.ReactNode }) => {
-  const [fictions, setFictions] = useState<Fiction[]>();
-  const [fictionsSelected, setFictionsSelected] = useState<Fiction[]>();
+  const [selectedFiction, setSelectedFiction] = useState<Fiction | undefined>();
+
   const [city, setCity] = useState<City>();
-  const [loading, setLoading] = useState<boolean>(true);
   const [style, setStyle] = useState<string>(
     () => localStorage.getItem("themeStyle") || "light"
   );
@@ -72,18 +61,13 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
   return (
     <MapControllerContext.Provider
       value={{
-        fictions,
-        fictionsSelected,
+        selectedFiction,
         city,
-        loading,
         style,
         mapBounds,
-        places,
         toggleStyle,
-        setFictions,
-        setFictionsSelected,
+        setSelectedFiction,
         setCity,
-        setLoading,
         setMapBounds,
         setPlaces,
       }}

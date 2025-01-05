@@ -41,8 +41,7 @@ export default function Map({ onLoad }: MapProps) {
   const { data:places, isLoading: loadingPlaces, refetch: refetchPlaces } = useFetchPlacesByCoordinates(placeSearchParameters);
 
   const {
-    loading: ldg,
-    fictionsSelected,
+    selectedFiction,
     city,
   } = useMapController();
 
@@ -266,11 +265,11 @@ export default function Map({ onLoad }: MapProps) {
       lowerLat: mapBounds?.bottomLeft.lat,
       rightLng: mapBounds?.topRight.lng,
       leftLng: mapBounds?.bottomLeft.lng,
-      fictionId: (fictionsSelected && fictionsSelected.length == 1) ? fictionsSelected[0].id : ""
+      fictionId: (selectedFiction != undefined) ? selectedFiction?.id : ""
     };
   
     setPlaceSearchParameters(placeCoordinatesRequestDTO);
-  },[fictionsSelected])
+  },[selectedFiction])
 
 
 

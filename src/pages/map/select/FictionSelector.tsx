@@ -1,51 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FictionSelect } from "./FictionSelect";
 import { FictionDisplayStatus } from "../../../types/enum/FictionSelectorStatus";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useMapController } from "../../../contexts/MapContext";
-import { useFictionsByCity } from "../../../hooks/fictions/useFetchFictions";
 
-export const FictionSelector = ({ }) => {
+export const FictionSelector = () => {
     const [fictionIsOpen, setFictionIsOpen] = useState(false);
-    const [selectedFictionName, setSelectedFictionName] = useState<string>(FictionDisplayStatus.ALL_FICTIONS);
-    // const [showClearFictionsButton, setShowClearFictionsButton] = useState(false)
 
     const {
-        city,
-        fictionsSelected,
-        setFictionsSelected,
+        selectedFiction,
+        setSelectedFiction,
     } = useMapController();
 
-    const { data: fictions, refetch: refetchFictionsByCity } = useFictionsByCity(city?.id);
-
-    useEffect(() => {
-        if (fictionsSelected != undefined) {
-
-            const buttonLabel = fictionsSelected?.length > 1
-                ? FictionDisplayStatus.ALL_FICTIONS
-                : fictionsSelected?.length === 1
-                    ? fictionsSelected[0].name
-                    : FictionDisplayStatus.NO_FICTIONS
-
-            setSelectedFictionName(buttonLabel);
-        }
-
-    }, [fictionsSelected]);
-
-
-    //   const resetFictions = () => {
-    //       setFictionsSelected(fictions)
-    //       setSelectedFictionName(FictionDisplayStatus.ALL_FICTIONS);
-    //       setShowClearFictionsButton(false)
-    // };
-
-    useEffect(() => {
-        if (city) {
-            refetchFictionsByCity();
-            setFictionsSelected(fictions)
-            setSelectedFictionName(FictionDisplayStatus.ALL_FICTIONS)
-        }
-    }, [city]);
+    const resetFictions = () => {
+        setSelectedFiction(undefined)
+    };
 
     return (
         <>
@@ -57,18 +26,17 @@ export const FictionSelector = ({ }) => {
                 {fictionIsOpen && (
                     <FictionSelect open={fictionIsOpen} setOpen={setFictionIsOpen} />
                 )}
-                {selectedFictionName}
+                {selectedFiction ? selectedFiction.name : FictionDisplayStatus.ALL_FICTIONS}
             </button>
 
-            {/* {showClearFictionsButton && (
-              <button
-                className="absolute rounded-md whitespace-nowrap bg-transparent py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-white/20 mt-6 h-10 ml-1"
-                onClick={() => resetFictions()}
-              >
-                <XCircleIcon className="h-auto w-6 text-white" />
-              </button>
-            )} */}
-
+            {selectedFiction != undefined && (
+                <button
+                    className="absolute rounded-md whitespace-nowrap bg-transparent py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-white/20 mt-6 h-10 ml-1"
+                    onClick={() => resetFictions()}
+                >
+                    <XCircleIcon className="h-auto w-6 text-white" />
+                </button>
+            )}
         </>
     )
 }

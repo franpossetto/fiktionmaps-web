@@ -6,7 +6,6 @@ import { City } from "../../../types/City";
 import { useMapController } from "../../../contexts/MapContext";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
 import { useFetchCities } from "../../../hooks/cities/useFetchCities";
-import { FictionDisplayStatus } from "../../../types/enum/FictionSelectorStatus";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -14,13 +13,12 @@ function classNames(...classes: any) {
 interface CitySelectProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  updateFiction: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen, updateFiction }) => {
+export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
   const [query, setQuery] = useState("");
   const { data: cities } = useFetchCities();
-  const { setCity } = useMapController();
+  const { setCity, setSelectedFiction } = useMapController();
 
   const filteredItems = useMemo(() => {
     return query === "" 
@@ -32,8 +30,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen, updateFic
 
   const setCityAndClose = (selectedCity: City) => {
     setCity(selectedCity);
-    updateFiction(FictionDisplayStatus.ALL_FICTIONS)
-
+    setSelectedFiction(undefined)
     setOpen(false);
   };
 

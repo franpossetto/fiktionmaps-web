@@ -24,14 +24,13 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
-  const { city, setFictionsSelected: sendFictionsToMap } = useMapController();
+  const { city} = useMapController();
   const { data: fictionsByCity, isLoading, error, refetch } = useFictionsByCity(city?.id);
 
-  useEffect(() => {
-    if (city?.id) {
-      refetch()
-    }
-  }, [city?.id]);
+  const {
+    selectedFiction,
+    setSelectedFiction,
+} = useMapController();
 
   useEffect(() => {
     const handler = debounce((value: string) => {
@@ -54,13 +53,9 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   }, [debouncedQuery, fictionsByCity]);
 
   const setFictionAndClose = (selectedFiction: Fiction) => {
-    sendFictionsToMap([selectedFiction]);
+    setSelectedFiction(selectedFiction);
     setOpen(false);
   };
-
-  useEffect(() => {
-    sendFictionsToMap(filteredItems);
-  }, [filteredItems, sendFictionsToMap]);
   
 
   return (
