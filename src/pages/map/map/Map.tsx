@@ -19,51 +19,15 @@ export default function Map({ onLoad }: MapProps) {
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const openInfoWindowRef = useRef<google.maps.InfoWindow | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
-  const { style } = useMapController();
   const clusterRef = useRef<MarkerClusterer | null>(null); // Referencia al clúster
-  const [cityIsLoaded, setCityIsLoaded] = useState(false)
-  const {
-    mapBounds,
-    setMapBounds
-  } = useMapController();
 
-  const newBounds = {
-    topRight: { lat: 40.811347160739146, lng: -73.83870051118907 },
-    bottomLeft: { lat: 40.614057292419616, lng: -74.17324508881092 },
-  };
+  const { style } = useMapController();
+  const { mapBounds, setMapBounds, selectedFiction, city } = useMapController();
 
-  useEffect(()=>{
-
-    setMapBounds(newBounds);
-  },[])
-  const [placeSearchParameters, setPlaceSearchParameters] = useState<any>(null);
   
+  const [placeSearchParameters, setPlaceSearchParameters] = useState<any>(null);
   const { data:places, isLoading: loadingPlaces, refetch: refetchPlaces } = useFetchPlacesByCoordinates(placeSearchParameters);
-
-  const {
-    selectedFiction,
-    city,
-  } = useMapController();
-
-    useEffect(()=>{
-      updateMapBounds()
-    },[city])
-    
-
-    useEffect(() => {
-
-      if (mapBounds) {
-        const newParameters = {
-          upperLat: mapBounds.topRight.lat,
-          lowerLat: mapBounds.bottomLeft.lat,
-          rightLng: mapBounds.topRight.lng,
-          leftLng: mapBounds.bottomLeft.lng,
-          fictionId: "",
-        };
-        setPlaceSearchParameters(newParameters);
-      }
-    }, [mapInstance, mapBounds]);
-
+  
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
     version: "weekly",
@@ -98,6 +62,11 @@ export default function Map({ onLoad }: MapProps) {
           onLoad();
         }
       });
+
+      map.addListener("idle", () => {
+        updateMapBounds();
+      });
+
       return map;
     }
     return null;
@@ -133,7 +102,7 @@ export default function Map({ onLoad }: MapProps) {
     }
   };
 
-  const updateMapBounds = () => {
+  const updateMapBounds = (mapInstance: any) => {
     if (mapInstance) {
       const bounds = mapInstance.getBounds();
       if (bounds) {
@@ -170,6 +139,30 @@ export default function Map({ onLoad }: MapProps) {
     visible: { opacity: 1, scale: 1 },
   };
 
+
+  useEffect(()=>{
+
+    const newBounds = {
+      topRight: { lat: 40.811347160739146, lng: -73.83870051118907 },
+      bottomLeft: { lat: 40.614057292419616, lng: -74.17324508881092 },
+    };
+
+    setMapBounds(newBounds);
+  },[])
+
+  useEffect(() => {
+
+    if (mapBounds) {
+      const newParameters = {
+        upperLat: mapBounds.topRight.lat,
+        lowerLat: mapBounds.bottomLeft.lat,
+        rightLng: mapBounds.topRight.lng,
+        leftLng: mapBounds.bottomLeft.lng,
+        fictionId: "",
+      };
+      setPlaceSearchParameters(newParameters);
+    }
+  }, [mapInstance, mapBounds]);
 
   useEffect(() => {
     if (mapInstance) {
@@ -236,8 +229,6 @@ export default function Map({ onLoad }: MapProps) {
     }
   }, [city, mapInstance, places]);
 
-
-
   useEffect(() => {
     updateMapCenter();
   }, [city]);
@@ -245,19 +236,6 @@ export default function Map({ onLoad }: MapProps) {
   useEffect(() => {
     initializeMap();
   }, [style]);
-
-  useEffect(() => {
-    if (mapBounds && cityIsLoaded) {
-      const newParameters = {
-        upperLat: mapBounds.topRight.lat,
-        lowerLat: mapBounds.bottomLeft.lat,
-        rightLng: mapBounds.topRight.lng,
-        leftLng: mapBounds.bottomLeft.lng,
-        fictionId: "",
-      };
-      setPlaceSearchParameters(newParameters);
-    }
-  }, [mapBounds]);
 
   useEffect(()=>{
     const placeCoordinatesRequestDTO = {
@@ -270,8 +248,6 @@ export default function Map({ onLoad }: MapProps) {
   
     setPlaceSearchParameters(placeCoordinatesRequestDTO);
   },[selectedFiction])
-
-
 
   return <div ref={mapRef} className="absolute w-full h-full z-1" />;
 }

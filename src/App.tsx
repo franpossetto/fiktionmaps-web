@@ -12,11 +12,11 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <MapController>
-          <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <MapController>
             <AppRouter />
-          </QueryClientProvider>
-        </MapController>
+          </MapController>
+        </QueryClientProvider>
       </AuthProvider>
       <ToastContainer />
     </>

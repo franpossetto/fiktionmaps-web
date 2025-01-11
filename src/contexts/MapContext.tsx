@@ -20,7 +20,6 @@ type MapContext = {
   setSelectedFiction: (f: Fiction | undefined) => void;
   setCity: (city: City) => void;
   setMapBounds: (bounds: { topRight: LatLng; bottomLeft: LatLng }) => void;
-  setPlaces: (places: any) => void;
 };
 
 const MapControllerContext = React.createContext<MapContext>({
@@ -32,7 +31,6 @@ const MapControllerContext = React.createContext<MapContext>({
   setSelectedFiction: noop,
   setCity: noop,
   setMapBounds: noop,
-  setPlaces: noop,
 });
 
 export const MapController = ({ children }: { children: React.ReactNode }) => {
@@ -69,7 +67,6 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
         setSelectedFiction,
         setCity,
         setMapBounds,
-        setPlaces,
       }}
     >
       {children}
