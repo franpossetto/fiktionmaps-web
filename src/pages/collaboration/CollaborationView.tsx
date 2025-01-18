@@ -5,7 +5,7 @@ import { SceneTableCollab } from "./scenes/SceneTableCall";
 import { CityTableCollab } from "./cities/CityTableCollab";
 import { PlaceTableView } from "./places/PlaceTableView";
 
-export default function CollaborationView() {
+export const CollaborationView = () => {
   return (
     <>
       <div className="lg:pl-20 bg-white dark:bg-gray-900">

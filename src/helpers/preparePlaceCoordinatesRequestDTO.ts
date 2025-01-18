@@ -1,5 +1,5 @@
 import { MapBounds } from "../contexts/MapContext";
-import { PlaceCoordinatesRequestDTO } from "../types/dto/PlaceCoordinatesRequestDTO";
+import { PlaceCoordinatesRequestDTO } from "../hooks/places/useFetchPlaces/useFetchPlaces.types";
 import { Fiction } from "../types/Fiction";
 
 export function preparePlaceCoordinatesRequestDTO(

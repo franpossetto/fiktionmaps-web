@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ContentTableView } from "../../../../components/common/ContentTableView";
 import { ContentTableWrapper } from "../../../../components/common/ContentTableWrapper";
-import { PlaceImageSmall } from "../../../../components/places/placeTable/common/PlaceImageSmall";
 import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
 import { EditPlaceModal } from "../../../../components/places/placeTable/modals/EditPlaceModal";
@@ -110,6 +109,7 @@ export const PlaceTableUser = () => {
       loggedUser,
       currentPage,
       true,
+      loggedUser?.role == "USER", // revisar esto luego, esta mal. 
       editPlace,
       deletePlace,
       approvePlace
@@ -126,7 +126,7 @@ export const PlaceTableUser = () => {
           <PlaceSkeleton />
         ) : (
           <>
-            <ContentTableView content={{ dataSource, config }} />
+            <ContentTableView content={{ dataSource, config }} isAdmin={false} />
             <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
               <div className="flex justify-center items-center">
                 <Pagination

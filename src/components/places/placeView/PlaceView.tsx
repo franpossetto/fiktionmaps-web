@@ -1,35 +1,32 @@
 import { FC, Fragment, ReactNode, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import usePlaceService from "../../../services/usePlaceService";
 import { PlaceImage } from "./common/PlaceImage";
 import { PlaceOverview } from "./common/PlaceOverview";
 import { PlaceData } from "./common/PlaceData";
 import { PlaceScenes } from "../placeTable/common/PlaceScene/PlaceScenes";
 import { PlaceCloseCard } from "../placeTable/common/PlaceScene/PlaceCloseCard";
+import { useFetchPlaceById } from "../../../hooks/places/useFetchPlaceById/usePlaceFetchById";
 
 interface PlaceViewProps {
   id: string;
+  open: boolean;
+  setOpen: ()=> void
 }
 
-const PlaceView: FC<PlaceViewProps> = ({ id }) => {
-  const { getPlaceById } = usePlaceService();
+const PlaceView: FC<PlaceViewProps> = ({ id, open, setOpen }) => {
+  const { data: place } = useFetchPlaceById(id);
   const [fiction, setFiction] = useState<any>(null);
-  const [open, setOpen] = useState(true);
-
-  const {
-    loading: loadingPlace,
-    data: place,
-    refetch: rr,
-  } = getPlaceById(id);
 
   return (
-    place && <PlaceViewWrapper open={open} setOpen={setOpen}>
-    <PlaceCloseCard place={place} setOpen={setOpen} />
-    <PlaceImage place={place} />
-    <PlaceOverview fiction={fiction} place={place} />
-    <PlaceData fiction={fiction} place={place} />
-    <PlaceScenes scenes={place.scenes} />
-  </PlaceViewWrapper>
+    place && (
+    <PlaceViewWrapper open={open} setOpen={setOpen}>
+      <PlaceCloseCard place={place} setOpen={setOpen} />
+      <PlaceImage place={place} />
+      <PlaceOverview fiction={fiction} place={place} />
+      <PlaceData fiction={fiction} place={place} />
+      <PlaceScenes scenes={place.scenes} />
+    </PlaceViewWrapper>
+    )
   );
 };
 

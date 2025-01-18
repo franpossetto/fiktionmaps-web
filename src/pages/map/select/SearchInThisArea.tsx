@@ -7,7 +7,7 @@ export const SearchInThisArea = () => {
     const [placeSearchParameters, setPlaceSearchParameters] = useState<any>(null);
     const { mapBounds, selectedFiction, setSelectedFiction } = useMapController();
 
-    const { data, refetch } = useFetchPlacesByCoordinates(placeSearchParameters);
+    // const { data, refetch } = useFetchPlacesByCoordinates(placeSearchParameters);
 
 
     const searchInThisArea = () => {

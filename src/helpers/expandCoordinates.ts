@@ -1,4 +1,4 @@
-import { PlaceCoordinatesRequestDTO } from "../types/dto/PlaceCoordinatesRequestDTO";
+import { PlaceCoordinatesRequestDTO } from "../hooks/places/useFetchPlaces/useFetchPlaces.types";
 
 /**
  * Expands the geographical coordinates by a fixed degree to increase the search area.

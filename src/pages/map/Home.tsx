@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import Map from "./map/Map";
 import { useMapController } from "../../contexts/MapContext";
 import { useFetchCityById } from "../../hooks/cities/useFetchCityById";
 import { FictionSelector } from "./select/FictionSelector";
 import { CitySelector } from "./select/CitySelector";
 import { SearchInThisArea } from "./select/SearchInThisArea";
+import MapView from "./map/MapView";
 
-export const MapView = () => {
+export const Home = () => {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const { city, setCity } = useMapController();
   const { data: cityById, isLoading: loadingCity } = useFetchCityById(city?.id);
@@ -26,7 +26,7 @@ export const MapView = () => {
             <CitySelector/>
         </div>
       )}
-      {city && <Map onLoad={() => setIsMapLoaded(true)}/>}
+      {city && <MapView onLoad={() => setIsMapLoaded(true)}/>}
     </div>
   );
 };

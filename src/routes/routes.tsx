@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { PlaceController } from "../contexts/PlaceContext";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import Layout from "../components/layout/Layout";
 import { Login } from "../pages/auth/Login";
 import { SignUp } from "../pages/auth/Signup";
 import { ForgotPassword } from "../pages/auth/ForgotPassword";
 import { Profile } from "../pages/profile/Profile";
-import { MapView } from "../pages/map/MapView";
-import { PlaceController } from "../contexts/PlaceContext";
-import Layout from "../components/layout/Layout";
-import CollaborationView from "../pages/collaboration/CollaborationView";
+import { Home } from "../pages/map/Home";
+import { CollaborationView } from "../pages/collaboration/CollaborationView";
 
 const AppRouter = () => {
   return (
@@ -18,7 +18,7 @@ const AppRouter = () => {
           path="/"
           element={
             <Layout>
-              <MapView />
+              <Home />
             </Layout>
           }
         />
@@ -58,7 +58,7 @@ const AppRouter = () => {
           path="/home"
           element={
             <Layout>
-              <MapView />
+              <Home />
             </Layout>
           }
         />
