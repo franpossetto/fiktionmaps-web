@@ -15,9 +15,7 @@ import { useFictionService } from "../../../../services/useFictionService";
 import { User } from "../../../../types/User";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
 import { useUserService } from "../../../../services/useUserService";
-import { ContentTableTagButton } from "../../../../components/common/ContentTableTagButton";
 import { Pagination } from "../../../../components/common/Pagination";
-import { current } from "@reduxjs/toolkit";
 
 export const PlaceTableUser = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);

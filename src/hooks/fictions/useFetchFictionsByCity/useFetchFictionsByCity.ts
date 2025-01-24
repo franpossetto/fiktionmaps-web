@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { axiosWithoutToken } from '../../config/axios';
+import { axiosWithoutToken } from '../../../config/axios';
+import { FictionByCityResponse } from './useFetchFictionsByCity.types';
 
-const fetchFictionsByCity = async (cityId: any) => {
+const fetchFictionsByCity = async (cityId: number): Promise<FictionByCityResponse[]> => {
   try {
     const response = await axiosWithoutToken.get(`/fictions/cities/${cityId}`);
     return response.data;
@@ -11,7 +12,7 @@ const fetchFictionsByCity = async (cityId: any) => {
   }
 };
 
-export const useFictionsByCity = (cityId: any) => {
+export const useFictionsByCity = (cityId: number = 1) => {
   const queryKey = ['fetchFictionsByCity', cityId];
   const { data, error, isLoading, refetch } = useQuery({
     queryKey,

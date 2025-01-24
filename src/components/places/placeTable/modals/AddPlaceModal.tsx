@@ -26,7 +26,6 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
   const [placeName, setPlaceName] = useState("");
   const [placeDescription, setPlaceDescription] = useState("");
   const [fiction, setFiction] = useState<Fiction>();
-  // const [place, setPlace] = useState<Place>();
 
   const { place: plc, fiction: fct } = usePlaceController();
   const { addPlaceToFiction, getFictions } = useFictionService();

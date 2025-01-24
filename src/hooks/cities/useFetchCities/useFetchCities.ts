@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { axiosWithoutToken } from "../../config/axios";
+import { axiosWithoutToken } from "../../../config/axios";
 
 const fetchCities = async () => {
     try {

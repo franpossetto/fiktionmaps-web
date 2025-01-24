@@ -5,7 +5,7 @@ import { GlobeAmericasIcon } from "@heroicons/react/24/outline";
 import { City } from "../../../types/City";
 import { useMapController } from "../../../contexts/MapContext";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
-import { useFetchCities } from "../../../hooks/cities/useFetchCities";
+import { useFetchCities } from "../../../hooks/cities/useFetchCities/useFetchCities";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");

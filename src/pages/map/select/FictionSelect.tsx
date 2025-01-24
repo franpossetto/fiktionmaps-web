@@ -6,8 +6,8 @@ import { Fiction } from "../../../types/Fiction";
 import { FictionImage } from "../../admin/fictions/FictionImage";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
 import { debounce } from "lodash";
-import { useFictionsByCity } from "../../../hooks/fictions/useFetchFictions";
 import classNames from "../../../helpers/classNames";
+import { useFictionsByCity } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity";
 
 interface FictionSelectProps {
   open: boolean;
@@ -25,7 +25,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
   const { city} = useMapController();
-  const { data: fictionsByCity, isLoading, error, refetch } = useFictionsByCity(city?.id);
+  const { data: fictionsByCity} = useFictionsByCity(city?.id);
 
   const {
     selectedFiction,

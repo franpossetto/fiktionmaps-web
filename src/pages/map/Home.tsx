@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useMapController } from "../../contexts/MapContext";
-import { useFetchCityById } from "../../hooks/cities/useFetchCityById";
 import { FictionSelector } from "./select/FictionSelector";
 import { CitySelector } from "./select/CitySelector";
 import { SearchInThisArea } from "./select/SearchInThisArea";
 import MapView from "./map/MapView";
+import { useFetchCityById } from "../../hooks/cities/useFetchCityBiId/useFetchCityById";
 
 export const Home = () => {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
