@@ -24,7 +24,7 @@ export default function MapView({ onLoad }: MapProps) {
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
 
   const { data: places } = useFetchPlaces(placeSearchParameters);
-  
+
   const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
 
   const center: google.maps.LatLngLiteral = {
@@ -54,7 +54,6 @@ export default function MapView({ onLoad }: MapProps) {
 
   }, [selectedFiction])
 
-console.log(places)
   return (
     <APIProvider apiKey={import.meta.env.VITE_GMAPS_API_KEY}>
       <div className="absolute w-full h-full z-1">
