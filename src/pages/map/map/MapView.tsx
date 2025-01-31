@@ -21,6 +21,7 @@ export default function MapView({ onLoad }: MapProps) {
 
   const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters } = useMapController();
   const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const { data: places } = useFetchPlaces(placeSearchParameters);
   const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
 
@@ -37,7 +38,7 @@ export default function MapView({ onLoad }: MapProps) {
 
     setSelectedFiction(undefined);
     setPlaceSearchParameters(searchParametersOverride);
-
+  console.log("ejecucion")
 
   }, [city])
 
@@ -69,10 +70,13 @@ console.log(places)
           gestureHandling={"greedy"}
           streetViewControl={false}
           scrollwheel={true}
-          onTilesLoaded={onLoad}
+          onTilesLoaded={() => {
+            setIsMapLoaded(true);
+            onLoad?.();
+          }}
         >
 
-          <Markers points={places} />
+          {isMapLoaded && <Markers points={places} />}
 
           <MapViewSettings city={city} setLocalBounds={setLocalBounds} />
         </Map>
@@ -104,7 +108,6 @@ const MapViewSettings = ({ city, setLocalBounds }: any) => {
   useEffect(() => {
     if (!map || !renderMap) return;
   
-    console.log("llamado aqui:")
     const updateBounds = () => {
       const bounds = map.getBounds();
       if (!bounds) return;

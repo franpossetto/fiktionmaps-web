@@ -10,7 +10,6 @@ export const SearchInThisArea = () => {
 
     useEffect(() => {
         if (!renderMap) return;
-        console.log("llamado")
         searchInThisArea();
     }, [mapBounds]); 
 
