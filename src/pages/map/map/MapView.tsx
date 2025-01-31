@@ -21,8 +21,10 @@ export default function MapView({ onLoad }: MapProps) {
 
   const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters } = useMapController();
   const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
+
   const { data: places } = useFetchPlaces(placeSearchParameters);
+  
   const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
 
   const center: google.maps.LatLngLiteral = {
