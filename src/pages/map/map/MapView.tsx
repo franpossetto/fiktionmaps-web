@@ -19,9 +19,8 @@ interface MapProps {
 
 export default function MapView({ onLoad }: MapProps) {
 
-  const { selectedFiction, setSelectedFiction, city, style } = useMapController();
+  const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters } = useMapController();
   const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
-  const [placeSearchParameters, setPlaceSearchParameters] = useState<any>();
   const { data: places } = useFetchPlaces(placeSearchParameters);
   const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
 
@@ -52,7 +51,7 @@ export default function MapView({ onLoad }: MapProps) {
 
   }, [selectedFiction])
 
-
+console.log(places)
   return (
     <APIProvider apiKey={import.meta.env.VITE_GMAPS_API_KEY}>
       <div className="absolute w-full h-full z-1">
@@ -83,7 +82,7 @@ export default function MapView({ onLoad }: MapProps) {
 }
 
 const MapViewSettings = ({ city, setLocalBounds }: any) => {
-
+  const { setMapBounds, renderMap } = useMapController();
   const map = useMap('map-view');
 
   useEffect(() => {
@@ -101,6 +100,31 @@ const MapViewSettings = ({ city, setLocalBounds }: any) => {
     }
 
   }, [city])
+
+  useEffect(() => {
+    if (!map || !renderMap) return;
+  
+    console.log("llamado aqui:")
+    const updateBounds = () => {
+      const bounds = map.getBounds();
+      if (!bounds) return;
+   
+      const northEast = bounds.getNorthEast();
+      const southWest = bounds.getSouthWest();
+  
+      const newBounds = {
+        topRight: { lat: northEast.lat(), lng: northEast.lng() },
+        bottomLeft: { lat: southWest.lat(), lng: southWest.lng() },
+      };
+      setMapBounds(newBounds);
+    };
+  
+    updateBounds();
+    map.addListener("bounds_changed", updateBounds);
+  
+    return () => google.maps.event.clearListeners(map, "bounds_changed");
+  }, [map, renderMap]);
+  
 
   return null;
 };
