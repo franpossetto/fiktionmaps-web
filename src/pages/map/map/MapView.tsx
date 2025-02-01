@@ -19,7 +19,7 @@ interface MapProps {
 
 export default function MapView({ onLoad }: MapProps) {
 
-  const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters } = useMapController();
+  const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters, setMapZoom, mapZoom } = useMapController();
   const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
 
@@ -71,9 +71,16 @@ export default function MapView({ onLoad }: MapProps) {
           gestureHandling={"greedy"}
           streetViewControl={false}
           scrollwheel={true}
-          onTilesLoaded={() => {
+          onTilesLoaded={(map) => {
+            var zoom = map.map.getZoom() || 0
             setIsMapLoaded(true);
             onLoad?.();
+
+            if (zoom >= 14) {
+              setMapZoom(true)
+            }else if(zoom <= 14 && mapZoom){
+              setMapZoom(false)
+            }
           }}
         >
 
@@ -214,7 +221,7 @@ const Markers = ({ points }: any) => {
           }}
           onClick={() => handleMarkerClick(place.placeId)}
         >
-          <CustomMarker text={place.name} />
+          <CustomMarker place={place} />
         </AdvancedMarker>
       ))}
       {clickedPlaceId && (

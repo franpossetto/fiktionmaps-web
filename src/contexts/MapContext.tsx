@@ -22,8 +22,10 @@ type MapContext = {
   setMapBounds: (bounds: { topRight: LatLng; bottomLeft: LatLng }) => void;
   renderMap: boolean; // ✅ Agregado
   setRenderMap: (value: boolean) => void; 
-  placeSearchParameters: any,
-  setPlaceSearchParameters: (value: any) => any,
+  placeSearchParameters: any;
+  setPlaceSearchParameters: (value: any) => any;
+  mapZoom: any;
+  setMapZoom: (value: any) => any
 };
 
 const MapControllerContext = React.createContext<MapContext>({
@@ -39,11 +41,14 @@ const MapControllerContext = React.createContext<MapContext>({
   setRenderMap: noop,
   placeSearchParameters: null,
   setPlaceSearchParameters: noop,
+  mapZoom: null,
+  setMapZoom: noop
 });
 
 export const MapController = ({ children }: { children: React.ReactNode }) => {
   const [selectedFiction, setSelectedFiction] = useState<Fiction | undefined>();
   const [placeSearchParameters, setPlaceSearchParameters] = useState<any>(null);
+  const [mapZoom, setMapZoom] = useState<any>(null);
   const [renderMap, setRenderMap] = useState<boolean>(false)
   const [city, setCity] = useState<City>();
   const [style, setStyle] = useState<string>(
@@ -79,7 +84,9 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
         renderMap,
         setRenderMap,
         placeSearchParameters,
-        setPlaceSearchParameters
+        setPlaceSearchParameters,
+        mapZoom, 
+        setMapZoom
       }}
     >
       {children}
