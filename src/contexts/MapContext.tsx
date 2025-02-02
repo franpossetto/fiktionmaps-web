@@ -20,6 +20,12 @@ type MapContext = {
   setSelectedFiction: (f: Fiction | undefined) => void;
   setCity: (city: City) => void;
   setMapBounds: (bounds: { topRight: LatLng; bottomLeft: LatLng }) => void;
+  renderMap: boolean;
+  setRenderMap: (value: boolean) => void; 
+  placeSearchParameters: any;
+  setPlaceSearchParameters: (value: any) => any;
+  mapZoom: any;
+  setMapZoom: (value: any) => any
 };
 
 const MapControllerContext = React.createContext<MapContext>({
@@ -31,11 +37,20 @@ const MapControllerContext = React.createContext<MapContext>({
   setSelectedFiction: noop,
   setCity: noop,
   setMapBounds: noop,
+  renderMap: false,
+  setRenderMap: noop,
+  placeSearchParameters: null,
+  setPlaceSearchParameters: noop,
+  mapZoom: null,
+  setMapZoom: noop
 });
 
 export const MapController = ({ children }: { children: React.ReactNode }) => {
   const [selectedFiction, setSelectedFiction] = useState<Fiction | undefined>();
 
+  const [placeSearchParameters, setPlaceSearchParameters] = useState<any>(null);
+  const [mapZoom, setMapZoom] = useState<any>(null);
+  const [renderMap, setRenderMap] = useState<boolean>(false)
   const [city, setCity] = useState<City>();
   const [style, setStyle] = useState<string>(
     () => localStorage.getItem("themeStyle") || "light"
@@ -67,6 +82,12 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
         setSelectedFiction,
         setCity,
         setMapBounds,
+        renderMap,
+        setRenderMap,
+        placeSearchParameters,
+        setPlaceSearchParameters,
+        mapZoom, 
+        setMapZoom
       }}
     >
       {children}

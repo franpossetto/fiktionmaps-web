@@ -18,6 +18,9 @@ body {
 .map-container {
   width: 100%;
   height: 100%;
+  }/* Clase para generar el vértice en la parte inferior del círculo */
+  .transform-generate-vertex {
+  border-bottom-right-radius: 5em !important;
 }
 
 .custom-marker {

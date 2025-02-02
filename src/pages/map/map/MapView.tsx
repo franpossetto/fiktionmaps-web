@@ -19,9 +19,8 @@ interface MapProps {
 
 export default function MapView({ onLoad }: MapProps) {
 
-  const { selectedFiction, setSelectedFiction, city, style } = useMapController();
-  const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
-  const [placeSearchParameters, setPlaceSearchParameters] = useState<any>();
+  const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters, setMapZoom, mapZoom } = useMapController();  const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
+  const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const { data: places } = useFetchPlaces(placeSearchParameters);
   const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
 
@@ -70,10 +69,19 @@ export default function MapView({ onLoad }: MapProps) {
           gestureHandling={"greedy"}
           streetViewControl={false}
           scrollwheel={true}
-          onTilesLoaded={onLoad}
+          onTilesLoaded={(map) => {
+            var zoom = map.map.getZoom() || 0
+            setIsMapLoaded(true);
+            onLoad?.();
+            if (zoom >= 14) {
+              setMapZoom(true)
+            }else if(zoom <= 14 && mapZoom){
+              setMapZoom(false)
+            }
+          }}
         >
 
-          <Markers points={places} />
+      {isMapLoaded && <Markers points={places} />}
 
           <MapViewSettings city={city} setLocalBounds={setLocalBounds} />
         </Map>
@@ -84,6 +92,7 @@ export default function MapView({ onLoad }: MapProps) {
 
 const MapViewSettings = ({ city, setLocalBounds }: any) => {
 
+  const { setMapBounds, renderMap } = useMapController();
   const map = useMap('map-view');
 
   useEffect(() => {
@@ -101,6 +110,30 @@ const MapViewSettings = ({ city, setLocalBounds }: any) => {
     }
 
   }, [city])
+
+  useEffect(() => {
+    if (!map || !renderMap) return;
+  
+    console.log("llamado aqui:")
+    const updateBounds = () => {
+      const bounds = map.getBounds();
+      if (!bounds) return;
+   
+      const northEast = bounds.getNorthEast();
+      const southWest = bounds.getSouthWest();
+  
+      const newBounds = {
+        topRight: { lat: northEast.lat(), lng: northEast.lng() },
+        bottomLeft: { lat: southWest.lat(), lng: southWest.lng() },
+      };
+      setMapBounds(newBounds);
+    };
+  
+    updateBounds();
+    map.addListener("bounds_changed", updateBounds);
+  
+    return () => google.maps.event.clearListeners(map, "bounds_changed");
+  }, [map, renderMap]);
 
   return null;
 };
