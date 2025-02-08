@@ -31,19 +31,23 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ place }) => {
     }
   }, []);
   return mapZoom ? (
-    <section className="relative flex items-center justify-center">
-      <article className="bg-white border border-gray-800
-        rounded-t-full rounded-bl-full p-[.05em]
-        text-lg shadow-md cursor-pointer flex items-center justify-center  
+    <section className="relative flex items-center justify-center mb-4">
+      <article className="bg-white border relative
+        p-[.05em] shadow-zinc-500 shadow-sm rounded-full
+        text-lg cursor-pointer flex items-center justify-center  
         overflow-hidden w-12 h-12 rotate-45">
         <article className="marker-content flex items-center justify-center">
           <img 
-            src={imageUrl} 
+            src={'https://i.pravatar.cc/150?u=a042581f4e29026024d'} 
             className="w-full h-full object-cover rounded-full -rotate-45 transition-all duration-300"
           />
         </article>
       </article>
-      <div className="absolute -bottom-[1.1rem] left-1/2 transform -translate-x-1/2 w-[.5em] h-[.5em] bg-white border border-gray-800 rounded-full"></div>
+        <article className="border-l-[1em]  border-l-transparent rotate-180 absolute -bottom-[.4em] 
+           border-r-[1em] border-r-transparent border-b-[.6em] border-b-gray-200"></article>
+      <article className="absolute -bottom-[.7rem] left-1/2 transform
+       -translate-x-1/2 w-[.5em] h-[.5em] bg-white border
+        shadow-zinc-500 shadow-sm rounded-full"></article>
     </section>
   ) : (
     <div className="custom-marker">

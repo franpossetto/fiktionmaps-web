@@ -40,8 +40,6 @@ export default function MapView({ onLoad }: MapProps) {
 
     setSelectedFiction(undefined);
     setPlaceSearchParameters(searchParametersOverride);
-  console.log("ejecucion")
-
   }, [city])
 
   useEffect(() => {
@@ -76,9 +74,9 @@ export default function MapView({ onLoad }: MapProps) {
             setIsMapLoaded(true);
             onLoad?.();
 
-            if (zoom >= 14) {
+            if (zoom >= 16) {
               setMapZoom(true)
-            }else if(zoom <= 14 && mapZoom){
+            }else if(zoom <= 16 && mapZoom){
               setMapZoom(false)
             }
           }}
@@ -155,21 +153,23 @@ const Markers = ({ points }: any) => {
       clusterer.current.setMap(null);
       clusterer.current = null;
     }
-
+  
+    console.log("puntos", points)
     clusterer.current = new MarkerClusterer({
       map,
-      renderer: new CustomClusterRenderer(),
+      renderer: new CustomClusterRenderer({ imageUrl: "https://github.com/shadcn.png", points }), // Pasando prop
     });
-
+  
     clusterer.current.addMarkers(Object.values(markers));
   }, [map]);
+  
 
   useEffect(() => {
     if (!map) return;
     if (!clusterer.current) {
       clusterer.current = new MarkerClusterer({
         map,
-        renderer: new CustomClusterRenderer(),
+        renderer: new CustomClusterRenderer({ imageUrl: "https://github.com/shadcn.png", points }),
       });
     }
   }, [map]);
