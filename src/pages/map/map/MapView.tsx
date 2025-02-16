@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { APIProvider, Map, AdvancedMarker, useMap } from '@vis.gl/react-google-maps'
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import type { Marker } from "@googlemaps/markerclusterer";
-
 import { useMapController } from "../../../contexts/MapContext";
 import { STYLE_DARK, DARK_MAP_ID, LIGHT_MAP_ID, NYC_MAP_BOUNDS, FICTION_EMPTY } from "../../../contants";
-import CustomMarker from "./CustomMarker";
 import { createSearchParametersOverride, MapBounds } from "../../../types/dto/MapBoundsDTO";
 import PlaceView from "../../../components/places/placeView/PlaceView";
 import { CustomClusterRenderer } from "./CustomClusterRenderer";
 import { useFetchPlaces } from "../../../hooks/places/useFetchPlaces/useFetchPlaces";
+import SquareMarker from "./SquareMarker";
+import { PlaceCoordinatesResponseDTO } from "../../../hooks/places/useFetchPlaces/useFetchPlaces.types";
 
 interface MapProps {
   onLoad?: () => void;
@@ -19,7 +19,7 @@ interface MapProps {
 
 export default function MapView({ onLoad }: MapProps) {
 
-  const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters, setMapZoom, mapZoom } = useMapController();  const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
+  const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters, setMapZoom, mapZoom } = useMapController(); const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const { data: places } = useFetchPlaces(placeSearchParameters);
   const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
@@ -73,16 +73,15 @@ export default function MapView({ onLoad }: MapProps) {
             var zoom = map.map.getZoom() || 0
             setIsMapLoaded(true);
             onLoad?.();
-            if (zoom >= 14) {
+            if (zoom >= 11) {
               setMapZoom(true)
-            }else if(zoom <= 14 && mapZoom){
+            } else if (zoom <= 11 && mapZoom) {
               setMapZoom(false)
             }
           }}
         >
 
-      {isMapLoaded && <Markers points={places} />}
-
+          {isMapLoaded && places && <Markers places={places} />}
           <MapViewSettings city={city} setLocalBounds={setLocalBounds} />
         </Map>
       </div>
@@ -113,25 +112,25 @@ const MapViewSettings = ({ city, setLocalBounds }: any) => {
 
   useEffect(() => {
     if (!map || !renderMap) return;
-  
+
     console.log("llamado aqui:")
     const updateBounds = () => {
       const bounds = map.getBounds();
       if (!bounds) return;
-   
+
       const northEast = bounds.getNorthEast();
       const southWest = bounds.getSouthWest();
-  
+
       const newBounds = {
         topRight: { lat: northEast.lat(), lng: northEast.lng() },
         bottomLeft: { lat: southWest.lat(), lng: southWest.lng() },
       };
       setMapBounds(newBounds);
     };
-  
+
     updateBounds();
     map.addListener("bounds_changed", updateBounds);
-  
+
     return () => google.maps.event.clearListeners(map, "bounds_changed");
   }, [map, renderMap]);
 
@@ -139,7 +138,11 @@ const MapViewSettings = ({ city, setLocalBounds }: any) => {
 };
 
 
-const Markers = ({ points }: any) => {
+interface MarkersProps {
+  places: PlaceCoordinatesResponseDTO[];
+}
+
+const Markers = ({ places }: MarkersProps) => {
   const map = useMap("map-view");
   const [markers, setMarkers] = useState<{ [key: string]: Marker }>({});
   const clusterer = useRef<MarkerClusterer | null>(null);
@@ -156,7 +159,8 @@ const Markers = ({ points }: any) => {
 
     clusterer.current = new MarkerClusterer({
       map,
-      renderer: new CustomClusterRenderer(),
+      renderer: new CustomClusterRenderer({ imageUrl: "https://github.com/shadcn.png", places }),
+
     });
 
     clusterer.current.addMarkers(Object.values(markers));
@@ -167,7 +171,7 @@ const Markers = ({ points }: any) => {
     if (!clusterer.current) {
       clusterer.current = new MarkerClusterer({
         map,
-        renderer: new CustomClusterRenderer(),
+        renderer: new CustomClusterRenderer({ imageUrl: "https://github.com/shadcn.png", places }),
       });
     }
   }, [map]);
@@ -207,7 +211,7 @@ const Markers = ({ points }: any) => {
 
   return (
     <>
-      {points && points.map((place: any) => (
+      {places && places.map((place: any) => (
         <AdvancedMarker
           key={place.placeId?.toString()}
           position={{
@@ -219,7 +223,7 @@ const Markers = ({ points }: any) => {
           }}
           onClick={() => handleMarkerClick(place.placeId)}
         >
-          <CustomMarker text={place.name} />
+          <SquareMarker place={place.name} />
         </AdvancedMarker>
       ))}
       {clickedPlaceId && (

@@ -3,14 +3,14 @@ import { PlaceCoordinatesRequestDTO, PlaceCoordinatesResponseDTO } from "./useFe
 import expandCoordinates from "../../../helpers/expandCoordinates";
 import { axiosWithoutToken } from "../../../config/axios";
 
-const fetchPlaces = async (params: PlaceCoordinatesRequestDTO): Promise<PlaceCoordinatesResponseDTO> => {
+const fetchPlaces = async (params: PlaceCoordinatesRequestDTO): Promise<PlaceCoordinatesResponseDTO[]> => {
   const adjustedParams = expandCoordinates(params);
 
   const url = `/places/map?upperLat=${adjustedParams.upperLat}&lowerLat=${adjustedParams.lowerLat}&rightLng=${adjustedParams.rightLng}&leftLng=${adjustedParams.leftLng}&fictionId=${adjustedParams.fictionId}`;
   
   try {
     const response = await axiosWithoutToken.get(url);
-    const data: PlaceCoordinatesResponseDTO = response.data;
+    const data: PlaceCoordinatesResponseDTO[] = response.data;
     return data;
 
   } catch (error) {
