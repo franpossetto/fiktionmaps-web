@@ -18,17 +18,20 @@ export const Home = () => {
   }, [cityById, loadingCity, setCity]);
 
   return (
-    <div className="h-[100%] w-[100%] flex">
+    <div className="relative h-screen w-full">
+      {city && <MapView onLoad={() => setIsMapLoaded(true)} />}
       {isMapLoaded && (
-        <div className="flex w-[100%] justify-between z-10">
-            <FictionSelector/>
-            <SearchInThisArea/>
-            <CitySelector/>
-        </div>
+        <>
+          <div className="absolute top-0 left-0 w-full z-10 flex justify-between">
+            <FictionSelector />
+            <SearchInThisArea />
+            <CitySelector />
+          </div> 
+        </>
       )}
-      {city && <MapView onLoad={() => setIsMapLoaded(true)}/>}
     </div>
   );
+  
 };
 
 

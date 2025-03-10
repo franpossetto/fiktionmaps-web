@@ -10,5 +10,6 @@ export type PlaceCoordinatesRequestDTO = {
     placeId: number;
     latitude: number;
     longitude: number;
+    screenshot: string;
   };
   

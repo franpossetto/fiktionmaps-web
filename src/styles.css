@@ -18,7 +18,7 @@ body {
 .map-container {
   width: 100%;
   height: 100%;
-  }/* Clase para generar el vértice en la parte inferior del círculo */
+  }
   .transform-generate-vertex {
   border-bottom-right-radius: 5em !important;
 }
@@ -28,14 +28,14 @@ body {
   background-color: #fc3b68;
   border: 1px solid #fc3b68;
   font-size: large;
-  border-radius: 12px; /* Forma de pastilla */
-  padding: 5px 5px; /* Tamaño inicial */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra */
+  border-radius: 12px;
+  padding: 5px 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition:
     transform 0.3s ease,
     width 0.3s ease,
     height 0.3s ease,
-    border-radius 0.3s ease; /* Transiciones suaves */
+    border-radius 0.3s ease;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -46,9 +46,9 @@ body {
 }
 
 .custom-marker:hover {
-  width: auto;
+  width: 1em;
   height: 1em;
-  border-radius: 12px;
+  border-radius: 1em;
 }
 
 .marker-content {
@@ -71,22 +71,24 @@ body {
 
 .custom-cluster {
   background-color: #fa1f52;
+  border: 1px solid #fc3b68;
   border-radius: 15px;
   font-size: 12px;
   color: white;
   font-weight: bold;
+  padding: 5px 5px;
   transition:
     width 0.3s ease,
     height 0.3s ease,
     border-radius 0.3s ease;
   text-align: center;
   line-height: 1.2em;
-  width: 2em;
-  height: 2em;
+  width: 0.75em;
+  height: 0.75em;
 }
 .custom-cluster:hover {
-  width: 2.25em;
-  height: 1.125em;
+  width: 1.5em;
+  height: 1.5em;
   border-radius: 12px;
-  background-color: #000000;
+  background-color: #fa1f52;
 }

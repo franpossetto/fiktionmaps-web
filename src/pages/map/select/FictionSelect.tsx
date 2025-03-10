@@ -8,6 +8,7 @@ import { SelectNoResults } from "../../../components/common/SelectNoResults";
 import { debounce } from "lodash";
 import classNames from "../../../helpers/classNames";
 import { useFictionsByCity } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity";
+import { FictionByCityResponse } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity.types";
 
 interface FictionSelectProps {
   open: boolean;
@@ -47,7 +48,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   const filteredItems = useMemo(() => {
     return debouncedQuery === ""
       ? fictionsByCity
-      : fictionsByCity?.filter((item: Fiction) =>
+      : fictionsByCity?.filter((item: FictionByCityResponse) =>
         item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
       );
   }, [debouncedQuery, fictionsByCity]);

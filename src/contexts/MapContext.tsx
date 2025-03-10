@@ -25,7 +25,8 @@ type MapContext = {
   placeSearchParameters: any;
   setPlaceSearchParameters: (value: any) => any;
   mapZoom: any;
-  setMapZoom: (value: any) => any
+  setMapZoom: (value: any) => any,
+  toggleMarkerMode: () => void;
 };
 
 const MapControllerContext = React.createContext<MapContext>({
@@ -41,15 +42,18 @@ const MapControllerContext = React.createContext<MapContext>({
   setRenderMap: noop,
   placeSearchParameters: null,
   setPlaceSearchParameters: noop,
-  mapZoom: null,
-  setMapZoom: noop
+  mapZoom: true,
+  setMapZoom: noop,
+  toggleMarkerMode: noop
 });
 
 export const MapController = ({ children }: { children: React.ReactNode }) => {
   const [selectedFiction, setSelectedFiction] = useState<Fiction | undefined>();
 
   const [placeSearchParameters, setPlaceSearchParameters] = useState<any>(null);
-  const [mapZoom, setMapZoom] = useState<any>(null);
+  const [mapZoom, setMapZoom] = useState<boolean>(
+    () => localStorage.getItem("mapZoom") === "true"
+  );
   const [renderMap, setRenderMap] = useState<boolean>(false)
   const [city, setCity] = useState<City>();
   const [style, setStyle] = useState<string>(
@@ -60,14 +64,20 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
     topRight: { lat: 0, lng: 0 },
     bottomLeft: { lat: 0, lng: 0 },
   });
-  const [places, setPlaces] = useState<any[]>();
-
 
   const toggleStyle = () => {
     setStyle((prevStyle) => {
       const newStyle = prevStyle === "light" ? "dark" : "light";
       localStorage.setItem("themeStyle", newStyle);
       return newStyle;
+    });
+  };
+
+  const toggleMarkerMode = () => {
+    setMapZoom((prevMapZoom: boolean) => {
+      const newMapZoom = !prevMapZoom;
+      localStorage.setItem("mapZoom", newMapZoom.toString());
+      return newMapZoom;
     });
   };
 
@@ -87,7 +97,8 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
         placeSearchParameters,
         setPlaceSearchParameters,
         mapZoom, 
-        setMapZoom
+        setMapZoom,
+        toggleMarkerMode
       }}
     >
       {children}
