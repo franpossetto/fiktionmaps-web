@@ -11,6 +11,8 @@ import {
   CircleStackIcon,
   MoonIcon,
   SunIcon,
+  ShieldCheckIcon,
+  ViewfinderCircleIcon,
 } from "@heroicons/react/24/outline";
 import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
@@ -32,7 +34,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const [error, setError] = useState("");
   const { logout, user } = useAuthContext();
   const navigate = useNavigate();
-  const { style, toggleStyle } = useMapController();
+  const { style, toggleStyle, mapZoom, toggleMarkerMode } = useMapController();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -283,6 +285,17 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                 <SunIcon className="h-6 w-6 mx-auto" />
               ) : (
                 <MoonIcon className="h-6 w-6 mx-auto" />
+              )}
+            </button>
+            <button
+              type="button"
+              className="w-full py-2 text-center rounded-md text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
+              onClick={toggleMarkerMode}
+            >
+              {mapZoom === true ? (
+                <ShieldCheckIcon className="h-6 w-6 mx-auto" />
+              ) : (
+                <ViewfinderCircleIcon className="h-6 w-6 mx-auto" />
               )}
             </button>
           </div>

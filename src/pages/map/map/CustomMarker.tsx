@@ -5,7 +5,7 @@ import { useMapController } from '../../../contexts/MapContext';
 import { motion } from "framer-motion";
 
 interface CustomMarkerProps {
-  text: string;
+  place: any;
 }
 
 const CustomMarker: React.FC<CustomMarkerProps> = ({ place }) => {
