@@ -5,17 +5,20 @@ import { useEffect, useState } from "react";
 import { getDownloadURL, ref, StorageReference } from "firebase/storage";
 import { storage } from "../../../config/firebase";
 
-export const CustomClusterRenderer = ({ imageUrls }: { imageUrls: string[] }): Renderer => ({
+export const CustomClusterRenderer = ({
+  imageUrls,
+  shouldAnimate,
+}: {
+  imageUrls: string[];
+  shouldAnimate: boolean;
+}): Renderer => ({
   render: ({ count, position, markers }: Cluster) => {
     const container = document.createElement("div");
     const root = createRoot(container);
-
+console.log("shouldAnimate", shouldAnimate);
     const screenshots: string[] = (markers as any[])
       .map((marker) => marker.screenshot)
       .filter((s: string | undefined): s is string => Boolean(s));
-
-    console.log("Cluster count:", count);
-    console.log("Screenshots array:", screenshots);
 
     const fetchAllImages = async () => {
       const fetchedImages: string[] = [];
@@ -26,18 +29,20 @@ export const CustomClusterRenderer = ({ imageUrls }: { imageUrls: string[] }): R
             const url = await getDownloadURL(imageRef);
             fetchedImages.push(url);
           } catch (error) {
-            console.error("Error fetching image:", error);
+            // console.error("Error fetching image:", error);
           }
         })
       );
       return fetchedImages;
     };
 
+    const initialProps = shouldAnimate ? { opacity: 0, scale: 0.5 } : {};
+    const animateProps = shouldAnimate ? { opacity: 1, scale: 1 } : {};
     root.render(
       <motion.section
         key={position.toString()}
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={initialProps}
+        animate={animateProps}
         transition={{ duration: 0.3 }}
         className="flex items-center justify-center rounded-xl w-[2.5em] h-[2.5em] relative bg-gray-200 text-black text-2xl font-bold p-[.1em]"
       >
@@ -53,7 +58,6 @@ export const CustomClusterRenderer = ({ imageUrls }: { imageUrls: string[] }): R
 
     if (screenshots.length > 0) {
       fetchAllImages().then((fetchedImages) => {
-        console.log("Fetched image URLs:", fetchedImages);
         root.render(
           <motion.section
             key={position.toString()}

@@ -11,7 +11,9 @@ export const Markers = ({ points }: any) => {
   const clusterer = useRef<MarkerClusterer | null>(null);
   const [clickedPlaceId, setClickedPlaceId] = useState<string>();
   const [isOpen, setIsOpen] = useState(false);
+  const [shouldAnimate, setIsMapLoaded] = useState(false);
 
+  // Efecto de inicialización: se ejecuta cuando map y points están listos.
   useEffect(() => {
     if (!map) return;
     if (clusterer.current) {
@@ -23,7 +25,7 @@ export const Markers = ({ points }: any) => {
     console.log("Creating new clusterer", points);
     clusterer.current = new MarkerClusterer({
       map,
-      renderer: CustomClusterRenderer({ imageUrls: ["https://github.com/shadcn.png", "https://i.pravatar.cc/150?u=a04258114e29026302d"] }),
+      renderer: CustomClusterRenderer({ imageUrls: ["https://github.com/shadcn.png", "https://i.pravatar.cc/150?u=a04258114e29026302d"], shouldAnimate }),
     });
   
     clusterer.current.addMarkers(Object.values(markers));
@@ -35,7 +37,7 @@ export const Markers = ({ points }: any) => {
     if (!clusterer.current) {
       clusterer.current = new MarkerClusterer({
         map,
-        renderer: CustomClusterRenderer({ imageUrls: ["https://github.com/shadcn.png", "https://i.pravatar.cc/150?u=a04258114e29026302d"]  }),
+        renderer: CustomClusterRenderer({ imageUrls: ["https://github.com/shadcn.png", "https://i.pravatar.cc/150?u=a04258114e29026302d"], shouldAnimate  }),
       });
     }
   }, [map]);
@@ -75,6 +77,9 @@ export const Markers = ({ points }: any) => {
     setClickedPlaceId(undefined);
   };
 
+  // Usamos un objeto para almacenar las referencias de los marcadores
+  const markerRefs = useRef<{ [key: string]: Marker | null }>({});
+
   return (
     <>
       {points && points.map((place: any) => (
@@ -82,10 +87,11 @@ export const Markers = ({ points }: any) => {
           key={place.placeId?.toString()}
           position={{
             lat: place?.latitude,
-            lng: place?.longitude
+            lng: place?.longitude,
           }}
           ref={(marker) => {
-            setMarkerRef(marker, place.placeId?.toString(), place.screenshot)
+            markerRefs.current[place.placeId?.toString()] = marker;
+            setMarkerRef(marker, place.placeId?.toString(), place.screenshot);
           }}
           onClick={() => handleMarkerClick(place.placeId)}
         >
