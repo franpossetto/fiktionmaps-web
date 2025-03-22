@@ -15,7 +15,7 @@ export const CustomClusterRenderer = ({
   render: ({ count, position, markers }: Cluster) => {
     const container = document.createElement("div");
     const root = createRoot(container);
-console.log("shouldAnimate", shouldAnimate);
+
     const screenshots: string[] = (markers as any[])
       .map((marker) => marker.screenshot)
       .filter((s: string | undefined): s is string => Boolean(s));

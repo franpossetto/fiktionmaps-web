@@ -18,7 +18,7 @@ export default function MapView({ onLoad }: MapProps) {
   const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters } = useMapController();
   const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
-
+  const map = useMap('map-view');
   const { data: places } = useFetchPlaces(placeSearchParameters);
 
   const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
@@ -48,6 +48,29 @@ export default function MapView({ onLoad }: MapProps) {
 
   }, [selectedFiction])
 
+  const handleClusterClick = (cluster: any) => {
+    if (!map) return;
+
+    const markers = cluster.getMarkers();
+    if (markers.length === 0) return;
+
+    const clusterPosition = markers[0].getPosition();
+
+    if (clusterPosition) {
+      let zoomLevel = map.getZoom() || 10;
+      const targetZoom = Math.min(zoomLevel + 2, 19); // Limita el zoom máximo a 19
+
+      const animateZoom = (currentZoom: number) => {
+        if (currentZoom >= targetZoom) return;
+        map.setZoom(currentZoom + 1);
+        setTimeout(() => animateZoom(currentZoom + 1), 200); // Suaviza la animación
+      };
+
+      map.panTo(clusterPosition);
+      animateZoom(zoomLevel);
+    }
+  };
+
   return (
     <APIProvider apiKey={import.meta.env.VITE_GMAPS_API_KEY}>
       <div className="absolute w-full h-full z-1">
@@ -73,7 +96,7 @@ export default function MapView({ onLoad }: MapProps) {
 
           {isMapLoaded && <Markers points={places} />}
 
-          <MapViewSettings city={city} setLocalBounds={setLocalBounds} />
+          <MapViewSettings city={city} setLocalBounds={setLocalBounds} onClusterClick={handleClusterClick} />
         </Map>
       </div>
     </APIProvider>

@@ -5,7 +5,7 @@ import { Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
 import { CustomClusterRenderer } from "../map/CustomClusterRenderer";
 import { useEffect, useRef, useState } from "react";
 
-export const Markers = ({ points }: any) => {
+export const Markers = ({ points, onClusterClick }: any) => {
   const map = useMap("map-view");
   const [markers, setMarkers] = useState<{ [key: string]: Marker }>({});
   const clusterer = useRef<MarkerClusterer | null>(null);
@@ -13,39 +13,45 @@ export const Markers = ({ points }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [shouldAnimate, setIsMapLoaded] = useState(false);
 
-  // Efecto de inicialización: se ejecuta cuando map y points están listos.
-  useEffect(() => {
-    if (!map) return;
-    if (clusterer.current) {
-      clusterer.current.clearMarkers();
-      clusterer.current.setMap(null);
-      clusterer.current = null;
-    }
-  
-    console.log("Creating new clusterer", points);
-    clusterer.current = new MarkerClusterer({
-      map,
-      renderer: CustomClusterRenderer({ imageUrls: ["https://github.com/shadcn.png", "https://i.pravatar.cc/150?u=a04258114e29026302d"], shouldAnimate }),
-    });
-  
-    clusterer.current.addMarkers(Object.values(markers));
-  }, [map]);
-  
-
   useEffect(() => {
     if (!map) return;
     if (!clusterer.current) {
       clusterer.current = new MarkerClusterer({
         map,
-        renderer: CustomClusterRenderer({ imageUrls: ["https://github.com/shadcn.png", "https://i.pravatar.cc/150?u=a04258114e29026302d"], shouldAnimate  }),
+        onClusterClick: (event, cluster, map) => {
+          const clusterCenter = cluster.position;
+          if (clusterCenter) {
+            map.panTo(clusterCenter);
+            // Ejemplo de zoom animado
+            let currentZoom = map.getZoom() || 13;
+            const targetZoom = Math.min(currentZoom + 4.5, 19);
+            const animateZoom = (zoom: number) => {
+              if (zoom >= targetZoom) return;
+              map.setZoom(zoom + 1);
+              setTimeout(() => animateZoom(zoom + 1), 200);
+            };
+            animateZoom(currentZoom);
+          }
+        },
+        renderer: CustomClusterRenderer({
+          imageUrls: [
+            "https://github.com/shadcn.png",
+            "https://i.pravatar.cc/150?u=a04258114e29026302d",
+          ],
+          shouldAnimate,
+        }),
+      });
+  
+      clusterer.current.addListener("clusterclick", (cluster: any) => {
+        onClusterClick(cluster);
       });
     }
-  }, [map]);
-
-  useEffect(() => {
-    clusterer.current?.clearMarkers();
-    clusterer.current?.addMarkers(Object.values(markers));
-  }, [markers]);
+  
+    // Actualizamos los marcadores cada vez que cambien
+    clusterer.current.clearMarkers();
+    clusterer.current.addMarkers(Object.values(markers));
+  }, [map, markers, onClusterClick, shouldAnimate]);
+  
 
   const setMarkerRef = (marker: Marker | null, key: string, screenshot: string) => {
     if (marker && markers[key]) return;
