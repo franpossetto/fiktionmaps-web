@@ -7,14 +7,13 @@ import { createSearchParametersOverride } from "@/types/dto/MapBoundsDTO";
 import { Markers } from "../map-controllers/Markers";
 import { Bounds } from "../map-controllers/Bounds";
 
-
 interface MapProps {
   onLoad?: () => void;
 }
 
 export default function MapView({ onLoad }: MapProps) {
-
-  const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters, setMapZoom, mapZoom } = useMapController(); const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS)
+  const { selectedFiction, setSelectedFiction, city, style, placeSearchParameters, setPlaceSearchParameters, setMapZoom, mapZoom } = useMapController();
+  const [localBounds, setLocalBounds] = useState<MapBounds>(NYC_MAP_BOUNDS);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const { data: places } = useFetchPlaces(placeSearchParameters);
   const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
@@ -25,27 +24,21 @@ export default function MapView({ onLoad }: MapProps) {
   };
 
   useEffect(() => {
-
     const searchParametersOverride = createSearchParametersOverride(
       localBounds, FICTION_EMPTY
     );
 
     setSelectedFiction(undefined);
     setPlaceSearchParameters(searchParametersOverride);
-
-
-  }, [city])
+  }, [city]);
 
   useEffect(() => {
-
     const searchParametersOverride = createSearchParametersOverride(
       localBounds, selectedFiction?.id || FICTION_EMPTY
     );
 
     setPlaceSearchParameters(searchParametersOverride);
-
-  }, [selectedFiction])
-
+  }, [selectedFiction]);
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_GMAPS_API_KEY}>

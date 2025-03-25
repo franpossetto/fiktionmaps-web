@@ -2,7 +2,6 @@ import { createRoot } from "react-dom/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cluster } from "@googlemaps/markerclusterer";
 import { PlaceCoordinatesResponseDTO } from "@/hooks/places/useFetchPlaces/useFetchPlaces.types";
-import { useEffect, useRef } from "react";
 
 export interface SquareClusterProps {
   imageUrl: string;
@@ -35,7 +34,6 @@ export class SquareCluster {
           transition={{ duration: 0.3 }}
           className="flex items-center justify-center rounded-xl w-[2.8em] h-[2.8em] relative dark:bg-gray-200 bg-white text-black text-2xl font-bold p-[.1em]"
         >
-          {/* bg-blue-700 */}
           <div className="absolute -top-4 -right-1 bg-[#fa1f52] text-white text-xs font-bold 
                   flex items-center justify-center w-6 h-6 rounded-full">
             {count}
