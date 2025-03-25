@@ -50,10 +50,40 @@ export const Markers = ({ places }: MarkersProps) => {
         clusterer.current = new MarkerClusterer({
             map,
             renderer,
+            onClusterClick: (event, cluster, map) => {
+                const clusterCenter = cluster.position;
+                if (clusterCenter) {
+                    map.panTo(clusterCenter);
+                    const currentZoom = map.getZoom() || 13;
+                    const targetZoom = Math.min(currentZoom + 4.5, 19);
+                    const animateZoom = (zoom: number) => {
+                        if (zoom >= targetZoom) return;
+                        map.setZoom(zoom + 1);
+                        setTimeout(() => animateZoom(zoom + 1), 200);
+                    };
+                    animateZoom(currentZoom);
+                }
+            }
         });
 
         // Add markers to clusterer
         clusterer.current.addMarkers(Object.values(markers));
+
+        // Add cluster click listener
+        clusterer.current.addListener("clusterclick", (cluster: any) => {
+            const clusterCenter = cluster.position;
+            if (clusterCenter) {
+                map.panTo(clusterCenter);
+                let currentZoom = map.getZoom() || 13;
+                const targetZoom = Math.min(currentZoom + 4.5, 19);
+                const animateZoom = (zoom: number) => {
+                    if (zoom >= targetZoom) return;
+                    map.setZoom(zoom + 1);
+                    setTimeout(() => animateZoom(zoom + 1), 200);
+                };
+                animateZoom(currentZoom);
+            }
+        });
 
         // Cleanup function
         return () => {
