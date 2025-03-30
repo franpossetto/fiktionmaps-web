@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { storage } from "../../../../config/firebase";
 import { Fiction } from "../../../../types/Fiction";
 import { Place } from "../../../../types/Place";
+import { FictionResponse } from "@/hooks/fictions/useFetchFictionById/useFetchFictionById.types";
 
 interface PlaceOverviewProps {
-  fiction: Fiction;
+  fiction: FictionResponse | undefined;
   place: Place;
 }
 

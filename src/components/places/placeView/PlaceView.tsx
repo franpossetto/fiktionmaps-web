@@ -6,6 +6,7 @@ import { PlaceData } from "./common/PlaceData";
 import { PlaceScenes } from "../placeTable/common/PlaceScene/PlaceScenes";
 import { PlaceCloseCard } from "../placeTable/common/PlaceScene/PlaceCloseCard";
 import { useFetchPlaceById } from "../../../hooks/places/useFetchPlaceById/usePlaceFetchById";
+import { useFetchFictionById } from "@/hooks/fictions/useFetchFictionById/useFetchFictionById";
 
 interface PlaceViewProps {
   id: string;
@@ -15,8 +16,7 @@ interface PlaceViewProps {
 
 const PlaceView: FC<PlaceViewProps> = ({ id, open, setOpen }) => {
   const { data: place } = useFetchPlaceById(id);
-  const [fiction, setFiction] = useState<any>(null);
-
+  const { data: fiction } = useFetchFictionById(place?.fictionId || 0)
   return (
     place && (
     <PlaceViewWrapper open={open} setOpen={setOpen}>
