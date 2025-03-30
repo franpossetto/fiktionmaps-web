@@ -9,6 +9,8 @@ import { debounce } from "lodash";
 import classNames from "../../../helpers/classNames";
 import { useFictionsByCity } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity";
 import { FictionByCityResponse } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity.types";
+import { useFictionsByCoordinates } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates";
+import { FictionByCoordinatesResponse } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates.types";
 
 interface FictionSelectProps {
   open: boolean;
@@ -25,11 +27,15 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
-  const { city} = useMapController();
-  const { data: fictionsByCity} = useFictionsByCity(city?.id);
+  const { city, placeSearchParameters} = useMapController();
+  const {data: fictionsByCoordinates} = useFictionsByCoordinates({
+    upperLat: placeSearchParameters?.upperLat,
+    lowerLat: placeSearchParameters?.lowerLat,
+    rightLng: placeSearchParameters?.rightLng,
+    leftLng: placeSearchParameters?.leftLng,
+  });
 
   const {
-    selectedFiction,
     setSelectedFiction,
 } = useMapController();
 
@@ -47,14 +53,24 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const filteredItems = useMemo(() => {
     return debouncedQuery === ""
-      ? fictionsByCity
-      : fictionsByCity?.filter((item: FictionByCityResponse) =>
+      ? fictionsByCoordinates
+      : fictionsByCoordinates?.filter((item: FictionByCoordinatesResponse) =>
         item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
       );
-  }, [debouncedQuery, fictionsByCity]);
+  }, [debouncedQuery, fictionsByCoordinates]);
 
-  const setFictionAndClose = (selectedFiction: Fiction) => {
-    setSelectedFiction(selectedFiction);
+  const setFictionAndClose = (selectedFiction: FictionByCoordinatesResponse) => {
+    const transformedFiction: Fiction = {
+      id: selectedFiction.fictionId,
+      name: selectedFiction.name,
+      imgUrl: selectedFiction.imgUrl,
+      type: selectedFiction.type,
+      duration: selectedFiction.duration,
+      year: selectedFiction.year?.toString() || "",
+      externalId: "", // ToDo: add this in the backend
+      overview: "", // ToDo: add this to backend.
+    };
+    setSelectedFiction(transformedFiction);
     setOpen(false);
   };
   
@@ -91,7 +107,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
           >
             <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all dark:bg-gray-900 dark:divide-gray-700">
               <Combobox
-                onChange={(selectedFiction: Fiction) =>
+                onChange={(selectedFiction: FictionByCoordinatesResponse) =>
                   setFictionAndClose(selectedFiction)
                 }
               >
@@ -113,7 +129,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
                   >
                     {filteredItems?.map((item) => (
                       <Combobox.Option
-                        key={item.id}
+                        key={item.fictionId}
                         value={item}
                         className={({ active }) =>
                           classNames(
