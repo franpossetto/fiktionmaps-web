@@ -24,8 +24,8 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
-  const { city} = useMapController();
-  const { data: fictionsByCity} = useFictionsByCity(city?.id);
+  const { city, placeSearchParameters} = useMapController();
+  const { data: fictionsByCity} = useFictionsByCity(placeSearchParameters);
 
   const {
     selectedFiction,

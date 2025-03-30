@@ -94,7 +94,7 @@ export default function MapView({ onLoad }: MapProps) {
           }}
         >
 
-          {isMapLoaded && <Markers points={places} />}
+          {isMapLoaded && places && <Markers points={places} />}
 
           <MapViewSettings city={city} setLocalBounds={setLocalBounds} onClusterClick={handleClusterClick} />
         </Map>

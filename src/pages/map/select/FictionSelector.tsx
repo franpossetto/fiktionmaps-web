@@ -1,28 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMapController } from "../../../contexts/MapContext";
 import { FictionSelect } from "./FictionSelect";
 import { FictionDisplayStatus } from "../../../types/enum/FictionSelectorStatus";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { createSearchParametersOverride } from "../../../types/dto/MapBoundsDTO";
+import { FICTION_EMPTY } from "../../../contants";
 
 export const FictionSelector = () => {
     const [fictionIsOpen, setFictionIsOpen] = useState(false);
-
     const {
+        mapBounds,
+        renderMap, 
+        setRenderMap, 
         selectedFiction,
         setSelectedFiction,
+        setPlaceSearchParameters
     } = useMapController();
 
     const resetFictions = () => {
         setSelectedFiction(undefined)
     };
 
+        useEffect(() => {
+            if (!renderMap) return;
+            handleFictionOpen();
+        }, [mapBounds]); 
+    
 
+    const handleFictionOpen = () => {
+        const searchParametersOverride = createSearchParametersOverride(mapBounds, FICTION_EMPTY);
+        setPlaceSearchParameters(searchParametersOverride);
+        setFictionIsOpen(!fictionIsOpen);
+    }
     return (
         <div className="bg-transparent font-semibold">
             <button
                 type="button"
                 className="rounded-md whitespace-nowrap py-2 px-3 text-sm font-semibold shadow-sm mt-6 h-10 ml-3 lg:ml-28 bg-white/80 text-black hover:bg-white/20 dark:bg-black/60 dark:text-white dark:hover:bg-white/20"
-                onClick={() => setFictionIsOpen(!fictionIsOpen)}>
+                onClick={() => setRenderMap(true)}>
                 {fictionIsOpen && (
                     <FictionSelect open={fictionIsOpen} setOpen={setFictionIsOpen} />
                 )}

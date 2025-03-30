@@ -54,24 +54,32 @@ export const Markers = ({ points, onClusterClick }: any) => {
   
 
   const setMarkerRef = (marker: Marker | null, key: string, screenshot: string) => {
+    // Si marker existe y ya se registró ese marker, no hacemos nada.
     if (marker && markers[key]) return;
-    if (!marker && !markers[key]) return;
-    if (marker == null) {
-      setMarkers({});
-    }
     
-    (marker as any).screenshot = screenshot;
-
-    setMarkers((prev) => {
-      if (marker) {
-        return { ...prev, [key]: marker };
-      } else {
+    // Si marker es null y no existe un marker registrado con esa key, no hacemos nada.
+    if (!marker && !markers[key]) return;
+  
+    // Si marker es null, eliminamos el marker existente y salimos de la función.
+    if (marker == null) {
+      setMarkers((prev) => {
         const newMarkers = { ...prev };
         delete newMarkers[key];
         return newMarkers;
-      }
-    });
+      });
+      return; // Salimos para evitar seguir con marker null.
+    }
+    
+    // Aquí marker es seguro (no es null), asignamos la propiedad screenshot.
+    (marker as any).screenshot = screenshot;
+  
+    // Actualizamos el estado para incluir el nuevo marker.
+    setMarkers((prev) => ({
+      ...prev,
+      [key]: marker,
+    }));
   };
+  
 
   const handleMarkerClick = (placeId: string) => {
     setClickedPlaceId(placeId);

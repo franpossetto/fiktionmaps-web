@@ -89,41 +89,77 @@ const ImageCarousel = ({ images }: { images: string[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState<number | null>(null);
 
+  // Si no hay imágenes, usamos estos colores de respaldo.
+  const defaultColors = ["#FF0000", "#00FF00", "#0000FF", "#FFA500"];
+  const displayItems = images.length > 0 ? images : defaultColors;
+
+  // Determina si el item es una URL de imagen o un color.
+  const isImage = (item: string) => item.startsWith("http");
+
+  // Actualiza el índice de forma recursiva con intervalo aleatorio.
   useEffect(() => {
-    const interval = setInterval(() => {
+    let timeoutId: any = null;
+
+    const updateIndex = () => {
       setPrevIndex(currentIndex);
-      const next = (currentIndex + 1) % images.length;
+      const next = (currentIndex + 1) % displayItems.length;
       setCurrentIndex(next);
       setTimeout(() => setPrevIndex(null), 500);
-    }, 3000);
 
-    return () => clearInterval(interval);
-  }, [currentIndex, images.length]);
+      const randomInterval = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
+      timeoutId = setTimeout(updateIndex, randomInterval);
+    };
+
+    const randomInitialInterval = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
+    timeoutId = setTimeout(updateIndex, randomInitialInterval);
+
+    return () => clearTimeout(timeoutId);
+  }, [currentIndex, displayItems.length]);
+
+  // Función que renderiza la "diapositiva" (slide) dependiendo del tipo de contenido.
+  const renderSlide = (
+    index: number,
+    key: string,
+    initialX: string,
+    animateX: string,
+    zIndex: number
+  ) => {
+    const item = displayItems[index];
+
+    if (isImage(item)) {
+      return (
+        <motion.img
+          key={key}
+          src={item}
+          alt="carousel"
+          className="w-full h-full object-cover absolute"
+          initial={{ x: initialX, opacity: 0 }}
+          animate={{ x: animateX, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          style={{ zIndex }}
+        />
+      );
+    } else {
+      return (
+        <motion.div
+          key={key}
+          className="w-full h-full absolute"
+          // En este caso animamos directamente el backgroundColor
+          initial={{ x: initialX, opacity: 0, backgroundColor: item }}
+          animate={{ x: animateX, opacity: 1, backgroundColor: item }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          style={{ zIndex }}
+        />
+      );
+    }
+  };
 
   return (
     <div className="w-full h-full overflow-hidden rounded-xl relative">
-      {prevIndex !== null && (
-        <motion.img
-          key={`prev-${prevIndex}`}
-          src={images[prevIndex]}
-          alt="carousel"
-          className="w-full h-full object-cover absolute"
-          initial={{ x: "0%", opacity: 1 }}
-          animate={{ x: "-100%", opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          style={{ zIndex: 1 }}
-        />
-      )}
-      <motion.img
-        key={`current-${currentIndex}`}
-        src={images[currentIndex]}
-        alt="carousel"
-        className="w-full h-full object-cover absolute"
-        initial={{ x: "100%", opacity: 0 }}
-        animate={{ x: "0%", opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-        style={{ zIndex: 0 }}
-      />
+      {prevIndex !== null && renderSlide(prevIndex, `prev-${prevIndex}`, "0%", "-100%", 1)}
+      {renderSlide(currentIndex, `current-${currentIndex}`, "100%", "0%", 0)}
     </div>
   );
 };
+
+export default ImageCarousel;
