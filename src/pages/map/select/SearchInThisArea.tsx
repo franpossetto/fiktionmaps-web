@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export const SearchInThisArea = () => {
 
-    const { mapBounds, renderMap, setRenderMap, setPlaceSearchParameters } = useMapController();
+    const { mapBounds, renderMap, setRenderMap, setPlaceSearchParameters, setSelectedFiction } = useMapController();
 
     useEffect(() => {
         if (!renderMap) return;
@@ -16,6 +16,7 @@ export const SearchInThisArea = () => {
 
     const searchInThisArea = async () => {
         const searchParametersOverride = createSearchParametersOverride(mapBounds, FICTION_EMPTY);
+        setSelectedFiction(undefined);
         setPlaceSearchParameters(searchParametersOverride);
         setRenderMap(false);
     };

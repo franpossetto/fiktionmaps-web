@@ -33,11 +33,13 @@ export default function MapView({ onLoad }: MapProps) {
   }, [city]);
 
   useEffect(() => {
-    const searchParametersOverride = createSearchParametersOverride(
-      localBounds, selectedFiction?.id || FICTION_EMPTY
-    );
+    if (!placeSearchParameters) return;
+    const updatedParameters = {
+      ...placeSearchParameters,
+      fictionId: selectedFiction?.id || FICTION_EMPTY
+    };
 
-    setPlaceSearchParameters(searchParametersOverride);
+    setPlaceSearchParameters(updatedParameters);
   }, [selectedFiction]);
 
   return (
