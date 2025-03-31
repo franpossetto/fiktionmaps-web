@@ -2,7 +2,7 @@ import { PlaceCoordinatesResponseDTO } from "@/hooks/places/useFetchPlaces/useFe
 import { Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { SquareCluster } from "../map-markers/SquareCluster";
+import { SquareClusterV2 } from "../map-markers/SquareClusterV2";
 import { SquareMarker } from "../map-markers/SquareMarker";
 import PlaceView from "@/components/places/placeView/PlaceView";
 import { RedCluster } from "../map-markers/RedCluster";
@@ -29,7 +29,7 @@ export const Markers = ({ places }: MarkersProps) => {
     // Memoize the renderer creation to prevent unnecessary recreations
     const createRenderer = useCallback(() => {
         return mapZoom
-            ? new SquareCluster({ imageUrl: DEFAULT_CLUSTER_IMAGE, places })
+            ? new SquareClusterV2({ imageUrl: DEFAULT_CLUSTER_IMAGE, places })
             : new RedCluster();
     }, [mapZoom, places]);
 
