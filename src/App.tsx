@@ -5,6 +5,7 @@ import { MapController } from "./contexts/MapContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient()
 
@@ -16,6 +17,7 @@ function App() {
           <MapController>
             <AppRouter />
           </MapController>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </AuthProvider>
       <ToastContainer />
