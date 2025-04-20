@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { axiosWithToken, axiosWithoutToken } from "../config/axios";
 import { useAxios, useAxiosResponse } from "../config/useAxios";
 import {
-  AxiosError,
   AxiosInstance,
   AxiosResponse,
-  RawAxiosRequestConfig,
 } from "axios";
 
 export const useCityService = () => {
