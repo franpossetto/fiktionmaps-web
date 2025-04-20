@@ -7,10 +7,9 @@ import { FictionImage } from "../../admin/fictions/FictionImage";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
 import { debounce } from "lodash";
 import classNames from "../../../helpers/classNames";
-import { useFictionsByCity } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity";
-import { FictionByCityResponse } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity.types";
 import { useFictionsByCoordinates } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates";
 import { FictionByCoordinatesResponse } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates.types";
+import { useFirebaseStorageMultiple } from "@/hooks/shared/useImage/useFirebaseStorageMultiple";
 
 interface FictionSelectProps {
   open: boolean;
@@ -73,8 +72,13 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
     setSelectedFiction(transformedFiction);
     setOpen(false);
   };
+  const imagePaths = useMemo(
+    () => filteredItems?.map(f => f.imgUrl ? MOVIE_COVERS_PATH + f.imgUrl : null) || [],
+    [filteredItems]
+  );
   
-
+  const { urls: imageUrls } = useFirebaseStorageMultiple(imagePaths);
+  
   return (
     <Transition.Root
       show={open}
@@ -127,7 +131,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
                     static
                     className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3"
                   >
-                    {filteredItems?.map((item) => (
+                    {filteredItems?.map((item, index) => (
                       <Combobox.Option
                         key={item.fictionId}
                         value={item}
@@ -140,10 +144,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
                       >
                         {({ active }) => (
                           <>
-                            <FictionImage
-                              imgUrl={MOVIE_COVERS_PATH + item.imgUrl}
-                            />
-
+                            <FictionImage imgUrl={imageUrls[index]} />
                             <div className="ml-4 flex-auto">
                               <p
                                 className={classNames(

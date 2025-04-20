@@ -1,12 +1,13 @@
 import { PlaceCoordinatesResponseDTO } from "@/hooks/places/useFetchPlaces/useFetchPlaces.types";
 import { Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { SquareClusterV2 } from "../map-markers/SquareClusterV2";
 import { SquareMarker } from "../map-markers/SquareMarker";
 import PlaceView from "@/components/places/placeView/PlaceView";
 import { RedCluster } from "../map-markers/RedCluster";
 import { useMapController } from "@/contexts/MapContext";
+import { useFirebaseStorageMultiple } from "@/hooks/shared/useImage/useFirebaseStorageMultiple";
 
 const DEFAULT_CLUSTER_IMAGE = "https://github.com/shadcn.png";
 
@@ -26,13 +27,26 @@ export const Markers = ({ places }: MarkersProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const { setMapZoom, mapZoom } = useMapController();
 
+    const imagePaths = useMemo(
+        () => places.map(p => p.screenshot ?? null),
+        [places]
+      );
+      
+      const { urls: imageUrls } = useFirebaseStorageMultiple(imagePaths);
+
     // Memoize the renderer creation to prevent unnecessary recreations
+    // const createRenderer = useCallback(() => {
+    //     return mapZoom
+    //         ? new SquareClusterV2({ imageUrl: DEFAULT_CLUSTER_IMAGE, places })
+    //         : new RedCluster();
+    // }, [mapZoom, places]);
+
     const createRenderer = useCallback(() => {
         return mapZoom
-            ? new SquareClusterV2({ imageUrl: DEFAULT_CLUSTER_IMAGE, places })
-            : new RedCluster();
-    }, [mapZoom, places]);
-
+          ? new SquareClusterV2({ imageUrls, places })
+          : new RedCluster();
+      }, [mapZoom, places, imageUrls]);
+    
     // Single useEffect for clusterer management
     useEffect(() => {
         if (!map) return;
@@ -139,9 +153,11 @@ export const Markers = ({ places }: MarkersProps) => {
         return null;
     }
 
+
+
     return (
         <>
-            {places.map((place) => {
+            {places.map((place, index) => {
                 const placeId = place.placeId?.toString();
                 const position = {
                     lat: place?.latitude ?? 0,
@@ -151,6 +167,7 @@ export const Markers = ({ places }: MarkersProps) => {
                 if (!placeId || !position.lat || !position.lng) {
                     return null;
                 }
+                
 
                 return (
                     <AdvancedMarker
@@ -159,8 +176,8 @@ export const Markers = ({ places }: MarkersProps) => {
                         ref={(marker) => setMarkerRef(marker, placeId)}
                         onClick={() => handleMarkerClick(placeId)}
                     >
-                        <SquareMarker place={place} />
-                    </AdvancedMarker>
+                    <SquareMarker imageUrl={imageUrls[index]} />
+                </AdvancedMarker>
                 );
             })}
             {clickedPlaceId && (

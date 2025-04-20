@@ -1,39 +1,15 @@
-import { getDownloadURL, ref, StorageReference } from 'firebase/storage';
-import React, { useEffect, useState, memo } from 'react';
-import { storage } from '../../../config/firebase';
+import { memo } from 'react';
 import { useMapController } from '../../../contexts/MapContext';
-import { PlaceCoordinatesResponseDTO } from '../../../hooks/places/useFetchPlaces/useFetchPlaces.types';
 import { RedMarker } from './RedMarker';
 import { motion } from 'framer-motion';
-
 interface SquareMarkerProps {
-  place: PlaceCoordinatesResponseDTO;
+  imageUrl?: string | null;
 }
 
-export const SquareMarker = memo<SquareMarkerProps>(({ place }) => {
-  const [imageUrl, setImageUrl] = useState<string | undefined>();
+export const SquareMarker = memo<SquareMarkerProps>(({ imageUrl }) => {
   const { mapZoom } = useMapController();
 
-  useEffect(() => {
-    const fetchImage = () => {
-      if (place.screenshot) {
-        let sceneImg = place.screenshot;
-        const imageRef: StorageReference = ref(storage, sceneImg);
 
-        getDownloadURL(ref(imageRef))
-          .then((url) => {
-            setImageUrl(url);
-          })
-          .catch((error) => {
-            setImageUrl(undefined);
-          });
-      }
-    };
-
-    if (place) {
-      fetchImage();
-    }
-  }, [place.screenshot]);
 
   if (!mapZoom) {
     return (
@@ -56,7 +32,7 @@ export const SquareMarker = memo<SquareMarkerProps>(({ place }) => {
       className="flex items-center justify-center rounded-xl w-[2.3em] h-[2.3em] relative bg-wite dark:bg-gray-200 bg-white border-b-white shadow-2xl text-black text-2xl font-bold p-[.1em]"
     >
       <img
-        src={imageUrl}
+        src={imageUrl ?? "/not_found_images/404_not_found_tokio.png"}
         alt="Place screenshot"
         className="w-full h-full object-cover rounded-xl"
       />

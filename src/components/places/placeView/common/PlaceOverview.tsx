@@ -1,46 +1,12 @@
-import { StorageReference, getDownloadURL, ref } from "firebase/storage";
-import { useEffect, useState } from "react";
-import { storage } from "../../../../config/firebase";
-import { Fiction } from "../../../../types/Fiction";
-import { Place } from "../../../../types/Place";
 import { FictionResponse } from "@/hooks/fictions/useFetchFictionById/useFetchFictionById.types";
+import { Place } from "../../../../types/Place";
 
 interface PlaceOverviewProps {
   fiction: FictionResponse | undefined;
   place: Place;
 }
 
-export const PlaceOverview: React.FC<PlaceOverviewProps> = ({
-  fiction,
-  place,
-}) => {
-  const [imageFictionUrl, setFictionImageUrl] = useState<string | undefined>();
-
-  useEffect(() => {
-    const fetchImage = () => {
-      if (!fiction?.imgUrl) {
-        console.error("fiction.imgUrl is undefined");
-        return;
-      }
-
-      try {
-        const sceneImg = fiction.imgUrl.replace("/img/", "");
-        const imageRef: StorageReference = ref(storage, sceneImg);
-
-        getDownloadURL(imageRef)
-          .then((url) => {
-            setFictionImageUrl(url);
-          })
-          .catch((error) => {
-            console.error("Failed to fetch image URL:", error);
-          });
-      } catch (error) {
-        console.error("Error in fetchImage:", error);
-      }
-    };
-
-    fetchImage();
-  }, [fiction]);
+export const PlaceOverview: React.FC<PlaceOverviewProps> = ({ fiction, place }) => {
 
   return (
     <div className="m-5 sm:flex sm:items-end">
