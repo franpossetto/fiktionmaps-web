@@ -5,12 +5,12 @@ import { ModalWrapper } from "../../../common/ModalWrapper";
 import PlaceDetails from "../common/PlaceDetails";
 import { usePlaceController } from "../../../../contexts/PlaceContext";
 import { Fiction } from "../../../../types/Fiction";
-import { useFictionService } from "../../../../services/useFictionService";
 import { Place } from "../../../../types/Place";
 import placeholder from "../common/Placeholder";
 import { ImageInput } from "../common/ImageInput";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../../config/firebase";
+import { useAddPlaceMutation } from "@/hooks/places/useAddPlace/useAddPlace";
 
 interface LogoutModalProps {
   modalOpen: boolean;
@@ -28,7 +28,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
   const [fiction, setFiction] = useState<Fiction>();
 
   const { place: plc, fiction: fct } = usePlaceController();
-  const { addPlaceToFiction, getFictions } = useFictionService();
+  const { mutateAsync: addPlace } = useAddPlaceMutation();
   const [isFormValid, setIsFormValid] = useState(false);
 
   const [imageFile, setImageFile] = useState<any>(null);
@@ -89,11 +89,13 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
       userEmail: "", //not necesary
     };
 
-    addPlaceToFiction(fiction?.id, pl)
-      .then((p) => {
-        setPlaces((prevPlaces: Place[]) => [...prevPlaces, p.data]);
-      })
-      .catch(() => {});
+    try {
+      const newPlace = await addPlace({ fictionId: fiction?.id || 0, place: pl });
+      setPlaces((prevPlaces: Place[]) => [...prevPlaces, newPlace]);
+    } catch (e) {
+      console.error("Error adding place", e);
+    }
+
     setLoading(false);
 
     setModalOpen(false);
