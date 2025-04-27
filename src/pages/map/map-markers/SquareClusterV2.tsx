@@ -23,13 +23,13 @@ const ImageCarousel = ({ images }: { images: string[] }) => {
       setPrevIndex(currentIndex);
       const next = (currentIndex + 1) % displayItems.length;
       setCurrentIndex(next);
-      setTimeout(() => setPrevIndex(null), 500);
+      setTimeout(() => setPrevIndex(null), 300);
 
-      const randomInterval = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+      const randomInterval = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
       timeoutRef.current = setTimeout(updateIndex, randomInterval);
     };
 
-    const initialDelay = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+    const initialDelay = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
     timeoutRef.current = setTimeout(updateIndex, initialDelay);
 
     return () => {
@@ -95,8 +95,17 @@ export class SquareClusterV2 {
     const initialProps = shouldAnimate ? { opacity: 0, scale: 0.5 } : {};
     const animateProps = shouldAnimate ? { opacity: 1, scale: 1 } : {};
 
-    const validImages = this.props.imageUrls.filter(Boolean) as string[];
+    const markerElems = cluster.markers as unknown as HTMLElement[];
+    const markerIds = markerElems.map(el => el.getAttribute('aria-label'));
+    const markerIdSet = new Set(markerIds);
 
+    const clusterImages = this.props.places.reduce<string[]>((acc, place, i) => {
+      if (markerIdSet.has(place.placeId.toString()) && this.props.imageUrls[i]) {
+        acc.push(this.props.imageUrls[i]!);
+  }
+  return acc;
+}, []);
+    
     root.render(
       <motion.section
         key={cluster.position.toString()}
@@ -109,7 +118,7 @@ export class SquareClusterV2 {
             flex items-center justify-center w-6 h-6 rounded-full">
           {cluster.count}
         </div>
-        <ImageCarousel images={validImages.slice(0, 2)} />
+        <ImageCarousel images={clusterImages} />
         <div className="border-l-[.4em] border-l-transparent rotate-180 absolute -bottom-2
             border-r-[.4em] border-r-transparent border-b-[.4em] dark:border-b-gray-200 border-b-white shadow-2xl"></div>
       </motion.section>

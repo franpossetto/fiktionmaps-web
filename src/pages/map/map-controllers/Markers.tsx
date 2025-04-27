@@ -9,8 +9,6 @@ import { RedCluster } from "../map-markers/RedCluster";
 import { useMapController } from "@/contexts/MapContext";
 import { useFirebaseStorageMultiple } from "@/hooks/shared/useImage/useFirebaseStorageMultiple";
 
-const DEFAULT_CLUSTER_IMAGE = "https://github.com/shadcn.png";
-
 interface MarkersProps {
     places: PlaceCoordinatesResponseDTO[];
 }
@@ -175,6 +173,7 @@ export const Markers = ({ places }: MarkersProps) => {
                         position={position}
                         ref={(marker) => setMarkerRef(marker, placeId)}
                         onClick={() => handleMarkerClick(placeId)}
+                        title={placeId} 
                     >
                     <SquareMarker imageUrl={imageUrls[index]} />
                 </AdvancedMarker>

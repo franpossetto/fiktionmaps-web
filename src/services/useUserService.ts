@@ -11,10 +11,6 @@ export const useUserService = () => {
     return axiosWithToken.put(`/users/${data.id}`, data);
   };
 
-  const getAllUsers = () => {
-    return axiosWithToken.get(`/users`);
-  };
-
   const getCurrentUser = async () => {
     try {
       const uid = auth.currentUser?.uid;
@@ -43,7 +39,6 @@ export const useUserService = () => {
   return {
     createUser,
     updateUser,
-    getAllUsers,
     getCurrentUser,
   };
 };
