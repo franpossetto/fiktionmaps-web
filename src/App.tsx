@@ -12,14 +12,14 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
           <MapController>
             <AppRouter />
           </MapController>
           <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </QueryClientProvider>
       <ToastContainer />
     </>
   );

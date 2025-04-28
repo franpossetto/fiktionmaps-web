@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { LocationDTO } from "../../../types/dto/LocationDTO";
 import { MapsProvider } from "../../../types/providers/MapsProvider";

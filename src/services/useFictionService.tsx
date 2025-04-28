@@ -5,13 +5,6 @@ import { Place } from "../types/Place";
 import { Scene } from "../types/Scene";
 
 export const useFictionService = () => {
-  const getFictionsByCity = (cityId: number): useAxiosResponse<Fiction[]> => {
-    return useAxios({
-      url: `/fictions/cities/${cityId}`,
-      config: { method: "get" },
-      tokenRequired: false,
-    });
-  };
 
   const getFictions = (): useAxiosResponse<any> => {
     return useAxios({
