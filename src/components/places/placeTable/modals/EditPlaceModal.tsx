@@ -9,6 +9,7 @@ import { Place } from "../../../../types/Place";
 import { ImageInput } from "../common/ImageInput";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../../config/firebase";
+import { useFetchFictionById } from "../../../../hooks/fictions/useFetchFictionById/useFetchFictionById";
 
 interface EditModalProps {
   modalOpen: boolean;
@@ -32,12 +33,13 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const { getFictionById } = useFictionService();
-  const { loading, data, error } = getFictionById(placeToEdit.fictionId);
+  const { data: fiction, isLoading: loadingFiction } = useFetchFictionById(placeToEdit.fictionId);
   const [fictionName, setSetFictionName] = useState<string>("");
 
   const [imageFile, setImageFile] = useState<any>(null);
   const [loadingImg, setLoadingImg] = useState(false);
+
+  const { getPlacesByUser, addPlaceToFiction } = useFictionService();
 
   const handleImageChange = (e: { target: { files: any[] } }) => {
     setImageFile(e.target.files[0]);
@@ -64,10 +66,10 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
   };
 
   useEffect(() => {
-    if (data) {
-      setSetFictionName(data.name);
+    if (fiction) {
+      setSetFictionName(fiction.name);
     }
-  }, [data]);
+  }, [fiction]);
 
   const handlePlaceNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setPlaceName(e.target.value);

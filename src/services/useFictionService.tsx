@@ -14,25 +14,6 @@ export const useFictionService = () => {
     });
   };
 
-  const createFiction = (fiction: any) => {
-    return axiosWithToken.post("/fictions", fiction);
-  };
-
-  const getFictionById = (fictionId: number): useAxiosResponse<any> => {
-    return useAxios({
-      url: `/fictions/${fictionId}`,
-      config: { method: "get" },
-    });
-  };
-
-  const deleteFiction = (fictionId: any) => {
-    return axiosWithToken.delete(`/fictions/${fictionId}`);
-  };
-
-  const getScenes = (): useAxiosResponse<any> => {
-    return useAxios({ url: "/scenes", config: { method: "get" } });
-  };
-
   const getPlaces = (
     published?: boolean,
     page?: number,
@@ -63,14 +44,6 @@ export const useFictionService = () => {
     });
   };
 
-  const getTotals = (): useAxiosResponse<any> => {
-    return useAxios({ url: "/fictions/totals", config: { method: "get" } });
-  };
-
-  const addSceneToFiction = (fictionId: any, scene: Scene) => {
-    return axiosWithToken.post(`/fictions/${fictionId}/scenes`, scene);
-  };
-
   const addPlaceToFiction = (fictionId: any, place: Place) => {
     return axiosWithToken.post(`/fictions/${fictionId}/places`, place);
   };
@@ -88,16 +61,9 @@ export const useFictionService = () => {
   };
 
   return {
-    getFictionsByCity,
     getFictions,
-    createFiction,
-    getFictionById,
-    deleteFiction,
-    getScenes,
     getPlaces,
     getPlacesByUser,
-    getTotals,
-    addSceneToFiction,
     addPlaceToFiction,
     deletePlaceFromFiction,
     updatePlaceFromFiction,

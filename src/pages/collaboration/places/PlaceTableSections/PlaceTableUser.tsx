@@ -12,35 +12,25 @@ import {
 } from "../PlaceTableUtils";
 import { Fiction } from "../../../../types/Fiction";
 import { useFictionService } from "../../../../services/useFictionService";
-import { User } from "../../../../types/User";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
-import { useUserService } from "../../../../services/useUserService";
+import { useCurrentUser } from "../../../../hooks/users/useCurrentUser/useCurrentUser";
 import { Pagination } from "../../../../components/common/Pagination";
+import { useFetchPlacesByUser } from "../../../../hooks/places/useFetchPlacesByUser/useFetchPlacesByUser";
 
 export const PlaceTableUser = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { getFictions, getPlacesByUser } = useFictionService();
-  const { getCurrentUser } = useUserService();
+  const { getFictions } = useFictionService();
   const {
-    loading: loadingPlaces,
     data: placesPaginated,
+    isLoading: loadingPlaces,
     error,
     refetch,
-  } = getPlacesByUser(currentPage, 10);
+  } = useFetchPlacesByUser({ page: currentPage, size: 10 });
   const { loading: loadingFictions, data: fictions } = getFictions();
 
-  const [loggedUser, setLoggedUser] = useState<User>();
-
-  const getUserInfo = async () => {
-    const response = await getCurrentUser();
-    setLoggedUser(response);
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
+  const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
 
   useEffect(() => {
     refetch();
@@ -73,7 +63,7 @@ export const PlaceTableUser = () => {
       );
       setPlaces(filteredPlaces);
     }
-  }, [placesData]);
+  }, [placesData, loggedUser]);
 
   useEffect(() => {
     if (fictions) {
@@ -101,6 +91,8 @@ export const PlaceTableUser = () => {
   };
 
   const dataSource = useMemo(() => {
+    if (!loggedUser || !loggedUser.role) return [];
+
     return generateDataSource(
       places,
       fictionHashTable,
@@ -113,6 +105,10 @@ export const PlaceTableUser = () => {
       approvePlace
     );
   }, [places, fictionHashTable, loggedUser, currentPage]);
+
+  if (loadingUser || !loggedUser || typeof loggedUser.role === 'undefined') {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <>

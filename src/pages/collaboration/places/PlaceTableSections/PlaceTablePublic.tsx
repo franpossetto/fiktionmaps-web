@@ -7,15 +7,15 @@ import { ContentTableWrapper } from "../../../../components/common/ContentTableW
 import { ContentTableView } from "../../../../components/common/ContentTableView";
 import { Fiction } from "../../../../types/Fiction";
 import { Place } from "../../../../types/Place";
-import { User } from "../../../../types/User";
 import {
   FictionHashTable,
   config,
   generateDataSource,
 } from "../PlaceTableUtils";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
-import { useUserService } from "../../../../services/useUserService";
+import { useCurrentUser } from "../../../../hooks/users/useCurrentUser/useCurrentUser";
 import { Pagination } from "../../../../components/common/Pagination";
+import { useFetchApprovedPlaces } from "../../../../hooks/places/useFetchApprovedPlaces/useFetchApprovedPlaces";
 
 export const PlaceTablePublished = () => {
   const [modalAddPlaceOpen, setModalAddPlaceOpen] = useState(false);
@@ -24,22 +24,19 @@ export const PlaceTablePublished = () => {
     useState<boolean>(false);
   const [modalApprovePlaceOpen, setModalApprovePlaceOpen] =
     useState<boolean>(false);
-  const { getFictions, getPlaces } = useFictionService();
+  const { getFictions } = useFictionService();
   const [currentPage, setCurrentPage] = useState(1);
-  const [loadingUser, setLoadingUser] = useState(true); // Estado para manejar la carga del usuario
 
   const {
-    loading: loadingPlaces,
     data: placesPaginated,
+    isLoading: loadingPlaces,
     error,
     refetch,
-  } = getPlaces(true, currentPage, 10);
+  } = useFetchApprovedPlaces({ page: currentPage, size: 10, approved: true });
 
   const { loading: loadingFictions, data: fictions } = getFictions();
 
-  const [loggedUser, setLoggedUser] = useState<User | null>(null); // Inicializar como null
-
-  const { getCurrentUser } = useUserService();
+  const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
   const placesData =
     placesPaginated && placesPaginated.content ? placesPaginated.content : [];
 
@@ -52,26 +49,8 @@ export const PlaceTablePublished = () => {
   const [fictionHashTable, setFictionHashTable] = useState<FictionHashTable>(
     {}
   );
-  //ACA
-  const [isAdmin, setIsAdmin] = useState(false); // Nuevo estado para mantener si el usuario es admin
 
-  const getUserInfo = async () => {
-    try {
-      const response = await getCurrentUser();
-      setLoggedUser(response);
-      setIsAdmin(response.role === "ADMIN"); // Establecer isAdmin basado en el rol del usuario
-      setLoadingUser(false);  // Indicar que la carga del usuario ha finalizado
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      setLoadingUser(false); // Asegúrate de desactivar la carga incluso en caso de error
-    }
-  };
-
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-
+  const isAdmin = loggedUser?.role === "ADMIN";
 
   useEffect(() => {
     if (placesData && placesData.length) {
@@ -121,18 +100,18 @@ export const PlaceTablePublished = () => {
       isAdmin ? deletePlace : () => {},
       approvePlace
     );
-  }, [places, fictionHashTable, loggedUser, currentPage]);
+  }, [places, fictionHashTable, loggedUser, currentPage, isAdmin]);
 
   useEffect(() => {
     refetch();
   }, [currentPage]);
 
-// Verificar que el usuario esté cargado y que el rol esté definido
-if (loadingUser || !loggedUser || typeof loggedUser.role === 'undefined') {
-  return <div>Loading user data...</div>;
-}
-return (
-  <>
+  if (loadingUser || !loggedUser || typeof loggedUser.role === 'undefined') {
+    return <div>Loading user data...</div>;
+  }
+
+  return (
+    <>
       <ContentTableWrapper
           description={"These are the approved places you have added to the system."}
           action={{ title: "Add Place", fn: setModalAddPlaceOpen }}
@@ -143,7 +122,7 @@ return (
               <>
                   <ContentTableView 
                       content={{ dataSource, config }}
-                      isAdmin={isAdmin} // Asegúrate de pasar isAdmin aquí
+                      isAdmin={isAdmin}
                   />
                   <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
                       <div className="flex justify-center items-center">
@@ -180,7 +159,6 @@ return (
           setModalOpen={setModalAddPlaceOpen}
           setPlaces={setPlaces}
       />
-  </>
-);
-
+    </>
+  );
 };

@@ -3,13 +3,13 @@ import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useMapController } from "../../../contexts/MapContext";
 import { Fiction } from "../../../types/Fiction";
-import { FictionImage } from "../../admin/fictions/FictionImage";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
 import { debounce } from "lodash";
 import classNames from "../../../helpers/classNames";
 import { useFictionsByCoordinates } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates";
 import { FictionByCoordinatesResponse } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates.types";
 import { useFirebaseStorageMultiple } from "@/hooks/shared/useImage/useFirebaseStorageMultiple";
+import { FictionImage } from "@/components/fiction/FictionImage";
 
 interface FictionSelectProps {
   open: boolean;

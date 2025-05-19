@@ -1,10 +1,7 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../../../contexts/AuthContext";
 import { useFictionService } from "../../../../services/useFictionService";
-import { useCityService } from "../../../../services/useCityService";
-import { ModalWrapper } from "../../../common/ModalWrapper";
+
 
 interface LogoutModalProps {
   modalOpen: boolean;

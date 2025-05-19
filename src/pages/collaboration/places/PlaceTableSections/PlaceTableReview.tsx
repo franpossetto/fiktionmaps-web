@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ContentTableView } from "../../../../components/common/ContentTableView";
 import { ContentTableWrapper } from "../../../../components/common/ContentTableWrapper";
-import { PlaceImageSmall } from "../../../../components/places/placeTable/common/PlaceImageSmall";
 import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
 import { ApprovePlaceModal } from "../../../../components/places/placeTable/modals/ApprovePlaceModal";
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
@@ -13,30 +12,29 @@ import {
   generateDataSource,
 } from "../PlaceTableUtils";
 import { Fiction } from "../../../../types/Fiction";
-import { User } from "../../../../types/User";
 import { useFictionService } from "../../../../services/useFictionService";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
-import { useUserService } from "../../../../services/useUserService";
+import { useCurrentUser } from "../../../../hooks/users/useCurrentUser/useCurrentUser";
 import { Pagination } from "../../../../components/common/Pagination";
+import { useFetchApprovedPlaces } from "../../../../hooks/places/useFetchApprovedPlaces/useFetchApprovedPlaces";
 
 export const PlaceTableReview = () => {
   const [loading, setLoading] = useState(true); // State for loading indicator
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
-  const [loggedUser, setLoggedUser] = useState<User>();
-  const { getFictions, getPlaces } = useFictionService();
+  const { getFictions } = useFictionService();
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
-    loading: loadingPlaces,
     data: placesPaginated,
+    isLoading: loadingPlaces,
     error,
     refetch,
-  } = getPlaces(false, currentPage, 10);
+  } = useFetchApprovedPlaces({ page: currentPage, size: 10, approved: false });
 
   const placesData =
     placesPaginated && placesPaginated.content ? placesPaginated.content : [];
 
-  const { getCurrentUser } = useUserService();
+  const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
   const { loading: loadingFictions, data: fictions } = getFictions();
   const [places, setPlaces] = useState<Place[]>([]);
   const [modalEditPlaceOpen, setModalEditPlaceOpen] = useState<boolean>(false);
@@ -52,16 +50,12 @@ export const PlaceTableReview = () => {
   );
 
   useEffect(() => {
-    getUserInfo();
-  }, []);
-
-  useEffect(() => {
-    if (loadingPlaces || loadingFictions) {
+    if (loadingPlaces || loadingFictions || loadingUser) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [loadingPlaces, loadingFictions]);
+  }, [loadingPlaces, loadingFictions, loadingUser]);
 
   useEffect(() => {
     if (placesData && placesData.length) {
@@ -73,7 +67,7 @@ export const PlaceTableReview = () => {
       );
       setPlaces(filteredPlaces);
     }
-  }, [placesData]);
+  }, [placesData, loggedUser]);
 
   useEffect(() => {
     if (fictions) {
@@ -84,11 +78,6 @@ export const PlaceTableReview = () => {
       setFictionHashTable(newHashTable);
     }
   }, [fictions]);
-
-  const getUserInfo = async () => {
-    const response = await getCurrentUser();
-    setLoggedUser(response);
-  };
 
   const editPlace = (place: Place) => {
     setPlaceToEdit(place);
@@ -106,12 +95,15 @@ export const PlaceTableReview = () => {
   };
 
   const dataSource = useMemo(() => {
+    if (!loggedUser || !loggedUser.role) return [];
+
     return generateDataSource(
       places,
       fictionHashTable,
       loggedUser,
       currentPage,
       true,
+      false, // isAdmin is always false for review places
       editPlace,
       deletePlace,
       approvePlace
@@ -121,6 +113,10 @@ export const PlaceTableReview = () => {
   useEffect(() => {
     refetch();
   }, [currentPage]);
+
+  if (loadingUser || !loggedUser || typeof loggedUser.role === 'undefined') {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <>
@@ -134,7 +130,7 @@ export const PlaceTableReview = () => {
           <PlaceSkeleton />
         ) : (
           <>
-            <ContentTableView content={{ dataSource, config }} />
+            <ContentTableView content={{ dataSource, config }} isAdmin={false} />
             <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
               <div className="flex justify-center items-center">
                 <Pagination
