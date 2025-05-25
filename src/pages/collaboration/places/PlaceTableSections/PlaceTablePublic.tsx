@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useFictionService } from "../../../../services/useFictionService";
 import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
 import { EditPlaceModal } from "../../../../components/places/placeTable/modals/EditPlaceModal";
@@ -16,6 +15,7 @@ import { PlaceSkeleton } from "../../../../components/places/placeTable/common/P
 import { useCurrentUser } from "../../../../hooks/users/useCurrentUser/useCurrentUser";
 import { Pagination } from "../../../../components/common/Pagination";
 import { useFetchApprovedPlaces } from "../../../../hooks/places/useFetchApprovedPlaces/useFetchApprovedPlaces";
+import { useFetchFictions } from "../../../../hooks/fictions/useFetchFictions/useFetchFictions";
 
 export const PlaceTablePublished = () => {
   const [modalAddPlaceOpen, setModalAddPlaceOpen] = useState(false);
@@ -24,7 +24,6 @@ export const PlaceTablePublished = () => {
     useState<boolean>(false);
   const [modalApprovePlaceOpen, setModalApprovePlaceOpen] =
     useState<boolean>(false);
-  const { getFictions } = useFictionService();
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -34,7 +33,7 @@ export const PlaceTablePublished = () => {
     refetch,
   } = useFetchApprovedPlaces({ page: currentPage, size: 10, approved: true });
 
-  const { loading: loadingFictions, data: fictions } = getFictions();
+  const { data: fictions, isLoading: loadingFictions } = useFetchFictions();
 
   const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
   const placesData =
@@ -116,7 +115,7 @@ export const PlaceTablePublished = () => {
           description={"These are the approved places you have added to the system."}
           action={{ title: "Add Place", fn: setModalAddPlaceOpen }}
       >
-          {loadingPlaces ? (
+          {loadingPlaces || loadingFictions ? (
               <PlaceSkeleton />
           ) : (
               <>

@@ -4,12 +4,12 @@ import { PlaceFictionSelector } from "../common/PlaceFictionSelector";
 import { ModalWrapper } from "../../../common/ModalWrapper";
 import PlaceDetails from "../common/PlaceDetails";
 import { usePlaceController } from "../../../../contexts/PlaceContext";
-import { useFictionService } from "../../../../services/useFictionService";
 import { Place } from "../../../../types/Place";
 import { ImageInput } from "../common/ImageInput";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../../config/firebase";
 import { useFetchFictionById } from "../../../../hooks/fictions/useFetchFictionById/useFetchFictionById";
+import { useUpdatePlace } from "../../../../hooks/places/useUpdatePlace/useUpdatePlace";
 
 interface EditModalProps {
   modalOpen: boolean;
@@ -27,8 +27,8 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
   const [placeName, setPlaceName] = useState<string>();
   const [placeDescription, setPlaceDescription] = useState<string>();
 
-  const { updatePlaceFromFiction } = useFictionService();
   const { place } = usePlaceController();
+  const { mutate: updatePlace } = useUpdatePlace();
 
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
@@ -38,8 +38,6 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
 
   const [imageFile, setImageFile] = useState<any>(null);
   const [loadingImg, setLoadingImg] = useState(false);
-
-  const { getPlacesByUser, addPlaceToFiction } = useFictionService();
 
   const handleImageChange = (e: { target: { files: any[] } }) => {
     setImageFile(e.target.files[0]);
@@ -111,24 +109,31 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
       published: false,
     };
 
-    updatePlaceFromFiction(placeToEdit?.id, pl)
-      .then((updatedPlaceResponse) => {
-        setPlaces((prevState: Place[]) => {
-          const updatedPlaces = [...prevState];
-          const index = updatedPlaces.findIndex(
-            (place) => place.id === updatedPlaceResponse.data.id
-          );
-          if (index !== -1) {
-            updatedPlaces[index] = updatedPlaceResponse.data;
-          }
-          return updatedPlaces;
-        });
-      })
-      .catch(() => {})
-      .finally(() => {
-        resetInputs();
-      });
-    setModalOpen(false);
+    updatePlace(
+      { placeId: placeToEdit.id || 0, place: pl },
+      {
+        onSuccess: (updatedPlace) => {
+          setPlaces((prevState: Place[]) => {
+            const updatedPlaces = [...prevState];
+            const index = updatedPlaces.findIndex(
+              (place) => place.id === updatedPlace.id
+            );
+            if (index !== -1) {
+              updatedPlaces[index] = updatedPlace;
+            }
+            return updatedPlaces;
+          });
+          setModalOpen(false);
+          resetInputs();
+        },
+        onError: (error) => {
+          console.error("Error updating place:", error);
+        },
+        onSettled: () => {
+          setLoadingImg(false);
+        }
+      }
+    );
   };
 
   const resetInputs = () => {
@@ -200,25 +205,28 @@ export const EditPlaceModal: React.FC<EditModalProps> = ({
           >
             Location
           </label>
-          <SearchPlace selectedPlace={placeToEdit} />
+          <SearchPlace />
+        </div>
+
+        <div className="mt-4">
           <PlaceDetails />
         </div>
 
-        <div className="py-3 flex justify-start mt-5">
-          <button
-            type="button"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white  hover:bg-slate-900  focus:outline-none sm:w-auto sm:text-sm"
-            onClick={handleFictionPlaceSave}
-          >
-            Update Place
-          </button>
-
+        <div className="mt-4 flex justify-end">
           <button
             type="button"
             className="ml-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:mr-3 sm:w-auto sm:text-sm"
             onClick={handleFictionPlaceCancel}
           >
             Cancel
+          </button>
+          <button
+            type="button"
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white hover:bg-slate-900 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
+            onClick={handleFictionPlaceSave}
+            disabled={loadingImg}
+          >
+            {loadingImg ? "Saving..." : "Save"}
           </button>
         </div>
       </>

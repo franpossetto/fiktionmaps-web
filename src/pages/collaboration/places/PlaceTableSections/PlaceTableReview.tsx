@@ -12,16 +12,15 @@ import {
   generateDataSource,
 } from "../PlaceTableUtils";
 import { Fiction } from "../../../../types/Fiction";
-import { useFictionService } from "../../../../services/useFictionService";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
 import { useCurrentUser } from "../../../../hooks/users/useCurrentUser/useCurrentUser";
 import { Pagination } from "../../../../components/common/Pagination";
 import { useFetchApprovedPlaces } from "../../../../hooks/places/useFetchApprovedPlaces/useFetchApprovedPlaces";
+import { useFetchFictions } from "../../../../hooks/fictions/useFetchFictions/useFetchFictions";
 
 export const PlaceTableReview = () => {
   const [loading, setLoading] = useState(true); // State for loading indicator
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
-  const { getFictions } = useFictionService();
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -35,7 +34,7 @@ export const PlaceTableReview = () => {
     placesPaginated && placesPaginated.content ? placesPaginated.content : [];
 
   const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
-  const { loading: loadingFictions, data: fictions } = getFictions();
+  const { data: fictions, isLoading: loadingFictions } = useFetchFictions();
   const [places, setPlaces] = useState<Place[]>([]);
   const [modalEditPlaceOpen, setModalEditPlaceOpen] = useState<boolean>(false);
   const [modalDeletePlaceOpen, setModalDeletePlaceOpen] =
@@ -126,7 +125,7 @@ export const PlaceTableReview = () => {
         }
         action={{ title: "Add Place", fn: setModalAddFictionOpen }}
       >
-        {loadingPlaces && loadingFictions ? (
+        {loadingPlaces || loadingFictions ? (
           <PlaceSkeleton />
         ) : (
           <>

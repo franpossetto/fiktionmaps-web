@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useFictionService } from "../../../../services/useFictionService";
-
+import { useDeletePlace } from "../../../../hooks/places/useDeletePlace/useDeletePlace";
 
 interface LogoutModalProps {
   modalOpen: boolean;
@@ -16,14 +15,25 @@ const DeletePlaceModal: React.FC<LogoutModalProps> = ({
   placeToDelete,
   setPlaces,
 }) => {
-  const { deletePlaceFromFiction } = useFictionService();
+  const { mutate: deletePlace } = useDeletePlace();
 
   const _deletePlace = () => {
-    deletePlaceFromFiction(placeToDelete?.id);
-    setPlaces((prevPlaces: any[]) =>
-      prevPlaces.filter((place) => place.id !== placeToDelete.id)
-    );
-    setModalOpen(false);
+    if (placeToDelete?.id) {
+      deletePlace(
+        { placeId: placeToDelete.id },
+        {
+          onSuccess: () => {
+            setPlaces((prevPlaces: any[]) =>
+              prevPlaces.filter((place) => place.id !== placeToDelete.id)
+            );
+            setModalOpen(false);
+          },
+          onError: (error) => {
+            console.error("Error deleting place:", error);
+          }
+        }
+      );
+    }
   };
 
   return (
@@ -85,9 +95,7 @@ const DeletePlaceModal: React.FC<LogoutModalProps> = ({
                 <button
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-white hover:bg-slate-900 focus:outline-none  sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => {
-                    _deletePlace();
-                  }}
+                  onClick={_deletePlace}
                 >
                   Delete Forever
                 </button>

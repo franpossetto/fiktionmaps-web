@@ -11,24 +11,23 @@ import {
   generateDataSource,
 } from "../PlaceTableUtils";
 import { Fiction } from "../../../../types/Fiction";
-import { useFictionService } from "../../../../services/useFictionService";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
 import { useCurrentUser } from "../../../../hooks/users/useCurrentUser/useCurrentUser";
 import { Pagination } from "../../../../components/common/Pagination";
 import { useFetchPlacesByUser } from "../../../../hooks/places/useFetchPlacesByUser/useFetchPlacesByUser";
+import { useFetchFictions } from "../../../../hooks/fictions/useFetchFictions/useFetchFictions";
 
 export const PlaceTableUser = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { getFictions } = useFictionService();
   const {
     data: placesPaginated,
     isLoading: loadingPlaces,
     error,
     refetch,
   } = useFetchPlacesByUser({ page: currentPage, size: 10 });
-  const { loading: loadingFictions, data: fictions } = getFictions();
+  const { data: fictions, isLoading: loadingFictions } = useFetchFictions();
 
   const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
 
@@ -116,7 +115,7 @@ export const PlaceTableUser = () => {
         description={"These are the places you have added to the system."}
         action={{ title: "Add Place", fn: setModalAddFictionOpen }}
       >
-        {loadingPlaces ? (
+        {loadingPlaces || loadingFictions ? (
           <PlaceSkeleton />
         ) : (
           <>
