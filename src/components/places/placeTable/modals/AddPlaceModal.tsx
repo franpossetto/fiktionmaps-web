@@ -189,7 +189,7 @@ export const AddPlaceModal: React.FC<LogoutModalProps> = ({
             Location
           </label>
           <SearchPlace />
-          <PlaceDetails />
+          <PlaceDetails place={undefined} />
         </div>
 
         <div className="py-3 flex justify-start">

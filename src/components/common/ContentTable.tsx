@@ -26,7 +26,6 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config, isAdmi
           ))}
         </thead>
         <tbody className="bg-white">
-          <div className="h-2"></div>
           {data.map((row: any) => (
             <tr key={row.id} className="even:bg-gray-50 dark:bg-gray-900">
               {config.map((column: any) => (
@@ -47,6 +46,7 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config, isAdmi
           ))}
         </tbody>
       </table>
+      <div className="h-2"></div>
     </div>
   );
 };

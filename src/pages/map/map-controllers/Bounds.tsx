@@ -19,6 +19,7 @@ export const Bounds = ({ city, setLocalBounds }: any) => {
         bottomLeft: { lat: southWest.lat(), lng: southWest.lng() },
       };
       setLocalBounds(newBounds);
+      map?.setZoom(15);
     }
 
   }, [city])

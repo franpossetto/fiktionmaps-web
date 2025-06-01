@@ -43,31 +43,29 @@ export default function MapView({ onLoad }: MapProps) {
   }, [selectedFiction]);
 
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GMAPS_API_KEY}>
-      <div className="absolute w-full h-full z-1">
-        <Map
-          id='map-view'
-          defaultCenter={center}
-          defaultZoom={13}
-          minZoom={6}
-          maxZoom={19}
-          mapId={mapId}
-          disableDefaultUI={true}
-          mapTypeControl={false}
-          zoomControl={false}
-          fullscreenControl={false}
-          gestureHandling={"greedy"}
-          streetViewControl={false}
-          scrollwheel={true}
-          onTilesLoaded={() => {
-            setIsMapLoaded(true);
-            onLoad?.();
-          }}
-        >
-          {isMapLoaded && places && <Markers places={places} />}
-          <Bounds city={city} setLocalBounds={setLocalBounds} />
-        </Map>
-      </div>
-    </APIProvider>
+    <div className="absolute w-full h-full z-1">
+      <Map
+        id='map-view'
+        defaultCenter={center}
+        defaultZoom={15}
+        minZoom={6}
+        maxZoom={19}
+        mapId={mapId}
+        disableDefaultUI={true}
+        mapTypeControl={false}
+        zoomControl={false}
+        fullscreenControl={false}
+        gestureHandling={"greedy"}
+        streetViewControl={false}
+        scrollwheel={true}
+        onTilesLoaded={() => {
+          setIsMapLoaded(true);
+          onLoad?.();
+        }}
+      >
+        {isMapLoaded && places && <Markers places={places} />}
+        <Bounds city={city} setLocalBounds={setLocalBounds} />
+      </Map>
+    </div>
   );
 }

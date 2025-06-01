@@ -14,6 +14,9 @@ interface SearchPlaceProps {
 export const SearchPlace = ({ selectedPlace }: SearchPlaceProps) => {
   const { place: plc, setPlace: setPlc } = usePlaceController();
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isAutocompleteLoaded, setIsAutocompleteLoaded] = useState(false);
+  const autocompleteRef = useRef<any>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const loader = new Loader({
     apiKey: import.meta.env.VITE_GMAPS_API_KEY,
@@ -26,39 +29,46 @@ export const SearchPlace = ({ selectedPlace }: SearchPlaceProps) => {
     types: ["address"],
   };
 
-  let autocomplete: any;
-  let isAutocompleteLoaded = false;
-
   useEffect(() => {
     if (selectedPlace) setPlc(selectedPlace);
-  }, []);
+  }, [selectedPlace, setPlc]);
 
   useEffect(() => {
-    loader
-      .load()
-      .then((google) => {
-        autocomplete = new google.maps.places.Autocomplete(
+    let isMounted = true;
+
+    const initializeAutocomplete = async () => {
+      try {
+        const google = await loader.load();
+        if (!isMounted || !inputRef.current) return;
+
+        autocompleteRef.current = new google.maps.places.Autocomplete(
           inputRef.current,
           options
         );
-        autocomplete.addListener("place_changed", handlePlaceChanged);
-        isAutocompleteLoaded = true;
-      })
-      .catch((e) => {});
+        autocompleteRef.current.addListener("place_changed", handlePlaceChanged);
+        setIsAutocompleteLoaded(true);
+      } catch (error) {
+        console.error("Error loading Google Maps:", error);
+      }
+    };
+
+    initializeAutocomplete();
+
     return () => {
-      if (isAutocompleteLoaded) {
-        google.maps.event.clearInstanceListeners(autocomplete);
+      isMounted = false;
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
   }, []);
 
-  const inputRef: any = useRef();
-
   const handlePlaceChanged = () => {
-    const placeAutoComplete = autocomplete.getPlace();
+    if (!autocompleteRef.current) return;
+
+    const placeAutoComplete = autocompleteRef.current.getPlace();
 
     if (!placeAutoComplete || !placeAutoComplete.geometry) {
-      inputRef.current.value = "";
+      if (inputRef.current) inputRef.current.value = "";
       return;
     }
 
@@ -76,7 +86,7 @@ export const SearchPlace = ({ selectedPlace }: SearchPlaceProps) => {
   const handleReset = () => {
     setPlc(null);
     setIsDisabled(false);
-    inputRef.current.value = null;
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   return (
