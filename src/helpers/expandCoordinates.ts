@@ -6,7 +6,7 @@ import { PlaceCoordinatesRequestDTO } from "../hooks/places/useFetchPlaces/useFe
  * @returns {PlaceCoordinatesRequestDTO} The expanded coordinates.
  */
 function expandCoordinates(params: PlaceCoordinatesRequestDTO): PlaceCoordinatesRequestDTO {
-    const expansionFactor = 550 / 111;  // Convert degrees to kilometers approximately
+    const expansionFactor = 70 / 111;  // Convert degrees to kilometers approximately
     return {
       upperLat: params.upperLat + expansionFactor,
       lowerLat: params.lowerLat - expansionFactor,

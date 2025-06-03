@@ -41,13 +41,13 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  width: 0.75em;
-  height: 0.75em;
+  width: 0.6em;
+  height: 0.6em;
 }
 
 .custom-marker:hover {
-  width: 1em;
-  height: 1em;
+  width: 0.8em;
+  height: 0.8em;
   border-radius: 1em;
 }
 
@@ -83,12 +83,12 @@ body {
     border-radius 0.3s ease;
   text-align: center;
   line-height: 1.2em;
-  width: 0.75em;
-  height: 0.75em;
+  width: 0.6em;
+  height: 0.6em;
 }
 .custom-cluster:hover {
-  width: 1.5em;
-  height: 1.5em;
+  width: 0.8em;
+  height: 0.8em;
   border-radius: 12px;
   background-color: #fa1f52;
 }

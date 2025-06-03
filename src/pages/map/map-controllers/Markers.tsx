@@ -8,6 +8,7 @@ import PlaceView from "@/components/places/placeView/PlaceView";
 import { RedCluster } from "../map-markers/RedCluster";
 import { useMapController } from "@/contexts/MapContext";
 import { useFirebaseStorageMultiple } from "@/hooks/shared/useImage/useFirebaseStorageMultiple";
+import { PlaceCarousel } from "@/components/places/placeCarousel/PlaceCarousel";
 
 interface MarkersProps {
     places: PlaceCoordinatesResponseDTO[];
@@ -28,16 +29,9 @@ export const Markers = ({ places }: MarkersProps) => {
     const imagePaths = useMemo(
         () => places.map(p => p.screenshot ?? null),
         [places]
-      );
-      
-      const { urls: imageUrls } = useFirebaseStorageMultiple(imagePaths);
+    );
 
-    // Memoize the renderer creation to prevent unnecessary recreations
-    // const createRenderer = useCallback(() => {
-    //     return mapZoom
-    //         ? new SquareClusterV2({ imageUrl: DEFAULT_CLUSTER_IMAGE, places })
-    //         : new RedCluster();
-    // }, [mapZoom, places]);
+    const { urls: imageUrls } = useFirebaseStorageMultiple(imagePaths);
 
     const createRenderer = useCallback(() => {
         return mapZoom
@@ -140,7 +134,17 @@ export const Markers = ({ places }: MarkersProps) => {
         if (!placeId) return;
         setClickedPlaceId(placeId);
         setIsOpen(true);
-    }, []);
+
+        // Find the clicked place and center the map on it
+        const clickedPlace = places.find(place => place.placeId?.toString() === placeId);
+        if (clickedPlace && map) {
+            const position = {
+                lat: clickedPlace.latitude ?? 0,
+                lng: clickedPlace.longitude ?? 0
+            };
+            map.panTo(position);
+        }
+    }, [places, map]);
 
     const handleClose = useCallback(() => {
         setIsOpen(false);
@@ -150,8 +154,6 @@ export const Markers = ({ places }: MarkersProps) => {
     if (!places?.length) {
         return null;
     }
-
-
 
     return (
         <>
@@ -166,7 +168,6 @@ export const Markers = ({ places }: MarkersProps) => {
                     return null;
                 }
                 
-
                 return (
                     <AdvancedMarker
                         key={placeId}
@@ -175,8 +176,8 @@ export const Markers = ({ places }: MarkersProps) => {
                         onClick={() => handleMarkerClick(placeId)}
                         title={placeId} 
                     >
-                    <SquareMarker imageUrl={imageUrls[index]} />
-                </AdvancedMarker>
+                        <SquareMarker imageUrl={imageUrls[index]} />
+                    </AdvancedMarker>
                 );
             })}
             {clickedPlaceId && (
@@ -185,6 +186,9 @@ export const Markers = ({ places }: MarkersProps) => {
                     open={isOpen} 
                     setOpen={handleClose} 
                 />
+            )}
+            {places && places.length > 0 && (
+                <PlaceCarousel places={places} imageUrls={imageUrls} />
             )}
         </>
     );
