@@ -4,7 +4,7 @@ import { Place } from "../../../../../types/Place";
 
 interface PlaceCloseCardProps {
   place: Place;
-  setOpen: (open: boolean) => void;
+  setOpen: () => void;
 }
 
 export const PlaceCloseCard: React.FC<PlaceCloseCardProps> = ({
@@ -23,7 +23,7 @@ export const PlaceCloseCard: React.FC<PlaceCloseCardProps> = ({
           <button
             type="button"
             className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 p-3 dark:hover:text-gray-300 dark:bg-gray-900 dark:text-gray-600"
-            onClick={() => setOpen(false)}
+            onClick={setOpen}
           >
             <span className="sr-only">Close panel</span>
             <XMarkIcon className="h-6 w-6" aria-hidden="true" />

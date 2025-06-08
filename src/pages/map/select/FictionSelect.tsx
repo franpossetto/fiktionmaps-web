@@ -1,5 +1,5 @@
-import { Fragment, useState, useMemo, useEffect } from "react";
-import { Combobox, Dialog, Transition } from "@headlessui/react";
+import { useState, useMemo, useEffect } from "react";
+import { Combobox } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useMapController } from "../../../contexts/MapContext";
 import { Fiction } from "../../../types/Fiction";
@@ -10,6 +10,7 @@ import { useFictionsByCoordinates } from "@/hooks/fictions/useFetchFictionsByCoo
 import { FictionByCoordinatesResponse } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates.types";
 import { useFirebaseStorageMultiple } from "@/hooks/shared/useImage/useFirebaseStorageMultiple";
 import { FictionImage } from "@/components/fiction/FictionImage";
+import { ModalCenterAnimateWrapper } from "@/components/common/ModalCenterAnimateWrapper";
 
 interface FictionSelectProps {
   open: boolean;
@@ -20,8 +21,6 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   open,
   setOpen,
 }) => {
-
-
   const MOVIE_COVERS_PATH = "movie_covers/";
 
   const [query, setQuery] = useState("");
@@ -36,7 +35,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
 
   const {
     setSelectedFiction,
-} = useMapController();
+  } = useMapController();
 
   useEffect(() => {
     const handler = debounce((value: string) => {
@@ -72,6 +71,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
     setSelectedFiction(transformedFiction);
     setOpen(false);
   };
+
   const imagePaths = useMemo(
     () => filteredItems?.map(f => f.imgUrl ? MOVIE_COVERS_PATH + f.imgUrl : null) || [],
     [filteredItems]
@@ -80,108 +80,75 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   const { urls: imageUrls } = useFirebaseStorageMultiple(imagePaths);
   
   return (
-    <Transition.Root
-      show={open}
-      as={Fragment}
-      afterLeave={() => setQuery("")}
-      appear
-    >
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
-        <Transition.Child
-          as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity" />
-        </Transition.Child>
-
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
+    <ModalCenterAnimateWrapper open={open} setOpen={() => setOpen(false)}>
+      <Combobox
+        onChange={(selectedFiction: FictionByCoordinatesResponse) =>
+          setFictionAndClose(selectedFiction)
+        }
+      >
+        <div className="relative">
+          <MagnifyingGlassIcon
+            className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
+            aria-hidden="true"
+          />
+          <Combobox.Input
+            className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm dark:text-white"
+            placeholder="Search..."
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </div>
+        {!!filteredItems?.length && (
+          <Combobox.Options
+            static
+            className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3"
           >
-            <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all dark:bg-gray-900 dark:divide-gray-700">
-              <Combobox
-                onChange={(selectedFiction: FictionByCoordinatesResponse) =>
-                  setFictionAndClose(selectedFiction)
+            {filteredItems?.map((item, index) => (
+              <Combobox.Option
+                key={item.fictionId}
+                value={item}
+                className={({ active }) =>
+                  classNames(
+                    "flex cursor-default select-none rounded-xl p-3",
+                    active && "bg-gray-100 dark:bg-gray-800"
+                  )
                 }
               >
-                <div className="relative">
-                  <MagnifyingGlassIcon
-                    className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  <Combobox.Input
-                    className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm dark:text-white"
-                    placeholder="Search..."
-                    onChange={(event) => setQuery(event.target.value)}
-                  />
-                </div>
-                {!!filteredItems?.length && (
-                  <Combobox.Options
-                    static
-                    className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3"
-                  >
-                    {filteredItems?.map((item, index) => (
-                      <Combobox.Option
-                        key={item.fictionId}
-                        value={item}
-                        className={({ active }) =>
-                          classNames(
-                            "flex cursor-default select-none rounded-xl p-3",
-                            active && "bg-gray-100 dark:bg-gray-800"
-                          )
-                        }
-                      >
-                        {({ active }) => (
-                          <>
-                            <FictionImage imgUrl={imageUrls[index]} />
-                            <div className="ml-4 flex-auto">
-                              <p
-                                className={classNames(
-                                  "text-sm font-medium",
-                                  active
-                                    ? "text-gray-900 dark:text-white"
-                                    : "text-gray-700 dark:text-gray-400"
-                                )}
-                              >
-                                {item.name}
-                              </p>
-                              <p
-                                className={classNames(
-                                  "text-sm",
-                                  active
-                                    ? "text-gray-700 dark:text-white"
-                                    : "text-gray-500 dark:text-gray-400"
-                                )}
-                              >
-                                {item.type}
-                              </p>
-                            </div>
-                          </>
+                {({ active }) => (
+                  <>
+                    <FictionImage imgUrl={imageUrls[index]} />
+                    <div className="ml-4 flex-auto">
+                      <p
+                        className={classNames(
+                          "text-sm font-medium",
+                          active
+                            ? "text-gray-900 dark:text-white"
+                            : "text-gray-700 dark:text-gray-400"
                         )}
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
+                      >
+                        {item.name}
+                      </p>
+                      <p
+                        className={classNames(
+                          "text-sm",
+                          active
+                            ? "text-gray-700 dark:text-white"
+                            : "text-gray-500 dark:text-gray-400"
+                        )}
+                      >
+                        {item.type}
+                      </p>
+                    </div>
+                  </>
                 )}
+              </Combobox.Option>
+            ))}
+          </Combobox.Options>
+        )}
 
-                {debouncedQuery !== "" && filteredItems?.length === 0 && (
-                  <SelectNoResults />
-                )}
-              </Combobox>
-            </Dialog.Panel>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition.Root>
+        {debouncedQuery !== "" && filteredItems?.length === 0 && (
+          <SelectNoResults />
+        )}
+      </Combobox>
+    </ModalCenterAnimateWrapper>
   );
 };
