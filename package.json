@@ -39,7 +39,6 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.62.9",
-    "@types/firebase": "^3.2.3",
     "@types/google.maps": "^3.55.11",
     "@types/lodash": "^4.17.13",
     "@types/next": "^9.0.0",
