@@ -6,6 +6,7 @@ import { SearchInThisArea } from "./select/SearchInThisArea";
 import MapView from "./map/MapView";
 import { useFetchCityById } from "../../hooks/cities/useFetchCityBiId/useFetchCityById";
 import { motion, AnimatePresence } from "framer-motion";
+import { AppVersion } from "../../components/common/AppVersion";
 
 export const Home = () => {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -47,6 +48,7 @@ export const Home = () => {
           )}
         </AnimatePresence>
       )}
+      <AppVersion />
     </div>
   );
 };
