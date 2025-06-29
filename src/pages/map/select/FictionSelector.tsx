@@ -3,8 +3,9 @@ import { useMapController } from "../../../contexts/MapContext";
 import { FictionSelect } from "./FictionSelect";
 import { FictionDisplayStatus } from "../../../types/enum/FictionSelectorStatus";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import React from "react";
 
-export const FictionSelector = () => {
+export const FictionSelector = React.memo(() => {
     const [fictionIsOpen, setFictionIsOpen] = useState(false);
 
     const {
@@ -39,4 +40,4 @@ export const FictionSelector = () => {
             )}
         </div>
     )
-}
+});

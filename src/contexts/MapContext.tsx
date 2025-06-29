@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Fiction } from "../types/Fiction";
 import { City } from "../types/City";
 
@@ -73,13 +73,13 @@ export const MapController = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const toggleMarkerMode = () => {
+  const toggleMarkerMode = useCallback(() => {
     setMapZoom((prevMapZoom: boolean) => {
       const newMapZoom = !prevMapZoom;
       localStorage.setItem("mapZoom", newMapZoom.toString());
       return newMapZoom;
     });
-  };
+  }, []);
 
   return (
     <MapControllerContext.Provider
