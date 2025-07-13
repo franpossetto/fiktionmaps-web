@@ -9,6 +9,7 @@ import { RedCluster } from "../map-markers/RedCluster";
 import { useMapController } from "@/contexts/MapContext";
 import { useFirebaseStorageMultiple } from "@/hooks/shared/useImage/useFirebaseStorageMultiple";
 import { PlaceCarousel } from "@/components/places/placeCarousel/PlaceCarousel";
+import { LoadingOverlay } from "@/components/common/LoadingOverlay";
 
 interface MarkersProps {
     places: PlaceCoordinatesResponseDTO[];
@@ -31,7 +32,18 @@ export const Markers = ({ places }: MarkersProps) => {
         [places]
     );
 
-    const { urls: imageUrls } = useFirebaseStorageMultiple(imagePaths);
+    // function getResizedPath(original: string, size: number): string {
+    //     const parts = original.split('/');
+    //     const file = parts.pop()!;
+    //     const [name] = file.split('.');
+    //     const dir = [...parts, 'resized'].join('/');
+    //     return `${dir}/${name}_${size}x${size}.webp`;
+    //   }
+      
+
+    // const resizedPaths = imagePaths.map(p => getResizedPath(p, 40));
+    const { urls: imageUrls, loading: imagesLoading } = useFirebaseStorageMultiple(imagePaths);
+
 
     const createRenderer = useCallback(() => {
         return mapZoom
@@ -65,10 +77,10 @@ export const Markers = ({ places }: MarkersProps) => {
                     const animateZoom = (zoom: number) => {
                         if (zoom >= targetZoom) return;
                         map.setZoom(zoom + 1);
-                        setTimeout(() => animateZoom(zoom + 1), 200);
+                        requestAnimationFrame(() => animateZoom(zoom + 1));
                     };
                     animateZoom(currentZoom);
-                }
+                    }
             }
         });
 
@@ -85,7 +97,7 @@ export const Markers = ({ places }: MarkersProps) => {
                 const animateZoom = (zoom: number) => {
                     if (zoom >= targetZoom) return;
                     map.setZoom(zoom + 1);
-                    setTimeout(() => animateZoom(zoom + 1), 200);
+                    requestAnimationFrame(() => animateZoom(zoom + 1));
                 };
                 animateZoom(currentZoom);
             }
@@ -155,6 +167,12 @@ export const Markers = ({ places }: MarkersProps) => {
         return null;
     }
 
+    // // Don't render markers until all images are loaded to avoid fallback image flashing
+    if (imagesLoading) {
+        return <LoadingOverlay message="SEARCHING PLACES..." />;
+        return null;
+    }
+
     return (
         <>
             {places.map((place, index) => {
@@ -187,7 +205,7 @@ export const Markers = ({ places }: MarkersProps) => {
                     setOpen={handleClose} 
                 />
             )}
-            {places && places.length > 0 && (
+            {places && places.length > 0 && !imagesLoading && (
                 <PlaceCarousel places={places} imageUrls={imageUrls} />
             )}
         </>
