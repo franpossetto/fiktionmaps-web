@@ -12,8 +12,8 @@ const fetchFictionsByCity = async (cityId: number): Promise<FictionByCityRespons
   }
 };
 
-export const useFictionsByCity = (cityId: number = 1) => {
-  const queryKey = ['fetchFictionsByCity', cityId];
+export const useFetchFictionsByCity = (cityId: number) => {
+  const queryKey = ['fictions', 'byCity', cityId];
   const { data, error, isLoading, refetch } = useQuery({
     queryKey,
     queryFn: () => fetchFictionsByCity(cityId),
