@@ -8,11 +8,14 @@ interface FictionImageProps {
 }
 
 export const FictionImage = memo(({ imgUrl }: FictionImageProps) => {
-  const { url: imageUrl } = useFirebaseStorage(imgUrl);
+  const { url: imageUrl, isLoading, error } = useFirebaseStorage(imgUrl);
+
+  const shouldShowFallback = error && !isLoading;
+  const displayImage = shouldShowFallback ? "src/assets/fm_v.png" : (imageUrl || undefined);
 
   return (
     <img
-      src={imageUrl || "src/assets/fm_v.png"}
+      src={displayImage}
       alt=""
       className="h-14 w-auto"
       style={{ backgroundColor: "black" }}

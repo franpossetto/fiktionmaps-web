@@ -13,7 +13,7 @@ const fetchDownloadUrl = async (path: string | null) => {
  */
 export const useFirebaseStorage = (path: string | null) => {
   const { data: url, isLoading, error } = useQuery({
-    queryKey: ['firebase-storage-url', path],
+    queryKey: ['firebase-storage-url', 'single', path],
     queryFn: () => fetchDownloadUrl(path),
     enabled: !!path,
     staleTime: 1000 * 60 * 60,
