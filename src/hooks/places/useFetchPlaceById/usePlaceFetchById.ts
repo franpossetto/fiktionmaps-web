@@ -15,7 +15,7 @@ const fetchPlaceById = async (placeId: string): Promise<PlaceResponseDTO> => {
 };
 
 export const useFetchPlaceById = (placeId: string) => {
-  const queryKey = ["fetchPlaceById", placeId];
+  const queryKey = ["places", "byId", placeId];
 
   const { data, error, isLoading, refetch } = useQuery({
     queryKey,

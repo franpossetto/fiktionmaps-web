@@ -13,10 +13,10 @@ const fetchFictionById = async (id: number): Promise<FictionResponse> => {
 };
 
 export const useFetchFictionById = (id: number) => {
-  const queryKey = ["fetchFictionById", id];
+  const queryKey = ["fictions", "byId", id];
   const { data, error, isLoading, refetch } = useQuery({
     queryKey,
-    queryFn: () => fetchFictionById(id),
+    queryFn: () => fetchFictionById(Number(id)),
     enabled: !!id, // Solo se ejecuta si hay un ID
   });
 

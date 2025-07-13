@@ -12,7 +12,7 @@ const fetchCities = async () => {
 };
 
 export const useFetchCities = () => {
-    const queryKey = ['cities'];
+    const queryKey = ['cities', 'all'];
     const { data, error, isLoading } = useQuery({
         queryKey,
         queryFn: fetchCities,

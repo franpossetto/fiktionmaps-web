@@ -8,7 +8,7 @@ const fetchCityById = async (cityId = 1) => {
 
 export const useFetchCityById = (cityId = 1) => {
   const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ['city', cityId],
+    queryKey: ['cities', 'byId', cityId],
     queryFn: () => fetchCityById(cityId),
     enabled: Boolean(cityId),
   });

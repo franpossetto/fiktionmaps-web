@@ -14,7 +14,7 @@ const fetchFictions = async (): Promise<FictionResponse[]> => {
 };
 
 export const useFetchFictions = () => {
-  const queryKey = ["fetchFictions"];
+  const queryKey = ["fictions", "all"];
   const { data, error, isLoading, refetch } = useQuery({
     queryKey,
     queryFn: fetchFictions,
