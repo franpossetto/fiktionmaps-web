@@ -20,12 +20,13 @@ const fetchPlaces = async (params: PlaceCoordinatesRequestDTO): Promise<PlaceCoo
 };
 
 export const useFetchPlaces = (params: PlaceCoordinatesRequestDTO) => {
-
-  const queryKey = ['fetchPlacesByCoordinates', params];
+  const isEnabled = !!params && !!params.upperLat && !!params.lowerLat && !!params.rightLng && !!params.leftLng;
+  
+  const queryKey = ['places', 'byCoordinates', params];
   const { data, error, isLoading, refetch } = useQuery({
     queryKey,
     queryFn: () => fetchPlaces(params),
-    enabled: !!params && !!params.upperLat && !!params.lowerLat && !!params.rightLng && !!params.leftLng,
+    enabled: isEnabled,
   });
   
   

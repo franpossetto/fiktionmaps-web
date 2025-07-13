@@ -20,6 +20,8 @@ export const useDeletePlace = () => {
       queryClient.invalidateQueries({ queryKey: ["places"] });
       queryClient.invalidateQueries({ queryKey: ["places", "approved"] });
       queryClient.invalidateQueries({ queryKey: ["places", "user"] });
+      queryClient.invalidateQueries({ queryKey: ["places", "byCoordinates"] });
+      queryClient.invalidateQueries({ queryKey: ["places", "byId"] });
     },
   });
 }; 

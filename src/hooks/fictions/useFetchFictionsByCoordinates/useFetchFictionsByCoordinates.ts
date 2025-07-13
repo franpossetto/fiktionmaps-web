@@ -22,12 +22,14 @@ const fetchFictionsByCoordinates = async (params:UseFictionsByCoordinatesRequest
   }
 };
 
-export const useFictionsByCoordinates = (params: UseFictionsByCoordinatesRequest) => {
-  const queryKey = ['fetchFictionsByCoordinates', params];
+export const useFetchFictionsByCoordinates = (params: UseFictionsByCoordinatesRequest) => {
+  const isEnabled = !!params && !!params.upperLat && !!params.lowerLat && !!params.rightLng && !!params.leftLng;
+  
+  const queryKey = ['fictions', 'byCoordinates', params];
   const { data, error, isLoading, refetch } = useQuery({
     queryKey,
     queryFn: () => fetchFictionsByCoordinates(params),
-    enabled: !!params && !!params.upperLat && !!params.lowerLat && !!params.rightLng && !!params.leftLng,
+    enabled: isEnabled,
   });
 
   console.log(data)

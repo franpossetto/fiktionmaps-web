@@ -6,7 +6,7 @@ import { Fiction } from "../../../types/Fiction";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
 import { debounce } from "lodash";
 import classNames from "../../../helpers/classNames";
-import { useFictionsByCoordinates } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates";
+import { useFetchFictionsByCoordinates } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates";
 import { FictionByCoordinatesResponse } from "@/hooks/fictions/useFetchFictionsByCoordinates/useFetchFictionsByCoordinates.types";
 import { useFirebaseStorageMultiple } from "@/hooks/shared/useImage/useFirebaseStorageMultiple";
 import { FictionImage } from "@/components/fiction/FictionImage";
@@ -26,7 +26,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
   const { city, placeSearchParameters} = useMapController();
-  const {data: fictionsByCoordinates} = useFictionsByCoordinates({
+  const {data: fictionsByCoordinates} = useFetchFictionsByCoordinates({
     upperLat: placeSearchParameters?.upperLat,
     lowerLat: placeSearchParameters?.lowerLat,
     rightLng: placeSearchParameters?.rightLng,
