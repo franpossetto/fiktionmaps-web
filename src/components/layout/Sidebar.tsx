@@ -1,4 +1,4 @@
-import React, { Fragment, PropsWithChildren, useState, useEffect } from "react";
+import React, { Fragment, PropsWithChildren, useState, useEffect, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -53,16 +53,11 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
     toggleMarkerMode();
   }
 
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      navigate("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
+  const handleLogout = useCallback(async () => {
+    setError('');
+    try { await logout(); navigate('/login'); }
+    catch { setError('Failed to log out') }
+  }, [logout, navigate]);
 
   const navigation = [
     {
@@ -165,7 +160,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                           <a
                             href="/home"
                             className={classNames(
-                              location.pathname === "/home"
+                              location.pathname === "/"
                                 ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
                                 : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                               "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -239,7 +234,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                 <a
                   href="/home"
                   className={classNames(
-                    location.pathname === "/home"
+                    location.pathname === "/"
                       ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
                       : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                     "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
