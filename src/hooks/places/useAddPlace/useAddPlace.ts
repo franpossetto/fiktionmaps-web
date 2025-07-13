@@ -1,5 +1,5 @@
 // useAddPlace.ts
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosWithToken } from "../../../config/axios";
 import { AddPlaceParams } from "./useAddPlace.types";
 
@@ -19,5 +19,17 @@ const addPlaceToFiction = async ({
 
 
 export const useAddPlaceMutation = () => {
-    return useMutation({ mutationFn: addPlaceToFiction });
+    const queryClient = useQueryClient();
+    
+    return useMutation({ 
+      mutationFn: addPlaceToFiction,
+      onSuccess: () => {
+        // Invalidate and refetch places queries
+        queryClient.invalidateQueries({ queryKey: ["places"] });
+        queryClient.invalidateQueries({ queryKey: ["places", "approved"] });
+        queryClient.invalidateQueries({ queryKey: ["places", "user"] });
+        queryClient.invalidateQueries({ queryKey: ["places", "byCoordinates"] });
+        queryClient.invalidateQueries({ queryKey: ["places", "byId"] });
+      },
+    });
   };
