@@ -12,7 +12,8 @@ import {
   MoonIcon,
   SunIcon,
   ShieldCheckIcon,
-  ViewfinderCircleIcon
+  ViewfinderCircleIcon,
+  HeartIcon,
 } from "@heroicons/react/24/outline";
 import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
@@ -65,6 +66,14 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
       href: "/profile",
       icon: UsersIcon,
       current: location.pathname === "/profile",
+      openModal: false,
+      private: true,
+    },
+    {
+      name: "Interests",
+      href: "/interests",
+      icon: HeartIcon,
+      current: location.pathname === "/interests",
       openModal: false,
       private: true,
     },

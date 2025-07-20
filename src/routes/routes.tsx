@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { PlaceController } from "../contexts/PlaceContext";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import Layout from "../components/layout/Layout";
@@ -9,6 +8,8 @@ import { ForgotPassword } from "../pages/auth/ForgotPassword";
 import { Profile } from "../pages/profile/Profile";
 import { Home } from "../pages/map/Home";
 import { CollaborationView } from "../pages/collaboration/CollaborationView";
+import { PlaceController } from "../contexts/PlaceContext";
+import { Interests } from "../pages/interests";
 
 const AppRouter = () => {
   return (
@@ -51,6 +52,16 @@ const AppRouter = () => {
           element={
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/interests"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <Interests />
+              </Layout>
             </PrivateRoute>
           }
         />
