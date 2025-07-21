@@ -10,67 +10,23 @@ export interface SquareClusterV2Props {
 }
 
 const ImageCarousel = ({ images }: { images: string[] }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState<number | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   const displayItems = images.length > 0 ? images : ["#E5E7EB"];
-
-  useEffect(() => {
-    if (displayItems.length <= 1) return;
-
-    const updateIndex = () => {
-      setPrevIndex(currentIndex);
-      const next = (currentIndex + 1) % displayItems.length;
-      setCurrentIndex(next);
-      setTimeout(() => setPrevIndex(null), 300);
-
-      const randomInterval = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
-      timeoutRef.current = setTimeout(updateIndex, randomInterval);
-    };
-
-    const initialDelay = Math.floor(Math.random() * (5000 - 2000 + 1)) + 2000;
-    timeoutRef.current = setTimeout(updateIndex, initialDelay);
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [currentIndex, displayItems.length]);
-
+  const randomIndex = Math.floor(Math.random() * displayItems.length);
+  const selectedImage = displayItems[randomIndex];
   const isImage = (item: string) => item.startsWith("http");
 
   return (
     <div className="w-full h-full overflow-hidden rounded-xl relative">
-      {prevIndex !== null && isImage(displayItems[prevIndex]) && (
-        <motion.img
-          key={`prev-${prevIndex}`}
-          src={displayItems[prevIndex]}
-          alt="carousel"
+      {isImage(selectedImage) ? (
+        <img
+          src={selectedImage}
+          alt="cluster"
           className="w-full h-full object-cover absolute rounded-xl"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-        />
-      )}
-      {isImage(displayItems[currentIndex]) ? (
-        <motion.img
-          key={`current-${currentIndex}`}
-          src={displayItems[currentIndex]}
-          alt="carousel"
-          className="w-full h-full object-cover absolute rounded-xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
         />
       ) : (
-        <motion.div
-          key={`current-${currentIndex}`}
+        <div
           className="w-full h-full absolute rounded-xl"
-          initial={{ opacity: 0, backgroundColor: displayItems[currentIndex] }}
-          animate={{ opacity: 1, backgroundColor: displayItems[currentIndex] }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          style={{ backgroundColor: selectedImage }}
         />
       )}
     </div>
