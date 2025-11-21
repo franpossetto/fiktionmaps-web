@@ -24,6 +24,13 @@ const queryClient = new QueryClient({
 // Clear old query keys on app start
 queryClient.clear();
 
+/**
+ * Composes and returns the root React element for the application, wiring global providers and top-level UI.
+ *
+ * The returned element sets up React Query, authentication, Google Maps API (with the "places" library), map context, routing, developer tools, and the toast container.
+ *
+ * @returns The application's root React element containing QueryClientProvider, AuthProvider, APIProvider, MapController, AppRouter, ReactQueryDevtools, and ToastContainer.
+ */
 function App() {
   return (
     <>
