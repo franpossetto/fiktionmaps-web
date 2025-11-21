@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { LocationDTO } from "../../../types/dto/LocationDTO";
 import { MapsProvider } from "../../../types/providers/MapsProvider";
 import { usePlaceController } from "../../../contexts/PlaceContext";
@@ -14,55 +14,21 @@ interface SearchPlaceProps {
 export const SearchPlace = ({ selectedPlace }: SearchPlaceProps) => {
   const { place: plc, setPlace: setPlc } = usePlaceController();
   const [isDisabled, setIsDisabled] = useState(false);
-  const [isAutocompleteLoaded, setIsAutocompleteLoaded] = useState(false);
-  const autocompleteRef = useRef<any>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const loader = new Loader({
-    apiKey: import.meta.env.VITE_GMAPS_API_KEY,
-    version: "weekly",
-    libraries: ["places"],
-  });
+  
+  const placesLibrary = useMapsLibrary("places");
 
   const options = {
     strictBounds: false,
-    types: ["address"],
+    types: ["address"] as const,
   };
 
   useEffect(() => {
     if (selectedPlace) setPlc(selectedPlace);
   }, [selectedPlace, setPlc]);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const initializeAutocomplete = async () => {
-      try {
-        const google = await loader.load();
-        if (!isMounted || !inputRef.current) return;
-
-        autocompleteRef.current = new google.maps.places.Autocomplete(
-          inputRef.current,
-          options
-        );
-        autocompleteRef.current.addListener("place_changed", handlePlaceChanged);
-        setIsAutocompleteLoaded(true);
-      } catch (error) {
-        console.error("Error loading Google Maps:", error);
-      }
-    };
-
-    initializeAutocomplete();
-
-    return () => {
-      isMounted = false;
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
-    };
-  }, []);
-
-  const handlePlaceChanged = () => {
+  const handlePlaceChanged = useCallback(() => {
     if (!autocompleteRef.current) return;
 
     const placeAutoComplete = autocompleteRef.current.getPlace();
@@ -81,7 +47,91 @@ export const SearchPlace = ({ selectedPlace }: SearchPlaceProps) => {
       };
     });
     setIsDisabled(true);
-  };
+  }, [setPlc]);
+
+  useEffect(() => {
+    if (!placesLibrary || !inputRef.current) return;
+
+    if (autocompleteRef.current) {
+      google.maps.event.clearInstanceListeners(autocompleteRef.current);
+    }
+
+    autocompleteRef.current = new placesLibrary.Autocomplete(
+      inputRef.current,
+      options
+    );
+
+    autocompleteRef.current.addListener("place_changed", handlePlaceChanged);
+
+    let rafId: number | null = null;
+    const fixDropdownPosition = () => {
+      const pacContainer = document.querySelector('.pac-container') as HTMLElement;
+      if (pacContainer && inputRef.current) {
+        const inputRect = inputRef.current.getBoundingClientRect();
+        pacContainer.style.position = 'fixed';
+        pacContainer.style.top = `${inputRect.bottom}px`;
+        pacContainer.style.left = `${inputRect.left}px`;
+        pacContainer.style.width = `${inputRect.width}px`;
+        pacContainer.style.zIndex = '9999';
+      }
+    };
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length) {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1 && (node as Element).classList?.contains('pac-container')) {
+              fixDropdownPosition();
+            }
+          });
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    const scrollHandler = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          fixDropdownPosition();
+          rafId = null;
+        });
+      }
+    };
+    
+    const resizeHandler = () => {
+      fixDropdownPosition();
+    };
+
+    window.addEventListener('scroll', scrollHandler, true);
+    window.addEventListener('resize', resizeHandler);
+    
+    const modalContainer = inputRef.current?.closest('[role="dialog"]') || 
+                           inputRef.current?.closest('.overflow-y-auto') ||
+                           inputRef.current?.closest('[class*="overflow"]');
+    if (modalContainer) {
+      modalContainer.addEventListener('scroll', scrollHandler, true);
+    }
+
+    return () => {
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+        autocompleteRef.current = null;
+      }
+      observer.disconnect();
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('scroll', scrollHandler, true);
+      window.removeEventListener('resize', resizeHandler);
+      if (modalContainer) {
+        modalContainer.removeEventListener('scroll', scrollHandler, true);
+      }
+    };
+  }, [placesLibrary, handlePlaceChanged]);
 
   const handleReset = () => {
     setPlc(null);
@@ -115,7 +165,6 @@ export const SearchPlace = ({ selectedPlace }: SearchPlaceProps) => {
   );
 };
 
-// Get Data from AutoComplete
 const GetDataFromAutoComplete = (placeAutoComplete: any) => {
   let locality = "",
     country = "";

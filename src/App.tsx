@@ -29,7 +29,7 @@ function App() {
     <>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <APIProvider apiKey={import.meta.env.VITE_GMAPS_API_KEY}>
+            <APIProvider apiKey={import.meta.env.VITE_GMAPS_API_KEY} libraries={["places"]}>
               <MapController>
                 <AppRouter />
               </MapController>
