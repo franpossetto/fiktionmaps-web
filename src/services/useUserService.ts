@@ -19,7 +19,12 @@ export const useUserService = () => {
     try {
       const uid = auth.currentUser?.uid;
       const response = await axiosWithToken.get(`/users/${uid}`);
-      return response.data;
+
+      // Asegúrate de que el rol esté incluido en el objeto de respuesta
+    return {
+      ...response.data,
+      role: response.data.role || UserRole.USER, // Asignar un rol por defecto si no está presente
+    };
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
         const user: UserDTO = {
@@ -29,8 +34,8 @@ export const useUserService = () => {
           role: UserRole.USER,
         };
 
-        createUser(user);
-      }
+        await createUser(user); // Esperar la creación del usuario para manejar promesas correctamente
+    }
       throw error;
     }
   };

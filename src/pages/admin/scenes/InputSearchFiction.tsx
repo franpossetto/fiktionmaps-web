@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Combobox } from "@headlessui/react";
 import { useMapController } from "../../../contexts/MapContext";
 import { useFictionService } from "../../../services/useFictionService";
@@ -16,11 +16,9 @@ export const InputSearchFiction = () => {
     fictions,
     setFictions,
     loading: ldg,
-    setLoading,
     fictionsSelected,
     setFictionsSelected, // replace with component state
-    city,
-    setCity,
+
   } = useMapController();
 
   const [inputSearchValue, setInputSearchValue] = useState<any>();
@@ -32,21 +30,38 @@ export const InputSearchFiction = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    if (inputSearchValue == null || inputSearchValue.length == 0) {
-      setFictionsSelected([]);
-      return;
-    }
-    console.log(fictions);
-    const _fictionsFiltered = fictions?.filter((f: Fiction) => {
-      return f.name.toLowerCase().includes(inputSearchValue?.toLowerCase());
-    });
+    // Utilizar useMemo para filtrar ficciones
+    const filteredFictions = useMemo(() => {
+      if (!inputSearchValue || inputSearchValue.length === 0) {
+        return [];
+      }
+      return fictions?.filter((f: Fiction) =>
+        f.name.toLowerCase().includes(inputSearchValue.toLowerCase())
+      ) || [];
+    }, [inputSearchValue, fictions]);
+  
+    useEffect(() => {
+      setFictionsSelected(filteredFictions);
+    }, [filteredFictions]);
+    
+    useEffect(() => {
+      setFictionsSelected(filteredFictions);
+    }, [filteredFictions]);
+  // useEffect(() => {
+  //   if (inputSearchValue == null || inputSearchValue.length == 0) {
+  //     setFictionsSelected([]);
+  //     return;
+  //   }
+  //   console.log(fictions);
+  //   const _fictionsFiltered = fictions?.filter((f: Fiction) => {
+  //     return f.name.toLowerCase().includes(inputSearchValue?.toLowerCase());
+  //   });
 
-    setFictionsSelected(_fictionsFiltered);
-    if (ldg) {
-      console.log(fictions);
-    }
-  }, [inputSearchValue]);
+  //   setFictionsSelected(_fictionsFiltered);
+  //   if (ldg) {
+  //     console.log(fictions);
+  //   }
+  // }, [inputSearchValue]);
 
   const selectFiction = (fiction: Fiction) => {
     setFictionsSelected([fiction]);

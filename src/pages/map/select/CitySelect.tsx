@@ -1,11 +1,11 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState, useMemo } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { GlobeAmericasIcon } from "@heroicons/react/24/outline";
-import { useCityService } from "../../../services/useCityService";
 import { City } from "../../../types/City";
 import { useMapController } from "../../../contexts/MapContext";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
+import { useFetchCities } from "../../../hooks/cities/useFetchCities/useFetchCities";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -17,26 +17,20 @@ interface CitySelectProps {
 
 export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
   const [query, setQuery] = useState("");
-  const { getCities } = useCityService();
-  const { loading, data, error } = getCities();
-  const [cities, setCities] = useState<City[]>([]);
-  const { setCity } = useMapController();
+  const { data: cities } = useFetchCities();
+  const { setCity, setSelectedFiction } = useMapController();
 
-  useEffect(() => {
-    if (data) {
-      setCities(data);
-    }
-  }, [data]);
-
-  const filteredItems =
-    query === ""
-      ? cities
-      : cities?.filter((item) => {
-          return item.name.toLowerCase().includes(query.toLowerCase());
-        });
+  const filteredItems = useMemo(() => {
+    return query === "" 
+      ? cities ?? []  
+      : cities?.filter((item: City) =>
+          item.name.toLowerCase().includes(query.toLowerCase())
+        ) ?? []; 
+  }, [query, cities]);
 
   const setCityAndClose = (selectedCity: City) => {
     setCity(selectedCity);
+    setSelectedFiction(undefined)
     setOpen(false);
   };
 
@@ -72,7 +66,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
           >
             <Dialog.Panel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all dark:bg-gray-900 dark:divide-gray-700">
               <Combobox
-                onChange={(selectedCity: any) => setCityAndClose(selectedCity)}
+                onChange={(selectedCity: City) => setCityAndClose(selectedCity)}
               >
                 <div className="relative">
                   <MagnifyingGlassIcon
@@ -92,7 +86,7 @@ export const CitySelect: React.FC<CitySelectProps> = ({ open, setOpen }) => {
                     static
                     className="max-h-96 transform-gpu scroll-py-3 overflow-y-auto p-3"
                   >
-                    {filteredItems.map((item) => (
+                    {filteredItems.map((item: City) => (
                       <Combobox.Option
                         key={item.id}
                         value={item}

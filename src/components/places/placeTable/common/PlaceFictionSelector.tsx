@@ -1,9 +1,9 @@
 import { Combobox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { useFictionService } from "../../../../services/useFictionService";
 import { Fiction } from "../../../../types/Fiction";
 import { usePlaceController } from "../../../../contexts/PlaceContext";
+import { useFetchFictions } from "../../../../hooks/fictions/useFetchFictions/useFetchFictions";
 
 interface FictionSelectorProps {
   fiction?: string;
@@ -18,11 +18,11 @@ export const PlaceFictionSelector: React.FC<FictionSelectorProps> = ({
 
   const [query, setQuery] = useState("");
   const [selectedFiction, setSelectedFiction] = useState<Fiction>();
-  const { setFiction } = usePlaceController();
-  const { getFictions, getFictionById } = useFictionService();
-  const { loading, data, error } = getFictions();
   const [fictions, setFictions] = useState<Fiction[]>([]);
   const [isDisabled, setIsDisabled] = useState(false);
+  
+  const { setFiction } = usePlaceController();
+  const {data} = useFetchFictions()
 
   useEffect(() => {
     if (data) {
@@ -34,7 +34,6 @@ export const PlaceFictionSelector: React.FC<FictionSelectorProps> = ({
   }, [data]);
 
   useEffect(() => {
-    console.log(fiction);
     if (fiction) {
       setIsDisabled(true);
     }

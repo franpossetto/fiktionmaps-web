@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useFictionService } from "../../../services/useFictionService";
-import { SearchPlace } from "../../../components/places/searchPlace/SearchPlace";
 import { InputSearchFiction } from "./InputSearchFiction";
 import { useMapController } from "../../../contexts/MapContext";
 import { Fiction } from "../../../types/Fiction";
@@ -19,17 +18,17 @@ const AddSceneModal: React.FC<LogoutModalProps> = ({
 }) => {
   const [place, setPlace] = useState();
   const [fictionToSave, setFictionToSave] = useState<Fiction>();
-  const { fictionsSelected } = useMapController();
+  // const { fictionsSelected } = useMapController();
   const { place: plc } = usePlaceController();
 
-  useEffect(() => {
-    if (fictionsSelected?.length == 1) {
-      setFictionToSave(fictionsSelected[0]);
-    } else {
-      setFictionToSave(undefined);
-    }
-    console.log(fictionsSelected);
-  }, [fictionsSelected]);
+  // useEffect(() => {
+  //   if (fictionsSelected?.length == 1) {
+  //     setFictionToSave(fictionsSelected[0]);
+  //   } else {
+  //     setFictionToSave(undefined);
+  //   }
+  //   console.log(fictionsSelected);
+  // }, [fictionsSelected]);
 
   const [sceneName, setSceneName] = useState<string>("");
   const [sceneDescription, setSceneDescription] = useState<string>("");

@@ -17,7 +17,7 @@ export const Pagination = (props: PaginationProps) => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
+    <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white border-t-2 pt-4">
       <div className="flex justify-center items-center">
         {totalPages != null ? (
           <P
@@ -30,7 +30,7 @@ export const Pagination = (props: PaginationProps) => {
             showSizeChanger={false}
           />
         ) : (
-          <P defaultCurrent={1} total={3} size="small" disabled responsive />
+          <P defaultCurrent={1} total={3} size="small" disabled responsive/>
         )}
         <p> {totalElements} places</p>
       </div>

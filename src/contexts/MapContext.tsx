@@ -4,60 +4,101 @@ import { City } from "../types/City";
 
 const noop = () => Promise.resolve();
 
+type LatLng = { lat: number; lng: number };
+
+export interface MapBounds {
+  topRight: LatLng;
+  bottomLeft: LatLng;
+}
+
 type MapContext = {
-  fictions?: Fiction[];
-  fictionsSelected?: Fiction[];
+  selectedFiction: Fiction | undefined;
   city?: City;
-  loading: boolean;
   style: string;
+  mapBounds?: MapBounds;
   toggleStyle: () => void;
-  setFictions: (f: any) => void;
-  setFictionsSelected: (f: any) => void;
-  setCity: (ldg: any) => void;
-  setLoading: (ldg: boolean) => void;
+  setSelectedFiction: (f: Fiction | undefined) => void;
+  setCity: (city: City) => void;
+  setMapBounds: (bounds: { topRight: LatLng; bottomLeft: LatLng }) => void;
+  renderMap: boolean;
+  setRenderMap: (value: boolean) => void; 
+  placeSearchParameters: any;
+  setPlaceSearchParameters: (value: any) => any;
+  mapZoom: any;
+  setMapZoom: (value: any) => any,
+  toggleMarkerMode: () => void;
 };
 
 const MapControllerContext = React.createContext<MapContext>({
-  fictions: undefined,
-  fictionsSelected: undefined,
+  selectedFiction: undefined,
   city: undefined,
-  loading: true,
-  style: 'light',
+  style: "light",
+  mapBounds: undefined,
   toggleStyle: noop,
-  setFictions: noop,
-  setFictionsSelected: noop,
+  setSelectedFiction: noop,
   setCity: noop,
-  setLoading: noop,
+  setMapBounds: noop,
+  renderMap: false,
+  setRenderMap: noop,
+  placeSearchParameters: null,
+  setPlaceSearchParameters: noop,
+  mapZoom: true,
+  setMapZoom: noop,
+  toggleMarkerMode: noop
 });
 
 export const MapController = ({ children }: { children: React.ReactNode }) => {
-  const [fictions, setFictions] = useState<Fiction[]>();
-  const [fictionsSelected, setFictionsSelected] = useState<Fiction[]>();
+  const [selectedFiction, setSelectedFiction] = useState<Fiction | undefined>();
+
+  const [placeSearchParameters, setPlaceSearchParameters] = useState<any>(null);
+  const [mapZoom, setMapZoom] = useState<boolean>(
+    () => localStorage.getItem("mapZoom") === "true"
+  );
+  const [renderMap, setRenderMap] = useState<boolean>(false)
   const [city, setCity] = useState<City>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [style, setStyle] = useState<string>(() => localStorage.getItem('themeStyle') || 'light');
+  const [style, setStyle] = useState<string>(
+    () => localStorage.getItem("themeStyle") || "light"
+  );
+
+  const [mapBounds, setMapBounds] = useState({
+    topRight: { lat: 0, lng: 0 },
+    bottomLeft: { lat: 0, lng: 0 },
+  });
 
   const toggleStyle = () => {
-    setStyle(prevStyle => {
-      const newStyle = prevStyle === 'light' ? 'dark' : 'light';
-      localStorage.setItem('themeStyle', newStyle);
+    setStyle((prevStyle) => {
+      const newStyle = prevStyle === "light" ? "dark" : "light";
+      localStorage.setItem("themeStyle", newStyle);
       return newStyle;
+    });
+  };
+
+  const toggleMarkerMode = () => {
+    setMapZoom((prevMapZoom: boolean) => {
+      const newMapZoom = !prevMapZoom;
+      localStorage.setItem("mapZoom", newMapZoom.toString());
+      return newMapZoom;
     });
   };
 
   return (
     <MapControllerContext.Provider
       value={{
-        fictions,
-        fictionsSelected,
+        selectedFiction,
         city,
-        loading,
         style,
+        mapBounds,
         toggleStyle,
-        setFictions,
-        setFictionsSelected,
+        setSelectedFiction,
         setCity,
-        setLoading,
+        setMapBounds,
+        renderMap,
+        setRenderMap,
+        placeSearchParameters,
+        setPlaceSearchParameters,
+        mapZoom, 
+        setMapZoom,
+        toggleMarkerMode
       }}
     >
       {children}

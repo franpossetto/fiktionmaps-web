@@ -4,15 +4,16 @@ import { RocketLaunchIcon } from "@heroicons/react/24/outline";
 
 interface ContentTableProps {
   content: any;
+  isAdmin: boolean;  // Añadir la propiedad isAdmin
 }
 
-export const ContentTableView: React.FC<ContentTableProps> = ({ content }) => {
+export const ContentTableView: React.FC<ContentTableProps> = ({ content, isAdmin }) => {
   return (
     <>
       <div className="mt-6 flow-root text-sm overflow-hidden">
         <div className="inline-block min-w-full mr-2 py-2 align-middle sm:px-6 lg:px-8">
           {content.dataSource && content.dataSource.length > 0 ? (
-            <ContentTable data={content.dataSource} config={content.config} />
+            <ContentTable data={content.dataSource} config={content.config} isAdmin={isAdmin} />
           ) : (
             <PlaceEmptyState
               icon={

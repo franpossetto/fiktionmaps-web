@@ -1,14 +1,14 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState, useMemo, useEffect } from "react";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useMapController } from "../../../contexts/MapContext";
 import { Fiction } from "../../../types/Fiction";
 import { FictionImage } from "../../admin/fictions/FictionImage";
 import { SelectNoResults } from "../../../components/common/SelectNoResults";
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
+import { debounce } from "lodash";
+import classNames from "../../../helpers/classNames";
+import { useFictionsByCity } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity";
+import { FictionByCityResponse } from "../../../hooks/fictions/useFetchFictionsByCity/useFetchFictionsByCity.types";
 
 interface FictionSelectProps {
   open: boolean;
@@ -19,29 +19,45 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
   open,
   setOpen,
 }) => {
-  const [query, setQuery] = useState("");
 
-  const {
-    fictions,
-    loading: ldg,
-    setLoading,
-    fictionsSelected,
-    setFictionsSelected: sendFictionsToMap,
-  } = useMapController();
 
   const MOVIE_COVERS_PATH = "movie_covers/";
 
-  const filteredItems =
-    query === ""
-      ? fictions
-      : fictionsSelected?.filter((item) => {
-          return item.name.toLowerCase().includes(query.toLowerCase());
-        });
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
+  const { city} = useMapController();
+  const { data: fictionsByCity} = useFictionsByCity(city?.id);
+
+  const {
+    selectedFiction,
+    setSelectedFiction,
+} = useMapController();
+
+  useEffect(() => {
+    const handler = debounce((value: string) => {
+      setDebouncedQuery(value);
+    }, 300);
+
+    handler(query);
+
+    return () => {
+      handler.cancel();
+    };
+  }, [query]);
+
+  const filteredItems = useMemo(() => {
+    return debouncedQuery === ""
+      ? fictionsByCity
+      : fictionsByCity?.filter((item: FictionByCityResponse) =>
+        item.name.toLowerCase().includes(debouncedQuery.toLowerCase())
+      );
+  }, [debouncedQuery, fictionsByCity]);
 
   const setFictionAndClose = (selectedFiction: Fiction) => {
-    sendFictionsToMap([selectedFiction]);
+    setSelectedFiction(selectedFiction);
     setOpen(false);
   };
+  
 
   return (
     <Transition.Root
@@ -141,7 +157,7 @@ export const FictionSelect: React.FC<FictionSelectProps> = ({
                   </Combobox.Options>
                 )}
 
-                {query !== "" && filteredItems?.length === 0 && (
+                {debouncedQuery !== "" && filteredItems?.length === 0 && (
                   <SelectNoResults />
                 )}
               </Combobox>
