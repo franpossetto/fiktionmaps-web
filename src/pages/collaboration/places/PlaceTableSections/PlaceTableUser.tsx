@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ContentTableView } from "../../../../components/common/ContentTableView";
 import { ContentTableWrapper } from "../../../../components/common/ContentTableWrapper";
-import { PlaceImageSmall } from "../../../../components/places/placeTable/common/PlaceImageSmall";
 import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
 import { EditPlaceModal } from "../../../../components/places/placeTable/modals/EditPlaceModal";
@@ -12,38 +11,25 @@ import {
   generateDataSource,
 } from "../PlaceTableUtils";
 import { Fiction } from "../../../../types/Fiction";
-import { useFictionService } from "../../../../services/useFictionService";
-import { User } from "../../../../types/User";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
-import { useUserService } from "../../../../services/useUserService";
-import { ContentTableTagButton } from "../../../../components/common/ContentTableTagButton";
+import { useCurrentUser } from "../../../../hooks/users/useCurrentUser/useCurrentUser";
 import { Pagination } from "../../../../components/common/Pagination";
-import { current } from "@reduxjs/toolkit";
+import { useFetchPlacesByUser } from "../../../../hooks/places/useFetchPlacesByUser/useFetchPlacesByUser";
+import { useFetchFictions } from "../../../../hooks/fictions/useFetchFictions/useFetchFictions";
 
 export const PlaceTableUser = () => {
   const [modalAddFictionOpen, setModalAddFictionOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { getFictions, getPlacesByUser } = useFictionService();
-  const { getCurrentUser } = useUserService();
   const {
-    loading: loadingPlaces,
     data: placesPaginated,
+    isLoading: loadingPlaces,
     error,
     refetch,
-  } = getPlacesByUser(currentPage, 10);
-  const { loading: loadingFictions, data: fictions } = getFictions();
+  } = useFetchPlacesByUser({ page: currentPage, size: 10 });
+  const { data: fictions, isLoading: loadingFictions } = useFetchFictions();
 
-  const [loggedUser, setLoggedUser] = useState<User>();
-
-  const getUserInfo = async () => {
-    const response = await getCurrentUser();
-    setLoggedUser(response);
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
+  const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
 
   useEffect(() => {
     refetch();
@@ -76,7 +62,7 @@ export const PlaceTableUser = () => {
       );
       setPlaces(filteredPlaces);
     }
-  }, [placesData]);
+  }, [placesData, loggedUser]);
 
   useEffect(() => {
     if (fictions) {
@@ -104,17 +90,24 @@ export const PlaceTableUser = () => {
   };
 
   const dataSource = useMemo(() => {
+    if (!loggedUser || !loggedUser.role) return [];
+
     return generateDataSource(
       places,
       fictionHashTable,
       loggedUser,
       currentPage,
       true,
+      loggedUser?.role == "USER", // revisar esto luego, esta mal. 
       editPlace,
       deletePlace,
       approvePlace
     );
   }, [places, fictionHashTable, loggedUser, currentPage]);
+
+  if (loadingUser || !loggedUser || typeof loggedUser.role === 'undefined') {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <>
@@ -122,11 +115,11 @@ export const PlaceTableUser = () => {
         description={"These are the places you have added to the system."}
         action={{ title: "Add Place", fn: setModalAddFictionOpen }}
       >
-        {loadingPlaces ? (
+        {loadingPlaces || loadingFictions ? (
           <PlaceSkeleton />
         ) : (
           <>
-            <ContentTableView content={{ dataSource, config }} />
+            <ContentTableView content={{ dataSource, config }} isAdmin={false} />
             <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
               <div className="flex justify-center items-center">
                 <Pagination

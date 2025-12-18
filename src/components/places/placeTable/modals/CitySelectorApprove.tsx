@@ -1,8 +1,8 @@
 import { Combobox } from "@headlessui/react";
 import { City } from "../../../../types/City";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import { useCityService } from "../../../../services/useCityService";
+import { useState } from "react";
+import { useFetchCities } from "../../../../hooks/cities/useFetchCities/useFetchCities";
 
 interface CitySelectorApproveProps {
   selectedCity: City | undefined;
@@ -13,21 +13,13 @@ export const CitySelectorApprove: React.FC<CitySelectorApproveProps> = ({
   selectedCity,
   setSelectedCity,
 }) => {
-  const [cities, setCities] = useState<City[]>([]);
   const [query, setQuery] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
-  const { getCities } = useCityService();
-  const { loading, data, error } = getCities();
+  const { data: cities, isLoading } = useFetchCities();
 
   function classNames(...classes: any) {
     return classes.filter(Boolean).join(" ");
   }
-
-  useEffect(() => {
-    if (data) {
-      setCities(data);
-    }
-  }, [data]);
 
   const handleCityChange = (city: City) => {
     setSelectedCity(city);
@@ -35,17 +27,17 @@ export const CitySelectorApprove: React.FC<CitySelectorApproveProps> = ({
 
   const filteredCity: City[] =
     query === ""
-      ? cities
-      : cities.filter((c) => {
+      ? cities ?? []
+      : cities?.filter((c: City) => {
           return c.name.toLowerCase().includes(query.toLowerCase());
-        });
+        }) ?? [];
 
   return (
     <Combobox
       as="div"
       value={selectedCity}
       onChange={handleCityChange}
-      disabled={isDisabled}
+      disabled={isDisabled || isLoading}
     >
       <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900"></Combobox.Label>
       <div className="relative mt-2">

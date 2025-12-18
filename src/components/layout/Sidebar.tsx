@@ -1,4 +1,4 @@
-import React, { Fragment, PropsWithChildren, useState, useEffect } from "react";
+import React, { Fragment, PropsWithChildren, useState, useEffect, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -11,6 +11,8 @@ import {
   CircleStackIcon,
   MoonIcon,
   SunIcon,
+  ShieldCheckIcon,
+  ViewfinderCircleIcon
 } from "@heroicons/react/24/outline";
 import LogoutModal from "../../pages/auth/LogoutModal";
 import { useAuthContext } from "../../contexts/AuthContext";
@@ -32,7 +34,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
   const [error, setError] = useState("");
   const { logout, user } = useAuthContext();
   const navigate = useNavigate();
-  const { style, toggleStyle } = useMapController();
+  const { style, toggleStyle, mapZoom, toggleMarkerMode } = useMapController();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -47,16 +49,15 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
     toggleStyle();
   };
 
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      navigate("/login");
-    } catch {
-      setError("Failed to log out");
-    }
+  const handleMarkerMode = () => {
+    toggleMarkerMode();
   }
+
+  const handleLogout = useCallback(async () => {
+    setError('');
+    try { await logout(); navigate('/login'); }
+    catch { setError('Failed to log out') }
+  }, [logout, navigate]);
 
   const navigation = [
     {
@@ -159,7 +160,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                           <a
                             href="/home"
                             className={classNames(
-                              location.pathname === "/home"
+                              location.pathname === "/"
                                 ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
                                 : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                               "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -216,6 +217,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                       </button>
                     </div>
                   </div>
+                  
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -232,7 +234,7 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                 <a
                   href="/home"
                   className={classNames(
-                    location.pathname === "/home"
+                    location.pathname === "/"
                       ? "bg-gray_hover_light text-black dark:bg-gray-800 dark:text-white"
                       : "text-gray-400 hover:text-black hover:bg-gray_hover_light dark:hover:text-white dark:hover:bg-gray-800",
                     "group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-semibold"
@@ -283,6 +285,17 @@ export default function SideBar({ sidebarOpen, setSidebarOpen }: SideBarProps) {
                 <SunIcon className="h-6 w-6 mx-auto" />
               ) : (
                 <MoonIcon className="h-6 w-6 mx-auto" />
+              )}
+            </button>
+            <button
+              type="button"
+              className="w-full py-2 text-center rounded-md text-gray-400 hover:text-white hover:bg-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
+              onClick={handleMarkerMode}
+            >
+              {mapZoom === true ? (
+                <ShieldCheckIcon className="h-6 w-6 mx-auto" />
+              ) : (
+                <ViewfinderCircleIcon className="h-6 w-6 mx-auto" />
               )}
             </button>
           </div>

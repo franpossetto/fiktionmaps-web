@@ -3,7 +3,7 @@ import { ModalWrapper } from "../../../common/ModalWrapper";
 import { Place } from "../../../../types/Place";
 import { CitySelectorApprove } from "./CitySelectorApprove";
 import { City } from "../../../../types/City";
-import { useFictionService } from "../../../../services/useFictionService";
+import { useApprovePlace } from "../../../../hooks/places/useApprovePlace/useApprovePlace";
 
 interface ApproveModalProps {
   modalOpen: boolean;
@@ -19,7 +19,7 @@ export const ApprovePlaceModal: React.FC<ApproveModalProps> = ({
   setPlaces,
 }) => {
   const [selectedCity, setSelectedCity] = useState<City | undefined>(undefined);
-  const { approvePlace } = useFictionService();
+  const { mutate: approvePlace } = useApprovePlace();
 
   const handleApproveClick = () => {
     if (
@@ -28,22 +28,27 @@ export const ApprovePlaceModal: React.FC<ApproveModalProps> = ({
       selectedCity &&
       selectedCity.id
     ) {
-      approvePlace(placeToApprove.id, selectedCity.id)
-        .then((updatedPlaceResponse) => {
-          console.log(updatedPlaceResponse);
-          setPlaces((prevState: Place[]) => {
-            const updatedPlaces = [...prevState];
-            const index = updatedPlaces.findIndex(
-              (place) => place.id === updatedPlaceResponse.data.id
-            );
-            if (index !== -1) {
-              updatedPlaces[index] = updatedPlaceResponse.data;
-            }
-            return updatedPlaces;
-          });
-        })
-        .catch(() => {});
-      setModalOpen(false);
+      approvePlace(
+        { placeId: placeToApprove.id, cityId: selectedCity.id },
+        {
+          onSuccess: (updatedPlace) => {
+            setPlaces((prevState: Place[]) => {
+              const updatedPlaces = [...prevState];
+              const index = updatedPlaces.findIndex(
+                (place) => place.id === updatedPlace.id
+              );
+              if (index !== -1) {
+                updatedPlaces[index] = updatedPlace;
+              }
+              return updatedPlaces;
+            });
+            setModalOpen(false);
+          },
+          onError: (error) => {
+            console.error("Error approving place:", error);
+          }
+        }
+      );
     } else {
       console.error("Place or City is not selected");
     }

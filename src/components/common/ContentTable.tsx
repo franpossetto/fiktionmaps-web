@@ -1,32 +1,31 @@
 interface ContentTableProps {
   data: any;
   config: any;
+  isAdmin: boolean;  // Añade isAdmin a las propiedades
 }
 
-export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
+export const ContentTable: React.FC<ContentTableProps> = ({ data, config, isAdmin }) => {
   return (
     <div className="min-h-screen">
       <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
         <thead>
-          {config &&
-            config.map((column: any) => (
-              <th
-                key={column.key}
-                className={`${column.className} ${
-                  column.key === "fiction" ||
-                  column.key === "description" ||
-                  column.key === "id"
-                    ? "md:table-cell hidden"
-                    : ""
-                }`}
-                scope="col"
-              >
-                {column.label}
-              </th>
-            ))}
+          {config.map((column: any) => (
+            <th
+              key={column.key}
+              className={`${column.className} ${
+                column.key === "fiction" ||
+                column.key === "description" ||
+                column.key === "id"
+                  ? "md:table-cell hidden"
+                  : ""
+              }`}
+              scope="col"
+            >
+              {column.label}
+            </th>
+          ))}
         </thead>
         <tbody className="bg-white">
-          <div className="h-2"></div>
           {data.map((row: any) => (
             <tr key={row.id} className="even:bg-gray-50 dark:bg-gray-900">
               {config.map((column: any) => (
@@ -47,6 +46,8 @@ export const ContentTable: React.FC<ContentTableProps> = ({ data, config }) => {
           ))}
         </tbody>
       </table>
+      <div className="h-2"></div>
     </div>
   );
 };
+

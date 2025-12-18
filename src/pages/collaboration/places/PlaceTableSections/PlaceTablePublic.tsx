@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useFictionService } from "../../../../services/useFictionService";
-import { ApprovePlaceModal } from "../../../../components/places/placeTable/modals/ApprovePlaceModal";
 import { AddPlaceModal } from "../../../../components/places/placeTable/modals/AddPlaceModal";
 import DeletePlaceModal from "../../../../components/places/placeTable/modals/DeletePlaceModal";
 import { EditPlaceModal } from "../../../../components/places/placeTable/modals/EditPlaceModal";
@@ -8,15 +6,16 @@ import { ContentTableWrapper } from "../../../../components/common/ContentTableW
 import { ContentTableView } from "../../../../components/common/ContentTableView";
 import { Fiction } from "../../../../types/Fiction";
 import { Place } from "../../../../types/Place";
-import { User } from "../../../../types/User";
 import {
   FictionHashTable,
   config,
   generateDataSource,
 } from "../PlaceTableUtils";
 import { PlaceSkeleton } from "../../../../components/places/placeTable/common/PlaceSkeleton";
-import { useUserService } from "../../../../services/useUserService";
+import { useCurrentUser } from "../../../../hooks/users/useCurrentUser/useCurrentUser";
 import { Pagination } from "../../../../components/common/Pagination";
+import { useFetchApprovedPlaces } from "../../../../hooks/places/useFetchApprovedPlaces/useFetchApprovedPlaces";
+import { useFetchFictions } from "../../../../hooks/fictions/useFetchFictions/useFetchFictions";
 
 export const PlaceTablePublished = () => {
   const [modalAddPlaceOpen, setModalAddPlaceOpen] = useState(false);
@@ -25,20 +24,18 @@ export const PlaceTablePublished = () => {
     useState<boolean>(false);
   const [modalApprovePlaceOpen, setModalApprovePlaceOpen] =
     useState<boolean>(false);
-  const { getFictions, getPlaces } = useFictionService();
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
-    loading: loadingPlaces,
     data: placesPaginated,
+    isLoading: loadingPlaces,
     error,
     refetch,
-  } = getPlaces(true, currentPage, 10);
+  } = useFetchApprovedPlaces({ page: currentPage, size: 10, approved: true });
 
-  const { loading: loadingFictions, data: fictions } = getFictions();
-  const [loggedUser, setLoggedUser] = useState<User>();
+  const { data: fictions, isLoading: loadingFictions } = useFetchFictions();
 
-  const { getCurrentUser } = useUserService();
+  const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
   const placesData =
     placesPaginated && placesPaginated.content ? placesPaginated.content : [];
 
@@ -52,14 +49,7 @@ export const PlaceTablePublished = () => {
     {}
   );
 
-  const getUserInfo = async () => {
-    const response = await getCurrentUser();
-    setLoggedUser(response);
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
+  const isAdmin = loggedUser?.role === "ADMIN";
 
   useEffect(() => {
     if (placesData && placesData.length) {
@@ -96,76 +86,78 @@ export const PlaceTablePublished = () => {
   };
 
   const dataSource = useMemo(() => {
+    if (!loggedUser || !loggedUser.role) return [];
+  
     return generateDataSource(
       places,
       fictionHashTable,
       loggedUser,
       currentPage,
       true,
-      editPlace,
-      deletePlace,
+      isAdmin,
+      isAdmin ? editPlace : () => {},  // Funciones condicionales basadas en el rol
+      isAdmin ? deletePlace : () => {},
       approvePlace
     );
-  }, [places, fictionHashTable, loggedUser, currentPage]);
+  }, [places, fictionHashTable, loggedUser, currentPage, isAdmin]);
 
   useEffect(() => {
     refetch();
   }, [currentPage]);
 
+  if (loadingUser || !loggedUser || typeof loggedUser.role === 'undefined') {
+    return <div>Loading user data...</div>;
+  }
+
   return (
     <>
       <ContentTableWrapper
-        description={
-          "These are the approved places that you have added to the system. You can find these places on the map."
-        }
-        action={{ title: "Add Place", fn: setModalAddPlaceOpen }}
+          description={"These are the approved places you have added to the system."}
+          action={{ title: "Add Place", fn: setModalAddPlaceOpen }}
       >
-        {loadingPlaces ? (
-          <PlaceSkeleton />
-        ) : (
-          <>
-            <ContentTableView content={{ dataSource, config }} />
-            <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
-              <div className="flex justify-center items-center">
-                <Pagination
-                  totalPages={placesPaginated?.totalPages || 0}
-                  currentPage={placesPaginated?.currentPage || 0}
-                  totalElements={placesPaginated?.totalElements || 0}
-                  pageSize={10}
-                  setCurrentPage={setCurrentPage}
-                />
-              </div>
-            </div>
-          </>
-        )}
+          {loadingPlaces || loadingFictions ? (
+              <PlaceSkeleton />
+          ) : (
+              <>
+                  <ContentTableView 
+                      content={{ dataSource, config }}
+                      isAdmin={isAdmin}
+                  />
+                  <div className="fixed bottom-0 left-0 w-full bg-white h-14 border-gray-100 border-t-2 pt-4">
+                      <div className="flex justify-center items-center">
+                          <Pagination
+                              totalPages={placesPaginated?.totalPages || 0}
+                              currentPage={placesPaginated?.currentPage || 0}
+                              totalElements={placesPaginated?.totalElements || 0}
+                              pageSize={10}
+                              setCurrentPage={setCurrentPage}
+                          />
+                      </div>
+                  </div>
+              </>
+          )}
       </ContentTableWrapper>
-      {placeToEdit && (
-        <EditPlaceModal
-          modalOpen={modalEditPlaceOpen}
-          setModalOpen={setModalEditPlaceOpen}
-          placeToEdit={placeToEdit}
-          setPlaces={setPlaces}
-        />
+      {isAdmin && placeToEdit && (
+          <EditPlaceModal
+              modalOpen={modalEditPlaceOpen}
+              setModalOpen={setModalEditPlaceOpen}
+              placeToEdit={placeToEdit}
+              setPlaces={setPlaces}
+          />
       )}
-      <DeletePlaceModal
-        modalOpen={modalDeletePlaceOpen}
-        setModalOpen={setModalDeletePlaceOpen}
-        placeToDelete={placeToDelete}
-        setPlaces={setPlaces}
-      />
-      <ApprovePlaceModal
-        modalOpen={modalApprovePlaceOpen}
-        setModalOpen={setModalApprovePlaceOpen}
-        placeToApprove={placeToApprove}
-        setPlaces={setPlaces}
-      />
+      {isAdmin && (
+          <DeletePlaceModal
+              modalOpen={modalDeletePlaceOpen}
+              setModalOpen={setModalDeletePlaceOpen}
+              placeToDelete={placeToDelete}
+              setPlaces={setPlaces}
+          />
+      )}
       <AddPlaceModal
-        modalOpen={modalAddPlaceOpen}
-        setModalOpen={setModalAddPlaceOpen}
-        setPlaces={setPlaces}
+          modalOpen={modalAddPlaceOpen}
+          setModalOpen={setModalAddPlaceOpen}
+          setPlaces={setPlaces}
       />
     </>
   );
 };
-
-export default PlaceTablePublished;

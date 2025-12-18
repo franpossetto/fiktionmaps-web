@@ -4,15 +4,16 @@ import { Place } from "./Place";
 import { FictionProvider } from "./providers/FictionProvider";
 
 export interface Fiction {
-    name: string;
     id: number;
+    name: string;
     imgUrl: string;
     overview: string;
-    provider?: FictionProvider,
     type?: MediaType,
-    places?: Place[]
-    episode?: EpisodeDTO,
-    duration: number,
+    provider?: FictionProvider;
     externalId: string;
-    year: string
+    duration: number;
+    year: string;
+    places?: Place[];
+    episode?: EpisodeDTO;
 }
+  

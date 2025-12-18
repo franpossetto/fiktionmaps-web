@@ -1,6 +1,6 @@
 import EntityTabs, { Tab } from "../../../components/common/EntityTabs";
 import { Route, Routes } from "react-router-dom";
-import PlaceTablePublished from "./PlaceTableSections/PlaceTablePublic";
+import { PlaceTablePublished } from "./PlaceTableSections/PlaceTablePublic";
 import { PlaceTableUser } from "./PlaceTableSections/PlaceTableUser";
 import { PlaceTableReview } from "./PlaceTableSections/PlaceTableReview";
 import {

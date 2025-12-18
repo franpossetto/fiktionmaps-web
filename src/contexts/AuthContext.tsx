@@ -17,7 +17,7 @@ import {
 import { auth } from "../config/firebase";
 
 import { UserDTO, UserRole } from "../types/dto/UserDTO";
-import { useUserService } from "../services/useUserService";
+import { useCreateUser } from "../hooks/users/useCreateUser/useCreateUser";
 
 const AuthContext = createContext<any>(null);
 
@@ -28,7 +28,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { createUser } = useUserService();
+  const { createUser } = useCreateUser();
 
   const loginWithEmailAndPassword = async (email: string, password: string) => {
     try {

@@ -1,8 +1,9 @@
+import { FictionResponse } from "@/hooks/fictions/useFetchFictionById/useFetchFictionById.types";
 import { Fiction } from "../../../../types/Fiction";
 import { Place } from "../../../../types/Place";
 
 interface PlaceDataProps {
-  fiction: Fiction;
+  fiction: FictionResponse | undefined;
   place: Place;
 }
 

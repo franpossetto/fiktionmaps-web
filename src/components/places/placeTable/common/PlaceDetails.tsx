@@ -1,89 +1,57 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePlaceController } from "../../../../contexts/PlaceContext";
-import { Loader } from "@googlemaps/js-api-loader";
+import { Map, Marker } from "@vis.gl/react-google-maps";
 import DefaultPlace from "./DefaultPlace";
 import { useMapController } from "../../../../contexts/MapContext";
+import { DARK_MAP_ID, LIGHT_MAP_ID, STYLE_DARK } from "../../../../contants";
+import { Place } from "../../../../types/Place";
 
-const PlaceDetails = () => {
-  const { place, setPlace: setPlc } = usePlaceController();
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [marker, setMarker] = useState<google.maps.Marker | null>(null);
-  const [initialCenter, setInitialCenter] = useState<any>();
+interface PlaceDetailsProps {
+  place: Place | undefined
+}
 
-  const mapRef = useRef<HTMLDivElement | null>(null);
-  const loader = new Loader({
-    apiKey: import.meta.env.VITE_GMAPS_API_KEY,
-    version: "weekly",
-    libraries: ["places"],
-  });
 
+const PlaceDetails: React.FC<PlaceDetailsProps>  = ({place}) => {
   const { style } = useMapController();
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const mapId = style === STYLE_DARK ? DARK_MAP_ID : LIGHT_MAP_ID;
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setInitialCenter({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      });
-    } else {
-      setInitialCenter({
-        lat: DefaultPlace.location.latitude,
-        lng: DefaultPlace.location.longitude,
-      });
-    }
-  }, []);
+  const defaultCenter = {
+    lat: place?.location.latitude ?? DefaultPlace.location.latitude,
+    lng: place?.location.longitude ?? DefaultPlace.location.longitude,
+  };
 
-  useEffect(() => {
-    console.log(initialCenter);
-    loader.load().then((google) => {
-      if (mapRef.current && !map && initialCenter) {
-        const mapInstance = new google.maps.Map(mapRef.current, {
-          center: initialCenter,
-          zoom: 11,
-          disableDefaultUI: false,
-          mapTypeControl: false,
-          zoomControl: false,
-          fullscreenControl: false,
-          streetViewControl: false,
-          gestureHandling: "greedy",
-        });
-        setMap(mapInstance);
-
-        const markerInstance = new google.maps.Marker({
-          position: initialCenter,
-          map: mapInstance,
-        });
-        setMarker(markerInstance);
-      }
-    });
-  }, [place, initialCenter]);
-
-  useEffect(() => {
-    const updateMapStyle = async () => {
-      if (map) { 
-        const mapStyles = style === 'dark' 
-          ? (await import("../../../../assets/map/dark_styles.json")).default 
-          : (await import("../../../../assets/map/light_style.json")).default;
-        
-          map.setOptions({styles: mapStyles});
-      }
-    };  
-    updateMapStyle();
-    if (place && map) {
-      const newCenter = {
-        lat: place?.location.latitude,
-        lng: place?.location.longitude,
-      };
-      marker?.setPosition(newCenter);
-      map.setCenter(newCenter);
-    }
-  }, [place, map, marker]);
-
+  console.log(place);
   return (
     <div className="h-60 mt-5">
-      <div ref={mapRef} className="h-full w-full rounded-md mb-5" />
+      <div className="h-full w-full rounded-md mb-5">
+        {defaultCenter && (
+          <Map
+            center={defaultCenter}
+            zoom={15}
+            mapId={mapId}
+            disableDefaultUI={true}
+            mapTypeControl={false}
+            zoomControl={false}
+            fullscreenControl={false}
+            gestureHandling={"none"}
+            streetViewControl={false}
+            scrollwheel={false}
+            draggable={false}
+            onTilesLoaded={() => setIsMapLoaded(true)}
+          >
+            {isMapLoaded && place && (
+              <Marker
+                position={{
+                  lat: place.location.latitude,
+                  lng: place.location.longitude,
+                }}
+                title={place.location.formattedAddress}
+              />
+            )}
+          </Map>
+        )}
+      </div>
     </div>
   );
 };

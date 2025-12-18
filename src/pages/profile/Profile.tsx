@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { UserDTO, UserRole } from "../../types/dto/UserDTO";
-import { useUserService } from "../../services/useUserService";
+import { useCurrentUser } from "../../hooks/users/useCurrentUser/useCurrentUser";
+import { useUpdateUser } from "../../hooks/users/useUpdateUser/useUpdateUser";
 
 interface UserObject {
   name?: string;
@@ -9,14 +10,14 @@ interface UserObject {
   country?: string;
   about?: string;
 }
+
 export const Profile = () => {
   const [editing, setEditing] = useState(false);
   const [userObject, setUserObject] = useState<UserObject>();
   const [name, setName] = useState("");
   const { user } = useAuthContext();
-  const [loggedUser, setLoggedUser] = useState<any>();
-
-  const { updateUser, getCurrentUser } = useUserService();
+  const { data: loggedUser, isLoading: loadingUser } = useCurrentUser();
+  const { updateUser, isPending: isUpdating } = useUpdateUser();
 
   const handleEdit = () => {
     setEditing(true);
@@ -25,13 +26,13 @@ export const Profile = () => {
   const handleSave = async () => {
     setEditing(false);
     const userDto: UserDTO = {
-      name: loggedUser?.name || "",
-      email: loggedUser.email || "",
+      name: userObject?.name || loggedUser?.name || "",
+      email: userObject?.email || loggedUser?.email || "",
       externalUserId: user.uid,
       password: "",
       role: UserRole.USER,
-      id: loggedUser?.id.toString(),
-      country: loggedUser.country,
+      id: loggedUser?.id?.toString(),
+      country: userObject?.country || loggedUser?.country,
     };
 
     await updateUser(userDto);
@@ -42,32 +43,27 @@ export const Profile = () => {
     setEditing(false);
   };
 
-  const getUserInfo = async () => {
-    const response = await getCurrentUser();
-    setLoggedUser(response);
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoggedUser((prevState: any) => ({ ...prevState, name: e.target.value }));
+    if (loggedUser) {
+      setUserObject((prevState) => ({ ...prevState, name: e.target.value }));
+    }
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoggedUser((prevState: any) => ({
-      ...prevState,
-      email: e.target.value,
-    }));
+    if (loggedUser) {
+      setUserObject((prevState) => ({ ...prevState, email: e.target.value }));
+    }
   };
 
   const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoggedUser((prevState: any) => ({
-      ...prevState,
-      country: e.target.value,
-    }));
+    if (loggedUser) {
+      setUserObject((prevState) => ({ ...prevState, country: e.target.value }));
+    }
   };
+
+  if (loadingUser || !loggedUser) {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <>
@@ -91,7 +87,7 @@ export const Profile = () => {
                   {editing ? (
                     <input
                       type="text"
-                      value={loggedUser?.name}
+                      value={userObject?.name || loggedUser?.name}
                       onChange={handleNameChange}
                       className="border rounded px-3 py-2 w-full h-8 dark:bg-gray-900"
                     />
@@ -114,7 +110,7 @@ export const Profile = () => {
                   {editing ? (
                     <input
                       type="text"
-                      value={loggedUser?.email}
+                      value={userObject?.email || loggedUser?.email}
                       onChange={handleEmailChange}
                       className="border rounded px-3 py-2 w-full h-10 dark:bg-gray-900"
                     />
@@ -131,7 +127,7 @@ export const Profile = () => {
                   {editing ? (
                     <input
                       type="text"
-                      value={loggedUser?.country}
+                      value={userObject?.country || loggedUser?.country}
                       onChange={handleCountryChange}
                       className="border rounded px-3 py-2 w-full h-10 dark:bg-gray-900"
                     />
@@ -157,12 +153,14 @@ export const Profile = () => {
                   <button
                     className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                     onClick={handleSave}
+                    disabled={isUpdating}
                   >
-                    Save
+                    {isUpdating ? "Saving..." : "Save"}
                   </button>
                   <button
                     className="rounded-md bg-white ml-3 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-black dark:text-gray-100 dark:hover:bg-gray-950 dark:ring-gray-800"
                     onClick={handleCancel}
+                    disabled={isUpdating}
                   >
                     Cancel
                   </button>
